@@ -1,10 +1,13 @@
-// Aguarda o carregamento completo da página para começar a "ouvir" os eventos
+console.log("Iniciando script.js..."); // Teste inicial para ver se o arquivo carrega
+
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM completamente carregado. Procurando elementos..."); // Teste para ver se este evento dispara
 
     // Pega os elementos do HTML com os quais vamos interagir
     const analyzeButton = document.getElementById('analyze-button');
-        const pgnInput = document.getElementById('pgn-input');
-    // ...
+    
+    console.log("Resultado da busca pelo botão:", analyzeButton); // <-- A PISTA DEFINITIVA ESTÁ AQUI
+    
     const pgnInput = document.getElementById('pgn-input');
     const analysisResultDiv = document.getElementById('analysis-result');
 
@@ -25,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         analysisResultDiv.innerHTML = '<p>O GM Chessveja está aquecendo as peças...</p>';
 
         try {
-            // 3. Envio para o "Mensageiro" (Backend - que criaremos no próximo passo)
-            // A mágica acontece aqui: estamos enviando o PGN para a nossa API.
+            // 3. Envio para o "Mensageiro" (Backend)
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: {
@@ -36,13 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                throw new Error('Houve um problema com a análise. Tente novamente.');
+                // Se a resposta do servidor não for OK, criamos um erro personalizado
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Houve um problema com a análise. Tente novamente.');
             }
 
             const data = await response.json();
             
             // 4. Exibição do Resultado:
-            // Usamos a biblioteca 'marked' para formatar o texto que a IA retorna (com negrito, listas, etc.)
             const formattedResult = marked.parse(data.analysis);
             analysisResultDiv.innerHTML = formattedResult;
 
@@ -51,12 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             // 5. Finalização: Reabilita o botão para uma nova análise
             analyzeButton.disabled = false;
-            analyzeButton.textContent = 'Analisar com GM Chessveja';
+            analyzeButton.textContent = 'Analisar Agora';
         }
     });
 });
-
-
-
-
-

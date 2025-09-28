@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
 </head>
 <body>
 
@@ -84,14 +88,37 @@
         </section>
 
         <section id="analisador">
-            <h2>Analise sua Partida com nosso IA Estrategista</h2>
-            <p>Deixe que nosso assistente virtual, o "GM Chessveja", analise sua partida. Com o foco de um "Estrategista Inspirador", ele não vai apenas apontar erros, mas comentar os planos e as ideias por trás dos lances. Cole o PGN da sua partida abaixo e receba um feedback detalhado.</p>
-            <div class="analyzer-container">
-                <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
-                <button id="analyze-button">Analisar Agora </button>
-                <div id="analysis-result"></div>
+    <h2>Analisador de Partidas</h2>
+    <div class="analyzer-layout">
+        <div class="board-column">
+            <div id="board" class="chessboard"></div>
+            <div class="board-controls">
+                <button id="btn-start">Início</button>
+                <button id="btn-prev">◀</button>
+                <button id="btn-next">▶</button>
+                <button id="btn-end">Fim</button>
             </div>
-        </section>
+            <div id="game-info" class="game-info-box">
+                <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
+            </div>
+        </div>
+        <div class="analysis-column">
+            <h3>Controles da Partida</h3>
+            <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
+            <button id="analyze-button">Carregar PGN e Analisar</button>
+            
+            <div id="engine-analysis" class="engine-box">
+                <h4>Análise do Stockfish</h4>
+                <div id="stockfish-output">Aguardando posição...</div>
+            </div>
+
+            <div id="analysis-result" class="gemini-box">
+                <h4>Análise do GM Chessveja (IA)</h4>
+                <div id="gemini-output">Aguardando análise...</div>
+            </div>
+        </div>
+    </div>
+</section>
 <section id="lichess-widgets">
     <h2>Pratique e Assista</h2>
     <div class="lichess-container">
@@ -139,6 +166,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 

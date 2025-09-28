@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chessveja - Aulas de Xadrez em Maceió</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#inicio" class="logo">Chessveja</a>
+            <ul>
+                <li><a href="#professores">Professores</a></li>
+                <li><a href="#aulas">Aulas</a></li>
+                <li><a href="#analisador">Analisador AI</a></li>
+                <li><a href="#galeria">Galeria</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio">
+            <div class="hero-content">
+                <h1>Eleve seu Jogo, Compreenda a Estratégia.</h1>
+                <p>Aulas de xadrez em Maceió e online com os professores Rafael e Graziela. Mais do que decorar lances, aqui você aprende a pensar como um enxadrista.</p>
+                <a href="#aulas" class="cta-button">Agende sua Aula Experimental</a>
+            </div>
+        </section>
+
+        <section id="professores">
+            <h2>Conheça a Equipe Chessveja</h2>
+            <div class="teachers-container">
+                <div class="teacher-card">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Professor Rafael">
+                    <h3>Rafael</h3>
+                    <p>Com vasta experiência como professor em instituições e projetos sociais, Rafael possui profundo conhecimento para ensinar o jogo de forma eficaz. Sua abordagem é centrada no aluno, desenvolvendo raciocínio lógico e concentração. Certificado pela FEXEAL, seu compromisso é oferecer aulas dinâmicas e motivadoras.</p>
+                </div>
+                <div class="teacher-card">
+                    <img src="https://via.placeholder.com/150" alt="Foto da Professora Graziela">
+                    <h3>Graziela Lopes</h3>
+                    <p>Educadora com Pós-Graduação no ensino da Matemática e certificada como Instrutora de Xadrez pela FEXEAL. Graziela possui ampla experiência com aulas particulares desde 2002. Sua paixão pelo ensino e sua dedicação fazem dela uma professora comprometida com o desenvolvimento integral de seus alunos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="aulas">
+            <h2>Encontre o Plano Ideal para sua Evolução</h2>
+            <div class="pricing-container">
+                <div class="pricing-card">
+                    <h3>Aula Experimental</h3>
+                    <p class="description">A porta de entrada para o universo da estratégia. Conheça nossa metodologia e dê o primeiro xeque em sua jornada.</p>
+                    <p class="price">R$ 20,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Quero Começar</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Aula Individual Avulsa</h3>
+                    <p class="description">Foco total nas suas necessidades. Uma aula personalizada para aprimorar pontos específicos do seu jogo.</p>
+                    <p class="price">R$ 50,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Agendar Aula</a>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>Plano Mensal Individual</h3>
+                    <p class="description">O caminho para a consistência e o progresso real. Um acompanhamento contínuo para quem leva a evolução a sério.</p>
+                    <p class="price">R$ 200,00<span class="per-month">/mês</span></p>
+                    <p class="duration">4 aulas por mês</p>
+                    <a href="#contato" class="cta-button">Iniciar Plano Mensal</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Grupos e Empresas</h3>
+                    <p class="description">Utilize o xadrez para potencializar o raciocínio estratégico em sua equipe. Ideal para empresas, associações e clubes.</p>
+                    <p class="price">Sob Consulta</p>
+                    <p class="duration">Pacotes para até 6 pessoas</p>
+                    <a href="#contato" class="cta-button">Solicitar Orçamento</a>
+                </div>
+            </div>
+            <p class="availability">Aulas disponíveis nos formatos online e presencial.</p>
+        </section>
+
+        <section id="analisador">
+            <h2>Analise sua Partida com nosso IA Estrategista</h2>
+            <p>Deixe que nosso assistente virtual, o "GM Chessveja", analise sua partida. Com o foco de um "Estrategista Inspirador", ele não vai apenas apontar erros, mas comentar os planos e as ideias por trás dos lances. Cole o PGN da sua partida abaixo e receba um feedback detalhado.</p>
+            <div class="analyzer-container">
+                <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
+                <button id="analyze-button">Analisar com GM Chessveja (Em Breve)</button>
+                <div id="analysis-result"></div>
+            </div>
+        </section>
+
+        <section id="galeria">
+            <h2>Galeria de Momentos</h2>
+            <div class="gallery-container">
+                <img src="https://via.placeholder.com/400x300.png?text=Evento+de+Xadrez+1" alt="Foto de evento de xadrez">
+                <img src="https://via.placeholder.com/400x300.png?text=Aluno+Jogando" alt="Foto de aluno jogando xadrez">
+                <img src="https://via.placeholder.com/400x300.png?text=Turma+Reunida" alt="Foto de turma de xadrez">
+                <img src="https://via.placeholder.com/400x300.png?text=Aula+Online" alt="Foto de aula online de xadrez">
+            </div>
+        </section>
+    </main>
+
+    <footer id="contato">
+        <h2>Entre em Contato</h2>
+        <p>Pronto para começar sua jornada no xadrez?</p>
+        <div class="contact-info">
+            <a href="https://api.whatsapp.com/send?phone=SEUNUMERO" target="_blank" class="contact-button">WhatsApp</a>
+            <a href="mailto:SEUEMAIL" class="contact-button">Email</a>
+             </div>
+        <p class="copyright">&copy; 2025 Chessveja. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>

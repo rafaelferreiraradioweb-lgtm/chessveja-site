@@ -1,0 +1,318 @@
+/* ---- GERAL & VARIÁVEIS ---- */
+:root {
+    --bg-dark: #1e1e1e;
+    --bg-medium: #2d2d2d;
+    --bg-light: #3c3c3c;
+    --text-light: #f0f0f0;
+    --text-dark: #cccccc;
+    --accent-gold: #D4AF37;
+    --accent-blue: #4a90e2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: var(--accent-gold);
+}
+
+section {
+    padding: 80px 5%;
+}
+
+/* ---- CABEÇALHO & NAVEGAÇÃO ---- */
+header {
+    background-color: rgba(30, 30, 30, 0.9);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    padding: 15px 5%;
+    backdrop-filter: blur(10px);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    text-decoration: none;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--accent-gold);
+}
+
+/* ---- SEÇÃO INÍCIO (HERO) ---- */
+#inicio {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(30, 30, 30, 0.7), rgba(30, 30, 30, 0.7)), url(https://images.unsplash.com/photo-1580541832626-2a7131ee809f?q=80&w=2070) no-repeat center center/cover;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* ---- SEÇÃO PROFESSORES ---- */
+.teachers-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.teacher-card {
+    background-color: var(--bg-medium);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--bg-light);
+}
+
+.teacher-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 3px solid var(--accent-gold);
+}
+
+.teacher-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--text-light);
+}
+
+/* ---- SEÇÃO AULAS (PREÇOS) ---- */
+#aulas {
+    background-color: var(--bg-medium);
+}
+.pricing-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.pricing-card {
+    background-color: var(--bg-dark);
+    padding: 40px 30px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--bg-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.pricing-card h3 {
+    font-size: 1.6rem;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+}
+
+.pricing-card .description {
+    margin-bottom: 20px;
+    flex-grow: 1;
+    color: var(--text-dark);
+}
+
+.pricing-card .price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.price .per-month {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.pricing-card .duration {
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.pricing-card.popular {
+    border: 2px solid var(--accent-gold);
+    transform: scale(1.05);
+}
+
+.availability {
+    text-align: center;
+    margin-top: 40px;
+    font-style: italic;
+}
+
+/* ---- SEÇÃO ANALISADOR ---- */
+#analisador p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.analyzer-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#pgn-input {
+    width: 100%;
+    min-height: 150px;
+    background-color: var(--bg-medium);
+    border: 1px solid var(--bg-light);
+    border-radius: 5px;
+    padding: 15px;
+    color: var(--text-light);
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+#analyze-button {
+    background-color: var(--accent-blue);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#analyze-button:hover {
+    background-color: #3a80d2;
+}
+
+/* ---- SEÇÃO GALERIA ---- */
+#galeria {
+    background-color: var(--bg-medium);
+}
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+.gallery-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+.gallery-container img:hover {
+    transform: scale(1.05);
+}
+
+/* ---- RODAPÉ ---- */
+footer {
+    background-color: #111;
+    text-align: center;
+    padding: 60px 5%;
+}
+
+.contact-info {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.contact-button {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.copyright {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+/* ---- RESPONSIVIDADE ---- */
+@media (max-width: 768px) {
+    h1 { font-size: 2.8rem; }
+    h2 { font-size: 2rem; }
+    nav ul { display: none; } /* Simplificação para mobile, pode ser melhorado com JS */
+    .pricing-card.popular { transform: scale(1); }
+}

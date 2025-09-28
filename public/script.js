@@ -1,4 +1,3 @@
-console.log("Meu script.js está funcionando!");
 // Aguarda o carregamento completo da página para começar a "ouvir" os eventos
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -56,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
 
 
 

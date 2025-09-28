@@ -366,3 +366,75 @@ footer {
     height: 100%;
     border-radius: 5px;
 }
+
+/* ---- NOVO ANALISADOR ---- */
+.analyzer-layout {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.board-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.analysis-column {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chessboard {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.board-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.board-controls button {
+    padding: 10px 15px;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--bg-medium);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.board-controls button:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.game-info-box {
+    background-color: var(--bg-dark);
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid var(--bg-light);
+}
+
+.engine-box, .gemini-box {
+    background-color: var(--bg-dark);
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--bg-light);
+}
+
+.analysis-column h3, .engine-box h4, .gemini-box h4 {
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--bg-light);
+    padding-bottom: 10px;
+}
+
+/* Garante que o ID do botão de análise principal ainda funcione com o estilo antigo */
+#analyze-button {
+    width: 100%;
+}

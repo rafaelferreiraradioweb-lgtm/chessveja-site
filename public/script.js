@@ -11,22 +11,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let stockfishReady = false;
     const stockfishOutputEl = document.getElementById('stockfish-output');
 
-    // --- NOVA FUNÇÃO DE TRADUÇÃO ---
+    // --- FUNÇÃO DE TRADUÇÃO (AGORA COM NÚMEROS DE LANCE) ---
     function convertUciSequenceToSan(fen, uciSequence) {
         const tempGame = new Chess(fen); // Cria um jogo temporário na posição atual
         const uciMoves = uciSequence.split(' ');
         const sanMoves = [];
 
         for (const uciMove of uciMoves) {
+            let movePrefix = "";
+            // Adiciona o número do lance se for a vez das brancas
+            if (tempGame.turn() === 'w') {
+                movePrefix = tempGame.move_number() + ". ";
+            } 
+            // Se for o primeiro lance da sequência e a vez das pretas, adiciona "..."
+            else if (sanMoves.length === 0) {
+                movePrefix = tempGame.move_number() + "... ";
+            }
+
             const move = tempGame.move(uciMove, { sloppy: true }); // Faz o lance em notação UCI
             if (move) {
-                sanMoves.push(move.san); // Adiciona o lance traduzido (ex: "Nf3") à lista
+                sanMoves.push(movePrefix + move.san); // Adiciona o prefixo + lance traduzido
             } else {
                 break; // Para se um lance for inválido
             }
         }
         return sanMoves.join(' ');
     }
+
 
     stockfish.addEventListener('message', function (e) {
         const message = e.data;
@@ -43,10 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const pvIndex = parts.indexOf('pv');
              
              const score = parts[scoreIndex] / 100.0;
-             // Pega a sequência em UCI
              const uciSequence = parts.slice(pvIndex + 1).join(' ');
-             // --- A MÁGICA ACONTECE AQUI ---
-             // Traduz a sequência para a notação que queremos (SAN)
              const sanSequence = convertUciSequenceToSan(game.fen(), uciSequence);
              
              stockfishOutputEl.innerHTML = `Avaliação: <strong>${score.toFixed(2)}</strong><br>Melhor Sequência: ${sanSequence}`;

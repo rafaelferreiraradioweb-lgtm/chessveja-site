@@ -316,3 +316,53 @@ footer {
     nav ul { display: none; } /* Simplificação para mobile, pode ser melhorado com JS */
     .pricing-card.popular { transform: scale(1); }
 }
+
+/* ---- SEÇÃO LICHESS ---- */
+#lichess-widgets {
+    background-color: var(--bg-medium);
+}
+
+.lichess-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap; /* Isso faz com que empilhe no celular */
+}
+
+.widget-card {
+    background-color: var(--bg-dark);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid var(--bg-light);
+    text-align: center;
+    width: 100%;
+    max-width: 500px; /* Define uma largura máxima para cada widget */
+}
+
+.widget-card h3 {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.widget-card p {
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.iframe-container {
+    width: 100%;
+    height: 0;
+    padding-bottom: 121%; /* Proporção para os widgets do Lichess */
+    position: relative;
+    overflow: hidden;
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}

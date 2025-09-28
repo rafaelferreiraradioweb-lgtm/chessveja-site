@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const config = {
         draggable: true,
         position: 'start',
-        pieceTheme: 'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/img/chesspieces/wikipedia/{piece}.png',
+        pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
         onDrop: function (source, target) {
             const move = game.move({
                 from: source,
@@ -183,3 +183,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+

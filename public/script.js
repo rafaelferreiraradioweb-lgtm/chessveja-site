@@ -11,35 +11,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let stockfishReady = false;
     const stockfishOutputEl = document.getElementById('stockfish-output');
 
+    // --- NOVA FUNÇÃO DE TRADUÇÃO ---
+    function convertUciSequenceToSan(fen, uciSequence) {
+        const tempGame = new Chess(fen); // Cria um jogo temporário na posição atual
+        const uciMoves = uciSequence.split(' ');
+        const sanMoves = [];
+
+        for (const uciMove of uciMoves) {
+            const move = tempGame.move(uciMove, { sloppy: true }); // Faz o lance em notação UCI
+            if (move) {
+                sanMoves.push(move.san); // Adiciona o lance traduzido (ex: "Nf3") à lista
+            } else {
+                break; // Para se um lance for inválido
+            }
+        }
+        return sanMoves.join(' ');
+    }
+
     stockfish.addEventListener('message', function (e) {
         const message = e.data;
 
         if (message === 'uciok') {
             stockfishReady = true;
-            // Configura o Stockfish após ele estar pronto
-            stockfish.postMessage('setoption name Threads value 4'); // Usa mais poder de processamento
-            stockfish.postMessage('setoption name Hash value 128'); // Aloca mais memória
+            stockfish.postMessage('setoption name Threads value 4');
+            stockfish.postMessage('setoption name Hash value 128');
         }
         
-        // Procura pela linha que contém a avaliação e o melhor lance
-        if (message.startsWith('info depth') && message.includes('score cp')) {
+        if (message.startsWith('info depth') && message.includes('score cp') && message.includes('pv')) {
              const parts = message.split(' ');
              const scoreIndex = parts.indexOf('score') + 2;
              const pvIndex = parts.indexOf('pv');
              
              const score = parts[scoreIndex] / 100.0;
-             const bestMoves = parts.slice(pvIndex + 1).join(' ');
+             // Pega a sequência em UCI
+             const uciSequence = parts.slice(pvIndex + 1).join(' ');
+             // --- A MÁGICA ACONTECE AQUI ---
+             // Traduz a sequência para a notação que queremos (SAN)
+             const sanSequence = convertUciSequenceToSan(game.fen(), uciSequence);
              
-             stockfishOutputEl.innerHTML = `Avaliação: <strong>${score.toFixed(2)}</strong><br>Melhor Sequência: ${bestMoves}`;
-        }
-        
-        if (message.startsWith('bestmove')) {
-            // A informação mais útil já foi pega da linha "info depth", então podemos ignorar o bestmove simples
+             stockfishOutputEl.innerHTML = `Avaliação: <strong>${score.toFixed(2)}</strong><br>Melhor Sequência: ${sanSequence}`;
         }
     });
 
     stockfish.postMessage('uci');
-
 
     // --- Elementos do DOM ---
     const analyzeButton = document.getElementById('analyze-button');
@@ -69,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         statusEl.textContent = status;
-        askStockfishToAnalyze(); // Pede análise a cada atualização de status
+        askStockfishToAnalyze();
     }
 
     // --- Configuração do Tabuleiro ---
@@ -135,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-end').addEventListener('click', () => {
         if (history.length === 0) return;
-        game.load_pgn(pgnInput.value); // Recarrega o PGN para ir para o final
+        game.load_pgn(pgnInput.value);
         board.position(game.fen());
         currentMoveIndex = history.length - 1;
         updateStatus();
@@ -183,4 +197,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-

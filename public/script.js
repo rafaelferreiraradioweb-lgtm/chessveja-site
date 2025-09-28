@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const game = new Chess();
     const geminiResultDiv = document.getElementById('gemini-output');
     
-    // --- Configuração de Depuração do Stockfish ---
+    // Configuração do Stockfish
     console.log("Tentando criar o Worker do Stockfish a partir de 'stockfish.js'...");
     const stockfish = new Worker('stockfish.js');
     console.log("Objeto Worker do Stockfish criado:", stockfish);
@@ -16,18 +16,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let stockfishReady = false;
     const stockfishOutputEl = document.getElementById('stockfish-output');
 
+    // --- FUNÇÃO DE TRADUÇÃO (CORRIGIDA) ---
+    function convertUciSequenceToSan(fen, uciSequence) {
+        const tempGame = new Chess(fen);
+        const uciMoves = uciSequence.split(' ');
+        const sanMoves = [];
+
+        for (const uciMove of uciMoves) {
+            let movePrefix = "";
+            // Pega o número do lance a partir do FEN (MÉTODO CORRETO)
+            const fenParts = tempGame.fen().split(' ');
+            const moveNumber = parseInt(fenParts[fenParts.length - 1]);
+
+            if (tempGame.turn() === 'w') {
+                movePrefix = moveNumber + ". ";
+            } else if (sanMoves.length === 0) {
+                movePrefix = moveNumber + "... ";
+            }
+
+            const move = tempGame.move(uciMove, { sloppy: true });
+            if (move) {
+                sanMoves.push(movePrefix + move.san);
+            } else {
+                break;
+            }
+        }
+        return sanMoves.join(' ');
+    }
+
     stockfish.addEventListener('message', function (e) {
-        // Mostra TUDO que o Stockfish nos diz
-        console.log("Mensagem recebida do Stockfish:", e.data); 
-
         const message = e.data;
-
         if (message === 'uciok') {
-            console.log("UCI OK recebido! Stockfish está pronto.");
             stockfishReady = true;
             stockfish.postMessage('setoption name Threads value 4');
             stockfish.postMessage('setoption name Hash value 128');
-            updateStatus(); // Chama a primeira análise assim que estiver pronto
+            updateStatus();
         }
         
         if (message.startsWith('info depth') && message.includes('score cp') && message.includes('pv')) {
@@ -43,33 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Adiciona um listener para erros do Worker
     stockfish.addEventListener('error', function(e) {
         console.error("Ocorreu um erro DENTRO do Worker do Stockfish:", e);
     });
 
     console.log("Enviando comando 'uci' para o Stockfish...");
     stockfish.postMessage('uci');
-
-    // --- FUNÇÃO DE TRADUÇÃO ---
-    function convertUciSequenceToSan(fen, uciSequence) {
-        const tempGame = new Chess(fen);
-        const uciMoves = uciSequence.split(' ');
-        const sanMoves = [];
-        for (const uciMove of uciMoves) {
-            let movePrefix = "";
-            if (tempGame.turn() === 'w') {
-                movePrefix = tempGame.move_number() + ". ";
-            } else if (sanMoves.length === 0) {
-                movePrefix = tempGame.move_number() + "... ";
-            }
-            const move = tempGame.move(uciMove, { sloppy: true });
-            if (move) {
-                sanMoves.push(movePrefix + move.san);
-            } else { break; }
-        }
-        return sanMoves.join(' ');
-    }
 
     // --- Elementos do DOM ---
     const analyzeButton = document.getElementById('analyze-button');
@@ -79,11 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Funções do Tabuleiro ---
     function askStockfishToAnalyze() {
         if(stockfishReady){
-            console.log("Enviando posição para análise do Stockfish:", game.fen());
             stockfish.postMessage(`position fen ${game.fen()}`);
             stockfish.postMessage('go depth 18');
-        } else {
-            console.warn("Stockfish não está pronto, análise adiada.");
         }
     }
 
@@ -119,9 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     board = Chessboard('board', config);
-    // Não chama updateStatus aqui, espera o 'uciok'
     
-    // ... resto do código (botões e função do Gemini) ...
+    // --- Event Listeners dos Botões de Navegação ---
     let history = [];
     let currentMoveIndex = -1;
 
@@ -168,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatus();
     });
 
+    // --- Função Principal de Análise do Gemini ---
     analyzeButton.addEventListener('click', async () => {
         const pgn = pgnInput.value;
         if (!pgn.trim()) { alert("Por favor, cole um PGN válido."); return; }

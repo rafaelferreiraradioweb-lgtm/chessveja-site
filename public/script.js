@@ -3,12 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Pega os elementos do HTML com os quais vamos interagir
     const analyzeButton = document.getElementById('analyze-button');
-    document.addEventListener('DOMContentLoaded', () => {
-
-    // Pega os elementos do HTML com os quais vamos interagir
-    const analyzeButton = document.getElementById('analyze-button');
-    console.log(analyzeButton); // <-- ADICIONE ESTA LINHA DE TESTE
-    const pgnInput = document.getElementById('pgn-input');
+        const pgnInput = document.getElementById('pgn-input');
     // ...
     const pgnInput = document.getElementById('pgn-input');
     const analysisResultDiv = document.getElementById('analysis-result');
@@ -60,5 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
 
 

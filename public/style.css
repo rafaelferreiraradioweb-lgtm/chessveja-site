@@ -480,7 +480,8 @@ footer {
 .material-card img {
     max-width: 100%;
     height: 250px; /* Altura fixa para as capas */
-    object-fit: cover; /* Garante que a imagem cubra a área */
+    object-fit: contain; /* <-- MUDANÇA PRINCIPAL AQUI */
+    background-color: var(--bg-dark); /* Cor de fundo para as bordas */
     margin-bottom: 20px;
     border-radius: 5px;
 }
@@ -513,3 +514,4 @@ footer {
     font-weight: 700;
     font-size: 1rem;
 }
+

@@ -438,3 +438,48 @@ footer {
 #analyze-button {
     width: 100%;
 }
+/* ---- SEÇÃO DE BÔNUS ---- */
+#bonus-gratuito {
+    background-color: var(--bg-dark); /* Fundo um pouco diferente para destacar */
+}
+
+.bonus-container {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap; /* Para empilhar em telas de celular */
+    background-color: var(--bg-medium);
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 900px;
+    margin: 0 auto; /* Centraliza o container */
+}
+
+.bonus-imagem {
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+}
+
+.bonus-imagem img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.bonus-texto {
+    flex: 2; /* Faz o texto ocupar mais espaço */
+    min-width: 300px;
+}
+
+.bonus-texto h3 {
+    font-size: 2rem;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+}
+
+.bonus-texto p {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}

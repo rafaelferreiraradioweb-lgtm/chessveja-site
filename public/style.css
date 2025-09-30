@@ -438,48 +438,78 @@ footer {
 #analyze-button {
     width: 100%;
 }
-/* ---- SEÇÃO DE BÔNUS ---- */
-#bonus-gratuito {
-    background-color: var(--bg-dark); /* Fundo um pouco diferente para destacar */
+/* ---- SEÇÃO DE MATERIAIS E LOJA ---- */
+#materiais {
+    background-color: var(--bg-dark);
 }
 
-.bonus-container {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-    flex-wrap: wrap; /* Para empilhar em telas de celular */
-    background-color: var(--bg-medium);
-    padding: 40px;
-    border-radius: 10px;
-    max-width: 900px;
-    margin: 0 auto; /* Centraliza o container */
+.subsecao {
+    margin-bottom: 60px;
 }
 
-.bonus-imagem {
-    flex: 1;
-    min-width: 200px;
+.subsecao h3 {
     text-align: center;
-}
-
-.bonus-imagem img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.bonus-texto {
-    flex: 2; /* Faz o texto ocupar mais espaço */
-    min-width: 300px;
-}
-
-.bonus-texto h3 {
-    font-size: 2rem;
-    color: var(--accent-gold);
-    margin-bottom: 15px;
-}
-
-.bonus-texto p {
+    font-size: 2.2rem;
+    color: var(--text-light);
     margin-bottom: 30px;
-    font-size: 1.1rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.material-card {
+    background-color: var(--bg-medium);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 25px;
+    border: 1px solid var(--bg-light);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.material-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.material-card img {
+    max-width: 100%;
+    height: 250px; /* Altura fixa para as capas */
+    object-fit: cover; /* Garante que a imagem cubra a área */
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.material-card h4 {
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    margin-bottom: 10px;
+    flex-grow: 1; /* Empurra o botão para baixo */
+}
+
+.material-card p {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    min-height: 60px; /* Altura mínima para descrições */
+}
+
+.material-card.pago {
+    position: relative;
+}
+
+.preco-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 1rem;
 }

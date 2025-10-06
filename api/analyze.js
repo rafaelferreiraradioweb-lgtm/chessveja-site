@@ -1,11 +1,9 @@
 import OpenAI from 'openai';
 
-// Inicializa o cliente da OpenAI com a chave secreta que está na Vercel
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Função principal que a Vercel irá executar
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Apenas requisições POST são permitidas' });
@@ -17,7 +15,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'PGN não fornecido.' });
     }
 
-    // O prompt para a IA, definindo a personalidade do GM Chessveja
     const systemPrompt = `
       Aja como o "GM Chessveja", um técnico de xadrez experiente, didático e inspirador. Seu foco é estratégico.
       Sua análise de uma partida de xadrez em formato PGN deve ser detalhada e seguir esta estrutura:
@@ -29,9 +26,8 @@ export default async function handler(req, res) {
 
     const userPgn = `Por favor, analise a seguinte partida:\n${pgn}`;
 
-    // Faz a chamada para a API da OpenAI
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Um modelo excelente e de baixo custo
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPgn },
@@ -39,14 +35,13 @@ export default async function handler(req, res) {
     });
 
     const analysis = response.choices[0].message.content;
-
-    // Retorna a análise em formato JSON
     res.status(200).json({ analysis: analysis });
 
- } catch (error) {
-  console.error("ERRO DETALHADO DA OPENAI:", error); // Mantém o log detalhado no servidor
-  // Envia uma mensagem de erro mais específica para o usuário ver na tela
-  res.status(500).json({ 
-      message: `Ocorreu um erro de comunicação com a IA. Detalhe técnico: ${error.message}` 
-  });
+  } catch (error) {
+    console.error("ERRO DETALHADO DA OPENAI:", error); // Mantém o log detalhado no servidor
+    // Envia uma mensagem de erro mais específica para o usuário ver na tela
+    res.status(500).json({ 
+        message: `Ocorreu um erro de comunicação com a IA. Detalhe técnico: ${error.message}` 
+    });
+  }
 }

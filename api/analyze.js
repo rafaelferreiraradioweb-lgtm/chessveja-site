@@ -43,8 +43,10 @@ export default async function handler(req, res) {
     // Retorna a análise em formato JSON
     res.status(200).json({ analysis: analysis });
 
-  } catch (error) {
-    console.error("Erro na API da OpenAI:", error);
-    res.status(500).json({ message: 'Ocorreu um erro ao processar a análise com a OpenAI.' });
-  }
+ } catch (error) {
+  console.error("ERRO DETALHADO DA OPENAI:", error); // Mantém o log detalhado no servidor
+  // Envia uma mensagem de erro mais específica para o usuário ver na tela
+  res.status(500).json({ 
+      message: `Ocorreu um erro de comunicação com a IA. Detalhe técnico: ${error.message}` 
+  });
 }

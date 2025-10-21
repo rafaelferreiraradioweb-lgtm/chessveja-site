@@ -5,6 +5,7 @@ const openai = new OpenAI({
 });
 
 export default async function handler(req, res) {
+console.log("--- FUNÇÃO ANALYZE CHAMADA ---");
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Apenas requisições POST são permitidas' });
   }

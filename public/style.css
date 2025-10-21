@@ -551,3 +551,68 @@ footer {
     opacity: 1; /* Legenda aparece no hover */
 }
 
+/* ---- SEÇÃO DE VÍDEOS ---- */
+#videos {
+    background-color: var(--bg-medium); /* Cor de fundo diferente */
+    padding-top: 60px; /* Adiciona espaço acima */
+    padding-bottom: 60px; /* Adiciona espaço abaixo */
+}
+
+#videos h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: var(--accent-gold);
+}
+
+.video-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cria colunas responsivas */
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.video-card {
+    background-color: var(--bg-dark);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease; /* Adiciona transição suave */
+}
+
+.video-card:hover {
+    transform: translateY(-5px); /* Efeito de levantar no hover */
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* Proporção 16:9 para vídeos */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-card h4 {
+    padding: 15px;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    text-align: center;
+    flex-grow: 1; /* Garante que todos os cards tenham a mesma altura */
+    min-height: 50px; /* Altura mínima para títulos */
+    display: flex; /* Para alinhar verticalmente */
+    align-items: center; /* Alinha o título no centro vertical */
+    justify-content: center; /* Alinha o título no centro horizontal */
+}
+
+.youtube-channel-link {
+    text-align: center; /* Centraliza o botão */
+}

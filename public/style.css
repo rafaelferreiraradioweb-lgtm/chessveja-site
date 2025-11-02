@@ -213,47 +213,6 @@ nav a:hover {
     font-style: italic;
 }
 
-/* ---- SEÇÃO ANALISADOR ---- */
-#analisador p {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto 30px;
-}
-
-.analyzer-container {
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-#pgn-input {
-    width: 100%;
-    min-height: 150px;
-    background-color: var(--bg-medium);
-    border: 1px solid var(--bg-light);
-    border-radius: 5px;
-    padding: 15px;
-    color: var(--text-light);
-    font-family: monospace;
-    font-size: 1rem;
-}
-
-#analyze-button {
-    background-color: var(--accent-blue);
-    color: white;
-    padding: 15px 30px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-#analyze-button:hover {
-    background-color: #3a80d2;
-}
 
 /* ---- SEÇÃO GALERIA ---- */
 #galeria {
@@ -367,77 +326,7 @@ footer {
     border-radius: 5px;
 }
 
-/* ---- NOVO ANALISADOR ---- */
-.analyzer-layout {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-}
 
-.board-column {
-    flex: 1;
-    min-width: 300px;
-}
-
-.analysis-column {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.chessboard {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.board-controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-.board-controls button {
-    padding: 10px 15px;
-    background-color: var(--bg-light);
-    color: var(--text-light);
-    border: 1px solid var(--bg-medium);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.board-controls button:hover {
-    background-color: var(--accent-gold);
-    color: var(--bg-dark);
-}
-
-.game-info-box {
-    background-color: var(--bg-dark);
-    padding: 15px;
-    border-radius: 5px;
-    text-align: center;
-    border: 1px solid var(--bg-light);
-}
-
-.engine-box, .gemini-box {
-    background-color: var(--bg-dark);
-    padding: 20px;
-    border-radius: 5px;
-    border: 1px solid var(--bg-light);
-}
-
-.analysis-column h3, .engine-box h4, .gemini-box h4 {
-    color: var(--accent-gold);
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--bg-light);
-    padding-bottom: 10px;
-}
-
-/* Garante que o ID do botão de análise principal ainda funcione com o estilo antigo */
-#analyze-button {
-    width: 100%;
-}
 /* ---- SEÇÃO DE MATERIAIS E LOJA ---- */
 #materiais {
     background-color: var(--bg-dark);
@@ -616,3 +505,251 @@ footer {
 .youtube-channel-link {
     text-align: center; /* Centraliza o botão */
 }
+
+/* ---- NOVO ANALISADOR (Layout Corrigido - FINAL) ---- */
+#analisador {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: var(--bg-dark); /* Fundo da seção inteira */
+}
+
+.analyzer-layout {
+    display: flex;
+    /* Por padrão (mobile), empilha as colunas */
+    flex-direction: column; 
+    gap: 30px; /* Espaço entre tabuleiro e coluna de análise no mobile */
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.board-column {
+    /* Ocupa a largura total no mobile */
+    width: 100%; 
+    max-width: 480px; /* Limita o tamanho do tabuleiro */
+    margin: 0 auto; /* Centraliza o tabuleiro no mobile */
+}
+
+.analysis-column {
+    /* Ocupa a largura total no mobile */
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Regras para telas maiores (lado a lado) */
+@media (min-width: 900px) { /* Ponto de quebra ajustado */
+    .analyzer-layout {
+        /* Volta para o layout em linha (lado a lado) */
+        flex-direction: row; 
+        gap: 40px; /* Espaço entre as colunas */
+        align-items: flex-start; /* Alinha as colunas no topo */
+    }
+
+    .board-column {
+        /* Define uma largura fixa para o tabuleiro */
+        flex: 0 0 480px; /* Não cresce, não encolhe, base 480px */
+        width: 480px; 
+        margin: 0; /* Remove margem automática */
+    }
+
+    .analysis-column {
+        /* Ocupa todo o espaço restante */
+        flex: 1; 
+        width: auto; /* Largura automática baseada no flex */
+    }
+}
+
+/* --- Estilos internos das colunas (mantidos) --- */
+.chessboard {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.board-controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; 
+    gap: 10px;
+    /* margin-bottom: 20px; */ /* Removido para dar espaço ao novo botão */
+}
+.board-controls button {
+    padding: 10px 15px;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--bg-medium);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.9rem; 
+}
+.board-controls button:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.game-info-box {
+    background-color: var(--bg-dark);
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid var(--bg-light);
+    min-height: 50px; 
+}
+
+.engine-box, .gemini-box { 
+    background-color: var(--bg-dark);
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--bg-light);
+    min-height: 150px; 
+}
+
+.analysis-column h3, .engine-box h4, .gemini-box h4 {
+    color: var(--accent-gold);
+    margin-top: 0; 
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--bg-light);
+    padding-bottom: 10px;
+}
+
+#analyze-button {
+    width: 100%;
+    display: inline-block;
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+#analyze-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+#analyze-button:disabled {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#pgn-input { 
+    width: 100%;
+    min-height: 100px; 
+    background-color: var(--bg-medium);
+    border: 1px solid var(--bg-light);
+    border-radius: 5px;
+    padding: 15px;
+    color: var(--text-light);
+    font-family: monospace;
+    font-size: 1rem;
+    resize: vertical; 
+}
+
+/* ---- INÍCIO DOS NOVOS ESTILOS (Dropdowns, CTA, Flip Button) ---- */
+
+/* 1. Estilos das Opções (Dropdowns) */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Uma coluna no mobile */
+    gap: 15px;
+    margin-bottom: 20px; /* Espaço antes da caixa de PGN */
+}
+
+.options-grid > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.options-grid label {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.options-grid select {
+    padding: 10px;
+    background-color: var(--bg-medium);
+    border: 1px solid var(--bg-light);
+    color: var(--text-light);
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+/* Em telas maiores, mostra em 3 colunas */
+@media (min-width: 900px) {
+    .options-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 2. Estilos do CTA (Isca do WhatsApp) */
+.cta-analisador {
+    background-color: var(--bg-medium);
+    color: var(--text-light);
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--bg-light);
+    margin-top: 20px; /* <- MUDANÇA AQUI: Era margin-bottom */
+}
+
+.cta-analisador h3 {
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.cta-analisador p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.cta-button-whatsapp {
+    display: inline-block;
+    background-color: #25D366; /* Cor do WhatsApp */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button-whatsapp:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* 3. Estilo do Botão Inverter Tabuleiro */
+.board-controls-secondary {
+    text-align: center;
+    margin-top: 15px; /* Espaço abaixo das setas */
+    margin-bottom: 20px; /* Espaço antes da caixa de status */
+}
+
+.board-controls-secondary button {
+    padding: 10px 20px;
+    background-color: var(--bg-light); /* Mesmo estilo dos outros botões de controle */
+    color: var(--text-light);
+    border: 1px solid var(--bg-medium);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem; 
+}
+
+.board-controls-secondary button:hover {
+    background-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+/* ---- FIM DOS NOVOS ESTILOS ---- */

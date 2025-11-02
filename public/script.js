@@ -1,190 +1,194 @@
-// Aguarda o carregamento do DOM para evitar erros
-document.addEventListener('DOMContentLoaded', () => {
+/* ======================================================================== */
+/* CÓDIGO DO ANALISADOR DE PARTIDAS (COMPLETO E CORRIGIDO)                 */
+/* ======================================================================== */
 
-    console.log("DOM carregado. Iniciando script principal...");
+// Variáveis Globais
+var board = null;
+var game = new Chess();
+var pgnEl = $('#pgn-input');
+var statusEl = $('#status');
+var stockfish = new Worker('stockfish.js');
+var currentPgn = null;
+var currentMoves = [];
+var currentMove = -1;
 
-    // --- Variáveis Globais ---
-    let board = null;
-    const game = new Chess();
-    const geminiResultDiv = document.getElementById('gemini-output');
-    
-    // Configuração do Stockfish
-    console.log("Tentando criar o Worker do Stockfish a partir de 'stockfish.js'...");
-    const stockfish = new Worker('stockfish.js');
-    console.log("Objeto Worker do Stockfish criado:", stockfish);
+// --- Funções do Tabuleiro (Stockfish, Movimento, etc.) ---
 
-    let stockfishReady = false;
-    const stockfishOutputEl = document.getElementById('stockfish-output');
+function onDragStart(source, piece, position, orientation) {
+    if (game.isGameOver()) return false;
+    if (piece.search(/^b/) !== -1) return false;
+}
 
-    // --- FUNÇÃO DE TRADUÇÃO (CORRIGIDA) ---
-    function convertUciSequenceToSan(fen, uciSequence) {
-        const tempGame = new Chess(fen);
-        const uciMoves = uciSequence.split(' ');
-        const sanMoves = [];
-
-        for (const uciMove of uciMoves) {
-            let movePrefix = "";
-            // Pega o número do lance a partir do FEN (MÉTODO CORRETO)
-            const fenParts = tempGame.fen().split(' ');
-            const moveNumber = parseInt(fenParts[fenParts.length - 1]);
-
-            if (tempGame.turn() === 'w') {
-                movePrefix = moveNumber + ". ";
-            } else if (sanMoves.length === 0) {
-                movePrefix = moveNumber + "... ";
-            }
-
-            const move = tempGame.move(uciMove, { sloppy: true });
-            if (move) {
-                sanMoves.push(movePrefix + move.san);
-            } else {
-                break;
-            }
-        }
-        return sanMoves.join(' ');
-    }
-
-    stockfish.addEventListener('message', function (e) {
-        const message = e.data;
-        if (message === 'uciok') {
-            stockfishReady = true;
-            stockfish.postMessage('setoption name Threads value 4');
-            stockfish.postMessage('setoption name Hash value 128');
-            updateStatus();
-        }
-        
-        if (message.startsWith('info depth') && message.includes('score cp') && message.includes('pv')) {
-             const parts = message.split(' ');
-             const scoreIndex = parts.indexOf('score') + 2;
-             const pvIndex = parts.indexOf('pv');
-             
-             const score = parts[scoreIndex] / 100.0;
-             const uciSequence = parts.slice(pvIndex + 1).join(' ');
-             const sanSequence = convertUciSequenceToSan(game.fen(), uciSequence);
-             
-             stockfishOutputEl.innerHTML = `Avaliação: <strong>${score.toFixed(2)}</strong><br>Melhor Sequência: ${sanSequence}`;
-        }
+function onDrop(source, target) {
+    var move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q'
     });
-    
-    stockfish.addEventListener('error', function(e) {
-        console.error("Ocorreu um erro DENTRO do Worker do Stockfish:", e);
-    });
+    if (move === null) return 'snapback';
+    updateStatus();
+    currentMoves = game.history({ verbose: true });
+    currentMove = currentMoves.length - 1;
+    triggerStockfish();
+}
 
-    console.log("Enviando comando 'uci' para o Stockfish...");
-    stockfish.postMessage('uci');
+function onSnapEnd() {
+    board.position(game.fen());
+}
 
-    // --- Elementos do DOM ---
-    const analyzeButton = document.getElementById('analyze-button');
-    const pgnInput = document.getElementById('pgn-input');
-    const statusEl = document.getElementById('status');
-
-    // --- Funções do Tabuleiro ---
-    function askStockfishToAnalyze() {
-        if(stockfishReady){
-            stockfish.postMessage(`position fen ${game.fen()}`);
-            stockfish.postMessage('go depth 18');
-        }
+function updateStatus() {
+    var status = '';
+    var moveColor = 'Brancas';
+    if (game.turn() === 'b') {
+        moveColor = 'Pretas';
     }
 
-    function updateStatus() {
-        let status = '';
-        const moveColor = game.turn() === 'b' ? 'Pretas' : 'Brancas';
-        if (game.in_checkmate()) {
-            status = `Fim de jogo, ${moveColor} estão em xeque-mate.`;
-        } else if (game.in_draw()) {
-            status = 'Fim de jogo, empate.';
-        } else {
-            status = `É a vez das ${moveColor}.`;
-            if (game.in_check()) {
-                status += `, ${moveColor} estão em xeque.`;
-            }
+    if (game.in_checkmate()) {
+        status = 'Xeque-mate! ' + (moveColor === 'Brancas' ? 'Pretas' : 'Brancas') + ' vencem.';
+    } else if (game.in_draw()) {
+        status = 'Empate!';
+    } else {
+        status = 'Vez das ' + moveColor;
+        if (game.in_check()) {
+            status += ', ' + moveColor + ' estão em xeque.';
         }
-        statusEl.textContent = status;
-        askStockfishToAnalyze();
     }
+    statusEl.html(status);
+}
 
-    // --- Configuração do Tabuleiro ---
-    const config = {
-        draggable: true,
-        position: 'start',
-        pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
-        onDrop: function (source, target) {
-            const move = game.move({ from: source, to: target, promotion: 'q' });
-            if (move === null) return 'snapback';
-            updateStatus();
-        },
-        onSnapEnd: function() {
-            board.position(game.fen());
-        }
-    };
-    board = Chessboard('board', config);
-    
-    // --- Event Listeners dos Botões de Navegação ---
-    let history = [];
-    let currentMoveIndex = -1;
+function triggerStockfish() {
+    $('#stockfish-output').html('Pensando...');
+    stockfish.postMessage('position fen ' + game.fen());
+    stockfish.postMessage('go depth 15');
+}
 
-    function loadPgnIntoHistory(pgn) {
-        const tempGame = new Chess();
-        if (!tempGame.load_pgn(pgn)) return false;
-        history = tempGame.history({ verbose: true });
-        currentMoveIndex = history.length - 1;
-        game.load_pgn(pgn);
-        board.position(game.fen());
-        updateStatus();
-        return true;
+stockfish.onmessage = function(event) {
+    var message = event.data;
+    if (message.startsWith('bestmove')) {
+        var bestMove = message.split(' ')[1];
+        $('#stockfish-output').html('Melhor lance: ' + bestMove);
     }
+};
 
-    document.getElementById('btn-start').addEventListener('click', () => {
-        if (history.length === 0) return;
-        game.reset();
-        board.position(game.fen());
-        currentMoveIndex = -1;
-        updateStatus();
-    });
+// --- Botões de Navegação (Setas, Início, Fim) ---
 
-    document.getElementById('btn-prev').addEventListener('click', () => {
-        if (currentMoveIndex < 0) return;
+$('#btn-start').on('click', function() {
+    game.reset();
+    currentMove = -1;
+    board.position(game.fen());
+    updateStatus();
+    $('#stockfish-output').html('Aguardando posição...');
+});
+
+$('#btn-prev').on('click', function() {
+    if (currentMove >= 0) {
+        currentMove--;
         game.undo();
         board.position(game.fen());
-        currentMoveIndex--;
         updateStatus();
-    });
+        triggerStockfish();
+    }
+});
 
-    document.getElementById('btn-next').addEventListener('click', () => {
-        if (currentMoveIndex >= history.length - 1) return;
-        currentMoveIndex++;
-        game.move(history[currentMoveIndex]);
+$('#btn-next').on('click', function() {
+    if (currentMove < currentMoves.length - 1) {
+        currentMove++;
+        game.move(currentMoves[currentMove].san);
         board.position(game.fen());
         updateStatus();
-    });
+        triggerStockfish();
+    }
+});
 
-    document.getElementById('btn-end').addEventListener('click', () => {
-        if (history.length === 0) return;
-        game.load_pgn(pgnInput.value);
+$('#btn-end').on('click', function() {
+    if (currentPgn) {
+        game.load_pgn(currentPgn);
+        currentMove = currentMoves.length - 1;
         board.position(game.fen());
-        currentMoveIndex = history.length - 1;
         updateStatus();
-    });
+        triggerStockfish();
+    }
+});
 
-    // --- Função Principal de Análise do Gemini ---
-    analyzeButton.addEventListener('click', async () => {
-        const pgn = pgnInput.value;
-        if (!pgn.trim()) { alert("Por favor, cole um PGN válido."); return; }
-        if (!loadPgnIntoHistory(pgn)) { alert("PGN inválido. Por favor, verifique o formato."); return; }
-        geminiResultDiv.innerHTML = '<p>Analisando com o GM Chessveja...</p>';
-        analyzeButton.disabled = true;
-        analyzeButton.textContent = 'Analisando...';
-        try {
-            const response = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pgn: pgn }), });
-            if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.message || 'Houve um problema com a análise.'); }
-            const data = await response.json();
-            const formattedResult = marked.parse(data.analysis);
-            geminiResultDiv.innerHTML = formattedResult;
-        } catch (error) {
-            geminiResultDiv.innerHTML = `<p style="color: #ffdddd;">${error.message}</p>`;
-        } finally {
-            analyzeButton.disabled = false;
-            analyzeButton.textContent = 'Carregar PGN e Analisar';
+$('#btn-flip').on('click', function() {
+    board.flip();
+});
+
+// --- Botão Principal: ANALISAR (CÉREBRO DA IA) ---
+
+$('#analyze-button').on('click', async function() {
+    var pgn = pgnEl.val();
+    
+    // 1. Pega os valores das novas opções
+    var cor = $('#analysis-color').val();
+    var nivel = $('#analysis-level').val();
+    var tom = $('#analysis-tone').val();
+    
+    if (!game.load_pgn(pgn)) {
+        alert('PGN inválido. Por favor, cole um PGN completo.');
+        return;
+    }
+
+    // Atualiza o tabuleiro e o Stockfish
+    currentPgn = pgn;
+    currentMoves = game.history({ verbose: true });
+    currentMove = currentMoves.length - 1;
+    board.position(game.fen());
+    updateStatus();
+    triggerStockfish(); 
+    
+    // 2. Mostra o status de "Carregando"
+    const outputDiv = $('#gemini-output');
+    const analyzeButton = $(this);
+    outputDiv.html('Aguardando análise da IA (isso pode levar alguns segundos)...');
+    analyzeButton.prop('disabled', true).text('Analisando...');
+
+    try {
+        // 3. (A PARTE QUE FALTAVA) Chama a nossa API
+        const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                pgn: pgn,
+                cor: cor,
+                nivel: nivel,
+                tom: tom
+            }),
+        });
+
+        if (!response.ok) {
+            // Se a API der erro (ex: erro 500 ou 404)
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Erro desconhecido na API');
         }
-    });
+
+        const data = await response.json();
+        
+        // 4. Converte a resposta (Markdown) para HTML e exibe
+        // (Usamos a biblioteca 'marked' que já está no seu index.html)
+        outputDiv.html(marked.parse(data.analysis)); 
+
+    } catch (error) {
+        console.error('Erro ao chamar a API:', error);
+        outputDiv.html(`<p style="color: red;">Houve um erro ao buscar a análise: ${error.message}</p>`);
+    } finally {
+        // 5. Reativa o botão
+        analyzeButton.prop('disabled', false).text('Carregar PGN e Analisar');
+    }
+});
+
+
+// --- Configuração Inicial do Tabuleiro ---
+document.addEventListener('DOMContentLoaded', function() {
+    var config = {
+        draggable: true,
+        position: 'start',
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd
+    };
+    board = Chessboard('board', config);
+    updateStatus();
 });

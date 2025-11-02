@@ -1,190 +1,169 @@
-// Aguarda o carregamento do DOM para evitar erros
-document.addEventListener('DOMContentLoaded', () => {
+/* ======================================================================== */
+/* CÓDIGO DO ANALISADOR DE PARTIDAS                                       */
+/* ======================================================================== */
 
-    console.log("DOM carregado. Iniciando script principal...");
+var board = null;
+var game = new Chess();
+var pgnEl = $('#pgn-input');
+var statusEl = $('#status');
+var stockfish = new Worker('stockfish.js');
+var currentPgn = null;
+var currentMoves = [];
+var currentMove = -1;
 
-    // --- Variáveis Globais ---
-    let board = null;
-    const game = new Chess();
-    const geminiResultDiv = document.getElementById('gemini-output');
-    
-    // Configuração do Stockfish
-    console.log("Tentando criar o Worker do Stockfish a partir de 'stockfish.js'...");
-    const stockfish = new Worker('stockfish.js');
-    console.log("Objeto Worker do Stockfish criado:", stockfish);
+function onDragStart(source, piece, position, orientation) {
+    // só permite mover as peças brancas
+    if (game.isGameOver()) return false;
+    if (piece.search(/^b/) !== -1) return false;
+}
 
-    let stockfishReady = false;
-    const stockfishOutputEl = document.getElementById('stockfish-output');
+function onDrop(source, target) {
+    // tenta fazer o movimento
+    var move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q' // promove para dama automaticamente
+    });
 
-    // --- FUNÇÃO DE TRADUÇÃO (CORRIGIDA) ---
-    function convertUciSequenceToSan(fen, uciSequence) {
-        const tempGame = new Chess(fen);
-        const uciMoves = uciSequence.split(' ');
-        const sanMoves = [];
+    // se for um movimento ilegal, volta a peça
+    if (move === null) return 'snapback';
 
-        for (const uciMove of uciMoves) {
-            let movePrefix = "";
-            // Pega o número do lance a partir do FEN (MÉTODO CORRETO)
-            const fenParts = tempGame.fen().split(' ');
-            const moveNumber = parseInt(fenParts[fenParts.length - 1]);
+    // atualiza o status do jogo
+    updateStatus();
+    currentMoves = game.history({ verbose: true });
+    currentMove = currentMoves.length - 1;
+    // chama o stockfish para analisar
+    triggerStockfish();
+}
 
-            if (tempGame.turn() === 'w') {
-                movePrefix = moveNumber + ". ";
-            } else if (sanMoves.length === 0) {
-                movePrefix = moveNumber + "... ";
-            }
+// atualiza o tabuleiro depois que a peça é solta
+function onSnapEnd() {
+    board.position(game.fen());
+}
 
-            const move = tempGame.move(uciMove, { sloppy: true });
-            if (move) {
-                sanMoves.push(movePrefix + move.san);
-            } else {
-                break;
-            }
-        }
-        return sanMoves.join(' ');
+function updateStatus() {
+    var status = '';
+    var moveColor = 'Brancas';
+    if (game.turn() === 'b') {
+        moveColor = 'Pretas';
     }
 
-    stockfish.addEventListener('message', function (e) {
-        const message = e.data;
-        if (message === 'uciok') {
-            stockfishReady = true;
-            stockfish.postMessage('setoption name Threads value 4');
-            stockfish.postMessage('setoption name Hash value 128');
-            updateStatus();
+    if (game.in_checkmate()) {
+        status = 'Xeque-mate! ' + (moveColor === 'Brancas' ? 'Pretas' : 'Brancas') + ' vencem.';
+    } else if (game.in_draw()) {
+        status = 'Empate!';
+    } else {
+        status = 'Vez das ' + moveColor;
+        if (game.in_check()) {
+            status += ', ' + moveColor + ' estão em xeque.';
         }
+    }
+    statusEl.html(status);
+}
+
+// Função para chamar o Stockfish
+function triggerStockfish() {
+    $('#stockfish-output').html('Pensando...');
+    stockfish.postMessage('position fen ' + game.fen());
+    stockfish.postMessage('go depth 15'); // Aumentei a profundidade para uma análise melhor
+}
+
+// Recebe a resposta do Stockfish
+stockfish.onmessage = function(event) {
+    var message = event.data;
+    if (message.startsWith('bestmove')) {
+        var bestMove = message.split(' ')[1];
+        $('#stockfish-output').html('Melhor lance: ' + bestMove);
+    }
+    
+    // Você pode adicionar mais lógica aqui para exibir a avaliação (score)
+    if (message.startsWith('info') && message.includes('score')) {
+         // Código para extrair e mostrar a pontuação (opcional)
+    }
+};
+
+// Botão Carregar PGN
+$('#analyze-button').on('click', function() {
+    var pgn = pgnEl.val();
+    
+    // *** AQUI VAMOS ADICIONAR A LÓGICA DAS NOVAS OPÇÕES (no próximo passo) ***
+    var cor = $('#analysis-color').val();
+    var nivel = $('#analysis-level').val();
+    var tom = $('#analysis-tone').val();
+    
+    console.log("Opções selecionadas:", cor, nivel, tom); // Apenas para teste por enquanto
+    
+    if (game.load_pgn(pgn)) {
+        currentPgn = pgn; // Salva o PGN
+        currentMoves = game.history({ verbose: true });
+        currentMove = currentMoves.length - 1;
+        board.position(game.fen());
+        updateStatus();
+        triggerStockfish(); // Analisa a posição final
         
-        if (message.startsWith('info depth') && message.includes('score cp') && message.includes('pv')) {
-             const parts = message.split(' ');
-             const scoreIndex = parts.indexOf('score') + 2;
-             const pvIndex = parts.indexOf('pv');
-             
-             const score = parts[scoreIndex] / 100.0;
-             const uciSequence = parts.slice(pvIndex + 1).join(' ');
-             const sanSequence = convertUciSequenceToSan(game.fen(), uciSequence);
-             
-             stockfishOutputEl.innerHTML = `Avaliação: <strong>${score.toFixed(2)}</strong><br>Melhor Sequência: ${sanSequence}`;
-        }
-    });
-    
-    stockfish.addEventListener('error', function(e) {
-        console.error("Ocorreu um erro DENTRO do Worker do Stockfish:", e);
-    });
-
-    console.log("Enviando comando 'uci' para o Stockfish...");
-    stockfish.postMessage('uci');
-
-    // --- Elementos do DOM ---
-    const analyzeButton = document.getElementById('analyze-button');
-    const pgnInput = document.getElementById('pgn-input');
-    const statusEl = document.getElementById('status');
-
-    // --- Funções do Tabuleiro ---
-    function askStockfishToAnalyze() {
-        if(stockfishReady){
-            stockfish.postMessage(`position fen ${game.fen()}`);
-            stockfish.postMessage('go depth 18');
-        }
+        // Limpa a análise antiga da IA
+        $('#gemini-output').html('Aguardando análise...');
+        
+    } else {
+        alert('PGN inválido.');
     }
+});
 
-    function updateStatus() {
-        let status = '';
-        const moveColor = game.turn() === 'b' ? 'Pretas' : 'Brancas';
-        if (game.in_checkmate()) {
-            status = `Fim de jogo, ${moveColor} estão em xeque-mate.`;
-        } else if (game.in_draw()) {
-            status = 'Fim de jogo, empate.';
-        } else {
-            status = `É a vez das ${moveColor}.`;
-            if (game.in_check()) {
-                status += `, ${moveColor} estão em xeque.`;
-            }
-        }
-        statusEl.textContent = status;
-        askStockfishToAnalyze();
-    }
+// Botões de Navegação
+$('#btn-start').on('click', function() {
+    game.reset();
+    currentMove = -1;
+    board.position(game.fen());
+    updateStatus();
+    $('#stockfish-output').html('Aguardando posição...');
+});
 
-    // --- Configuração do Tabuleiro ---
-    const config = {
-        draggable: true,
-        position: 'start',
-        pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
-        onDrop: function (source, target) {
-            const move = game.move({ from: source, to: target, promotion: 'q' });
-            if (move === null) return 'snapback';
-            updateStatus();
-        },
-        onSnapEnd: function() {
-            board.position(game.fen());
-        }
-    };
-    board = Chessboard('board', config);
-    
-    // --- Event Listeners dos Botões de Navegação ---
-    let history = [];
-    let currentMoveIndex = -1;
-
-    function loadPgnIntoHistory(pgn) {
-        const tempGame = new Chess();
-        if (!tempGame.load_pgn(pgn)) return false;
-        history = tempGame.history({ verbose: true });
-        currentMoveIndex = history.length - 1;
-        game.load_pgn(pgn);
-        board.position(game.fen());
-        updateStatus();
-        return true;
-    }
-
-    document.getElementById('btn-start').addEventListener('click', () => {
-        if (history.length === 0) return;
-        game.reset();
-        board.position(game.fen());
-        currentMoveIndex = -1;
-        updateStatus();
-    });
-
-    document.getElementById('btn-prev').addEventListener('click', () => {
-        if (currentMoveIndex < 0) return;
+$('#btn-prev').on('click', function() {
+    if (currentMove >= 0) {
+        currentMove--;
         game.undo();
         board.position(game.fen());
-        currentMoveIndex--;
         updateStatus();
-    });
+        triggerStockfish(); // Re-analisa a posição anterior
+    }
+});
 
-    document.getElementById('btn-next').addEventListener('click', () => {
-        if (currentMoveIndex >= history.length - 1) return;
-        currentMoveIndex++;
-        game.move(history[currentMoveIndex]);
+$('#btn-next').on('click', function() {
+    if (currentMove < currentMoves.length - 1) {
+        currentMove++;
+        game.move(currentMoves[currentMove].san);
         board.position(game.fen());
         updateStatus();
-    });
+        triggerStockfish(); // Analisa a próxima posição
+    }
+});
 
-    document.getElementById('btn-end').addEventListener('click', () => {
-        if (history.length === 0) return;
-        game.load_pgn(pgnInput.value);
+$('#btn-end').on('click', function() {
+    if (currentPgn) {
+        game.load_pgn(currentPgn);
+        currentMove = currentMoves.length - 1;
         board.position(game.fen());
-        currentMoveIndex = history.length - 1;
         updateStatus();
-    });
+        triggerStockfish();
+    }
+});
 
-    // --- Função Principal de Análise do Gemini ---
-    analyzeButton.addEventListener('click', async () => {
-        const pgn = pgnInput.value;
-        if (!pgn.trim()) { alert("Por favor, cole um PGN válido."); return; }
-        if (!loadPgnIntoHistory(pgn)) { alert("PGN inválido. Por favor, verifique o formato."); return; }
-        geminiResultDiv.innerHTML = '<p>Analisando com o GM Chessveja...</p>';
-        analyzeButton.disabled = true;
-        analyzeButton.textContent = 'Analisando...';
-        try {
-            const response = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pgn: pgn }), });
-            if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.message || 'Houve um problema com a análise.'); }
-            const data = await response.json();
-            const formattedResult = marked.parse(data.analysis);
-            geminiResultDiv.innerHTML = formattedResult;
-        } catch (error) {
-            geminiResultDiv.innerHTML = `<p style="color: #ffdddd;">${error.message}</p>`;
-        } finally {
-            analyzeButton.disabled = false;
-            analyzeButton.textContent = 'Carregar PGN e Analisar';
-        }
-    });
+// **** NOVO BOTÃO INVERTER (como você pediu) ****
+$('#btn-flip').on('click', function() {
+    board.flip();
+});
+
+
+// Configuração inicial do Chessboard
+// Adicionado um 'DOMContentLoaded' para garantir que o HTML carregou
+document.addEventListener('DOMContentLoaded', function() {
+    var config = {
+        draggable: true,
+        position: 'start',
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd
+    };
+    board = Chessboard('board', config);
+    updateStatus();
 });

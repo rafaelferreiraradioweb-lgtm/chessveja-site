@@ -698,7 +698,7 @@ footer {
     border-radius: 8px;
     text-align: center;
     border: 1px solid var(--bg-light);
-    margin-bottom: 30px; /* Separa do título da análise */
+    margin-top: 20px; /* <- MUDANÇA AQUI: Era margin-bottom */
 }
 
 .cta-analisador h3 {

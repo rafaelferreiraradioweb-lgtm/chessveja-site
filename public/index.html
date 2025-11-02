@@ -32,11 +32,12 @@
                 <li><a href="#professores">Professores</a></li>
                 <li><a href="#aulas">Aulas</a></li>
                 <li><a href="#analisador">Analisador AI</a></li>
-                </ul>
+            </ul>
         </nav>
     </header>
 
     <main>
+    
         <section id="inicio">
             <div class="hero-content">
                 <h1>Eleve seu Jogo, Compreenda a Estratégia.</h1>
@@ -45,9 +46,77 @@
             </div>
         </section>
 
+        <section id="analisador">
+            <h2>Analisador de Partidas</h2>
+            <div class="analyzer-layout">
+                <div class="board-column">
+                    <div id="board" class="chessboard"></div>
+                    <div class="board-controls">
+                        <button id="btn-start">Início</button>
+                        <button id="btn-prev">◀</button>
+                        <button id="btn-next">▶</button>
+                        <button id="btn-end">Fim</button>
+                    </div>
+                    <div class="board-controls-secondary"> 
+                        <button id="btn-flip">Inverter Tabuleiro</button>
+                    </div>
+                    <div id="game-info" class="game-info-box">
+                        <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
+                    </div>
+                    <div class="cta-analisador">
+                        <h3>Gostou da Análise?</h3>
+                        <p>Essa ferramenta gratuita mostra o 'quê' deu errado. Nas minhas <strong>aulas particulares</strong>, eu mostro o 'porquê'.</p>
+                        <p>Aprenda a parar de cometer esses erros e eleve seu jogo para o próximo nível.</p>
+                        <a href="https://api.whatsapp.com/send?phone=5582996535079&text=Oi!%20Vim%20pelo%20Analisador%20de%20PGN%20e%20quero%20saber%20mais%20sobre%20as%20aulas" target="_blank" class="cta-button-whatsapp">
+                            Agende sua Aula Experimental!
+                        </a>
+                    </div>
+                </div>
+                <div class="analysis-column">
+                    <h3>Controles da Partida</h3>
+                    <div class="options-grid">
+                        <div>
+                            <label for="analysis-color">Analisar do ponto de vista:</label>
+                            <select id="analysis-color" name="analysis-color">
+                                <option value="brancas" selected>Brancas</option>
+                                <option value="pretas">Pretas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="analysis-level">Meu nível (Rating Online):</label>
+                            <select id="analysis-level" name="analysis-level">
+                                <option value="iniciante" selected>Iniciante (Até 1500)</option>
+                                <option value="intermediario">Intermediário (1501-2000)</option>
+                                <option value="avancado">Avançado (Acima de 2000)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="analysis-tone">Tom da Análise:</label>
+                            <select id="analysis-tone" name="analysis-tone">
+                                <option value="tecnico" selected>Técnico</option>
+                                <option value="motivacional">Motivacional</option>
+                                <option value="humorado">Humorado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
+                    <button id="analyze-button">Carregar PGN e Analisar</button>
+                    <div id="engine-analysis" class="engine-box">
+                        <h4>Análise do Stockfish</h4>
+                        <div id="stockfish-output">Aguardando posição...</div>
+                    </div>
+                    <div id="analysis-result" class="gemini-box">
+                        <h4>Análise do GM Chessveja (IA)</h4>
+                        <div id="gemini-output">Aguardando análise...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="videos">
-            <h2>Aula em Destaque</h2>
-            <div class="video-grid-container" style="max-width: 800px; margin: 0 auto;"> <div class="video-card">
+            <h2>Vídeo em Destaque</h2>
+            <div class="video-grid-container" style="max-width: 800px; margin: 0 auto;">
+                <div class="video-card">
                     <div class="video-wrapper">
                         <iframe src="https://www.youtube.com/embed/gadzp7dLrFQ" title="A Armadilha do Gambito da Dama Aceito: Lasker Trap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
@@ -58,19 +127,27 @@
                 <a href="https://www.youtube.com/@chessveja" target="_blank" class="cta-button">Visite Nosso Canal no YouTube</a>
             </div>
         </section>
-
-        <section id="professores">
-            <h2>Conheça a Equipe Chessveja</h2>
-            <div class="teachers-container">
-                <div class="teacher-card">
-                    <img src="https://i.imgur.com/eTdI5X5.jpeg" alt="Foto do Professor Rafael">
-                    <h3>Rafael</h3>
-                    <p>Com vasta experiência como professor em instituições e projetos sociais, Rafael possui profundo conhecimento para ensinar o jogo de forma eficaz. Sua abordagem é centrada no aluno, desenvolvendo raciocínio lógico e concentração. Certificado pela FEXEAL, seu compromisso é oferecer aulas dinâmicas e motivadoras.</p>
+        
+        <section id="lichess-widgets">
+            <h2>Pratique e Assista</h2>
+            <div class="lichess-container">
+                <div class="widget-card">
+                    <h3>Puzzle Diário do Lichess</h3>
+                    <p>Teste sua tática com o puzzle do dia!</p>
+                    <div class="iframe-container">
+                        <div class="widget-card">
+            <h3>Puzzle Diário do Lichess</h3>
+            <p>Teste sua tática com o desafio do dia diretamente no Lichess!</p>
+            <a href="https://lichess.org/training/daily" target="_blank" class="cta-button">Resolver Puzzle Agora</a>
+        </div>
+                    </div>
                 </div>
-                <div class="teacher-card">
-                    <img src="https://imgur.com/dCdVx65.jpg" alt="Foto da Professora Graziela">
-                    <h3>Graziela Lopes</h3>
-                    <p>Educadora com Pós-Graduação no ensino da Matemática e certificada como Instrutora de Xadrez pela FEXEAL. Graziela possui ampla experiência com aulas particulares desde 2002. Sua paixão pelo ensino e sua dedicação fazem dela uma professora comprometida com o desenvolvimento integral de seus alunos.</p>
+                <div class="widget-card">
+                    <h3>Lichess TV Ao Vivo</h3>
+                    <p>Assista às partidas dos melhores jogadores.</p>
+                    <div class="iframe-container">
+                        <iframe src="https://lichess.org/tv/frame?theme=brown&bg=dark" frameborder="0"></iframe>
+                    </div>
                 </div>
             </div>
         </section>
@@ -110,102 +187,23 @@
             <p class="availability">Aulas disponíveis nos formatos online e presencial.</p>
         </section>
 
-        <section id="analisador">
-    <h2>Analisador de Partidas</h2>
-    <div class="analyzer-layout">
-        <div class="board-column">
-            <div id="board" class="chessboard"></div>
-            <div class="board-controls">
-                <button id="btn-start">Início</button>
-                <button id="btn-prev">◀</button>
-                <button id="btn-next">▶</button>
-                <button id="btn-end">Fim</button>
-            </div>
-            <div class="board-controls-secondary"> 
-                <button id="btn-flip">Inverter Tabuleiro</button>
-            </div>
-            
-            <div id="game-info" class="game-info-box">
-                <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
-            </div>
-
-            <div class="cta-analisador">
-                <h3>Gostou da Análise?</h3>
-                <p>Essa ferramenta gratuita mostra o 'quê' deu errado. Nas minhas <strong>aulas particulares</strong>, eu mostro o 'porquê'.</p>
-                <p>Aprenda a parar de cometer esses erros e eleve seu jogo para o próximo nível.</p>
-                <a href="https://api.whatsapp.com/send?phone=5582996535079&text=Oi!%20Vim%20pelo%20Analisador%20de%20PGN%20e%20quero%20saber%20mais%20sobre%20as%20aulas" target="_blank" class="cta-button-whatsapp">
-                    Agende sua Aula Experimental!
-                </a>
-            </div>
-            </div>
-        <div class="analysis-column">
-            <h3>Controles da Partida</h3>
-
-            <div class="options-grid">
-                <div>
-                    <label for="analysis-color">Analisar do ponto de vista:</label>
-                    <select id="analysis-color" name="analysis-color">
-                        <option value="brancas" selected>Brancas</option>
-                        <option value="pretas">Pretas</option>
-                    </select>
+        <section id="professores">
+            <h2>Conheça a Equipe Chessveja</h2>
+            <div class="teachers-container">
+                <div class="teacher-card">
+                    <img src="https://i.imgur.com/eTdI5X5.jpeg" alt="Foto do Professor Rafael">
+                    <h3>Rafael</h3>
+                    <p>Com vasta experiência como professor em instituições e projetos sociais, Rafael possui profundo conhecimento para ensinar o jogo de forma eficaz. Sua abordagem é centrada no aluno, desenvolvendo raciocínio lógico e concentração. Certificado pela FEXEAL, seu compromisso é oferecer aulas dinâmicas e motivadoras.</p>
                 </div>
-                <div>
-                    <label for="analysis-level">Meu nível (Rating Online):</label>
-                    <select id="analysis-level" name="analysis-level">
-                        <option value="iniciante" selected>Iniciante (Até 1500)</option>
-                        <option value="intermediario">Intermediário (1501-2000)</option>
-                        <option value="avancado">Avançado (Acima de 2000)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="analysis-tone">Tom da Análise:</label>
-                    <select id="analysis-tone" name="analysis-tone">
-                        <option value="tecnico" selected>Técnico</option>
-                        <option value="motivacional">Motivacional</option>
-                        <option value="humorado">Humorado</option>
-                    </select>
+                <div class="teacher-card">
+                    <img src="https://imgur.com/dCdVx65.jpg" alt="Foto da Professora Graziela">
+                    <h3>Graziela Lopes</h3>
+                    <p>Educadora com Pós-Graduação no ensino da Matemática e certificada como Instrutora de Xadrez pela FEXEAL. Graziela possui ampla experiência com aulas particulares desde 2002. Sua paixão pelo ensino e sua dedicação fazem dela uma professora comprometida com o desenvolvimento integral de seus alunos.</p>
                 </div>
             </div>
-            <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
-            <button id="analyze-button">Carregar PGN e Analisar</button>
-            
-            <div id="engine-analysis" class="engine-box">
-                <h4>Análise do Stockfish</h4>
-                <div id="stockfish-output">Aguardando posição...</div>
-            </div>
+        </section>
 
-            <div id="analysis-result" class="gemini-box">
-                <h4>Análise do GM Chessveja (IA)</h4>
-                <div id="gemini-output">Aguardando análise...</div>
-            </div>
-        </div>
-    </div>
-</section>
-<section id="lichess-widgets">
-    <h2>Pratique e Assista</h2>
-    <div class="lichess-container">
-        <div class="widget-card">
-            <h3>Puzzle Diário do Lichess</h3>
-            <p>Teste sua tática com o puzzle do dia!</p>
-            <div class="iframe-container">
-                <div class="widget-card">
-    <h3>Puzzle Diário do Lichess</h3>
-    <p>Teste sua tática com o desafio do dia diretamente no Lichess!</p>
-    <a href="https://lichess.org/training/daily" target="_blank" class="cta-button">Resolver Puzzle Agora</a>
-</div>
-            </div>
-        </div>
-        <div class="widget-card">
-            <h3>Lichess TV Ao Vivo</h3>
-            <p>Assista às partidas dos melhores jogadores.</p>
-            <div class="iframe-container">
-                <iframe src="https://lichess.org/tv/frame?theme=brown&bg=dark" frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
-</section>
-
-        </main>
+    </main>
 
     <footer id="contato">
         <h2>Entre em Contato</h2>

@@ -25,7 +25,7 @@
 
     <header>
         <nav>
-           <a href="#inicio" class="logo">
+            <a href="#inicio" class="logo">
     <img src="minha_logo.png" alt="Logo do Chessveja" style="height: 70px;">
 </a>
             <ul>
@@ -45,6 +45,7 @@
                 <a href="#aulas" class="cta-button">Agende sua Aula Experimental</a>
             </div>
         </section>
+
 <section id="materiais">
     <h2>Materiais Gratuitos e Loja</h2>
     
@@ -177,12 +178,42 @@
                 <button id="btn-next">▶</button>
                 <button id="btn-end">Fim</button>
             </div>
+            <div class="board-controls-secondary"> 
+                <button id="btn-flip">Inverter Tabuleiro</button>
+            </div>
+            
             <div id="game-info" class="game-info-box">
                 <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
             </div>
         </div>
         <div class="analysis-column">
             <h3>Controles da Partida</h3>
+
+            <div class="options-grid">
+                <div>
+                    <label for="analysis-color">Analisar do ponto de vista:</label>
+                    <select id="analysis-color" name="analysis-color">
+                        <option value="brancas" selected>Brancas</option>
+                        <option value="pretas">Pretas</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="analysis-level">Meu nível (Rating Online):</label>
+                    <select id="analysis-level" name="analysis-level">
+                        <option value="iniciante" selected>Iniciante (Até 1500)</option>
+                        <option value="intermediario">Intermediário (1501-2000)</option>
+                        <option value="avancado">Avançado (Acima de 2000)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="analysis-tone">Tom da Análise:</label>
+                    <select id="analysis-tone" name="analysis-tone">
+                        <option value="tecnico" selected>Técnico</option>
+                        <option value="motivacional">Motivacional</option>
+                        <option value="humorado">Humorado</option>
+                    </select>
+                </div>
+            </div>
             <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
             <button id="analyze-button">Carregar PGN e Analisar</button>
             
@@ -192,7 +223,16 @@
             </div>
 
             <div id="analysis-result" class="gemini-box">
-                <h4>Análise do GM Chessveja (IA)</h4>
+
+                <div class="cta-analisador">
+                    <h3>Gostou da Análise?</h3>
+                    <p>Essa ferramenta gratuita mostra o 'quê' deu errado. Nas minhas <strong>aulas particulares</strong>, eu mostro o 'porquê'.</p>
+                    <p>Aprenda a parar de cometer esses erros e eleve seu jogo para o próximo nível.</p>
+                    <a href="https://api.whatsapp.com/send?phone=5582996535079&text=Oi!%20Vim%20pelo%20Analisador%20de%20PGN%20e%20quero%20saber%20mais%20sobre%20as%20aulas" target="_blank" class="cta-button-whatsapp">
+                        Agende sua Aula Experimental!
+                    </a>
+                </div>
+                <h4 style="margin-top: 30px;">Análise do GM Chessveja (IA)</h4>
                 <div id="gemini-output">Aguardando análise...</div>
             </div>
         </div>
@@ -255,8 +295,7 @@
         </div>
     </div>
 </section>
-</section>
-    </main>
+</main>
 
     <footer id="contato">
         <h2>Entre em Contato</h2>
@@ -268,30 +307,7 @@
         <p class="copyright">&copy; 2025 Chessveja. Todos os direitos reservados.</p>
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="stockfish.js"></script>  <script src="script.js"></script>
-</body>
+    <script src="stockfish.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

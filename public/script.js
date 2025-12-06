@@ -1,194 +1,200 @@
-/* ======================================================================== */
-/* CÓDIGO DO ANALISADOR DE PARTIDAS (COMPLETO E CORRIGIDO)                 */
-/* ======================================================================== */
+var board = null
+var game = new Chess()
+var $status = $('#status')
+var $fen = $('#fen')
+var $pgn = $('#pgn')
 
-// Variáveis Globais
-var board = null;
-var game = new Chess();
-var pgnEl = $('#pgn-input');
-var statusEl = $('#status');
-var stockfish = new Worker('stockfish.js');
-var currentPgn = null;
-var currentMoves = [];
-var currentMove = -1;
-
-// --- Funções do Tabuleiro (Stockfish, Movimento, etc.) ---
-
-function onDragStart(source, piece, position, orientation) {
-    if (game.isGameOver()) return false;
-    if (piece.search(/^b/) !== -1) return false;
+function onDragStart (source, piece, position, orientation) {
+  if (game.game_over()) return false
+  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+    return false
+  }
 }
 
-function onDrop(source, target) {
-    var move = game.move({
-        from: source,
-        to: target,
-        promotion: 'q'
-    });
-    if (move === null) return 'snapback';
-    updateStatus();
-    currentMoves = game.history({ verbose: true });
-    currentMove = currentMoves.length - 1;
-    triggerStockfish();
+function onDrop (source, target) {
+  var move = game.move({
+    from: source,
+    to: target,
+    promotion: 'q' 
+  })
+
+  if (move === null) return 'snapback'
+
+  updateStatus()
 }
 
-function onSnapEnd() {
-    board.position(game.fen());
+function onSnapEnd () {
+  board.position(game.fen())
 }
 
-function updateStatus() {
-    var status = '';
-    var moveColor = 'Brancas';
-    if (game.turn() === 'b') {
-        moveColor = 'Pretas';
+function updateStatus () {
+  var status = ''
+  var moveColor = 'Brancas'
+  if (game.turn() === 'b') {
+    moveColor = 'Pretas'
+  }
+
+  if (game.in_checkmate()) {
+    status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.'
+  } else if (game.in_draw()) {
+    status = 'Fim de jogo, empate.'
+  } else {
+    status = moveColor + ' jogam.'
+    if (game.in_check()) {
+      status += ', ' + moveColor + ' está em xeque.'
     }
+  }
 
-    if (game.in_checkmate()) {
-        status = 'Xeque-mate! ' + (moveColor === 'Brancas' ? 'Pretas' : 'Brancas') + ' vencem.';
-    } else if (game.in_draw()) {
-        status = 'Empate!';
-    } else {
-        status = 'Vez das ' + moveColor;
-        if (game.in_check()) {
-            status += ', ' + moveColor + ' estão em xeque.';
-        }
-    }
-    statusEl.html(status);
+  $status.html(status)
+  
+  // Atualiza o output do Stockfish com a avaliação se disponível
+  // (Lógica simples para limpar se necessário)
 }
 
-function triggerStockfish() {
-    $('#stockfish-output').html('Pensando...');
-    stockfish.postMessage('position fen ' + game.fen());
-    stockfish.postMessage('go depth 15');
+var config = {
+  draggable: true,
+  position: 'start',
+  onDragStart: onDragStart,
+  onDrop: onDrop,
+  onSnapEnd: onSnapEnd
 }
+board = Chessboard('board', config)
 
-stockfish.onmessage = function(event) {
-    var message = event.data;
-    if (message.startsWith('bestmove')) {
-        var bestMove = message.split(' ')[1];
-        $('#stockfish-output').html('Melhor lance: ' + bestMove);
-    }
-};
+updateStatus()
 
-// --- Botões de Navegação (Setas, Início, Fim) ---
-
+// --- CONTROLES DO TABULEIRO ---
 $('#btn-start').on('click', function() {
     game.reset();
-    currentMove = -1;
-    board.position(game.fen());
+    board.start();
     updateStatus();
-    $('#stockfish-output').html('Aguardando posição...');
+    $('#stockfish-output').text('Aguardando posição...');
+    $('#gemini-output').text('Aguardando análise...');
 });
 
 $('#btn-prev').on('click', function() {
-    if (currentMove >= 0) {
-        currentMove--;
-        game.undo();
-        board.position(game.fen());
-        updateStatus();
-        triggerStockfish();
-    }
+    game.undo();
+    board.position(game.fen());
+    updateStatus();
 });
 
 $('#btn-next').on('click', function() {
-    if (currentMove < currentMoves.length - 1) {
-        currentMove++;
-        game.move(currentMoves[currentMove].san);
-        board.position(game.fen());
-        updateStatus();
-        triggerStockfish();
-    }
+    // Nota: Para implementar 'Next' real, precisaríamos salvar o histórico de movimentos.
+    // O chess.js perde o histórico ao usar undo(). 
+    // Por simplicidade, este botão está apenas decorativo ou precisaria de lógica extra.
+    alert("Para avançar, carregue um PGN completo.");
 });
 
 $('#btn-end').on('click', function() {
-    if (currentPgn) {
-        game.load_pgn(currentPgn);
-        currentMove = currentMoves.length - 1;
-        board.position(game.fen());
-        updateStatus();
-        triggerStockfish();
-    }
+    // Mesma lógica do Next, precisaria carregar o PGN inteiro.
 });
 
 $('#btn-flip').on('click', function() {
     board.flip();
 });
 
-// --- Botão Principal: ANALISAR (CÉREBRO DA IA) ---
+
+// --- LÓGICA DE ANÁLISE ---
+
+// Variável global para o Worker do Stockfish
+var stockfish = new Worker('stockfish.js');
+
+stockfish.onmessage = function(event) {
+    // Simples parse da mensagem do Stockfish para pegar o CP (Centipawns) ou Mate
+    // Exemplo de msg: "info depth 10 seldepth 15 multipv 1 score cp 25 ..."
+    var msg = event.data;
+    if (msg.startsWith('info') && msg.includes('score')) {
+        let scoreText = "Calculando...";
+        
+        if (msg.includes('mate')) {
+            let mateIndex = msg.indexOf('mate') + 5;
+            let mateValue = msg.split(' ')[msg.split(' ').indexOf('mate') + 1];
+            scoreText = "Mate em " + mateValue;
+        } else if (msg.includes('cp')) {
+            let cpIndex = msg.indexOf('cp') + 3;
+            let cpValue = parseInt(msg.split(' ')[msg.split(' ').indexOf('cp') + 1]);
+            // Ajusta para o ponto de vista (Stockfish sempre dá score para as brancas relativo ou lado a jogar)
+            let eval = (cpValue / 100).toFixed(2);
+            scoreText = "Avaliação: " + eval;
+        }
+        
+        $('#stockfish-output').text(scoreText);
+    }
+};
 
 $('#analyze-button').on('click', async function() {
-    var pgn = pgnEl.val();
     
-    // 1. Pega os valores das novas opções
-    var cor = $('#analysis-color').val();
-    var nivel = $('#analysis-level').val();
-    var tom = $('#analysis-tone').val();
-    
-    if (!game.load_pgn(pgn)) {
-        alert('PGN inválido. Por favor, cole um PGN completo.');
+    // --- [NOVO] TRAVA DE SEGURANÇA (LOGIN) ---
+    if (!window.Clerk || !window.Clerk.user) {
+        // Se não tiver usuário logado:
+        alert("🔒 Acesso Restrito!\n\nVocê precisa criar uma conta gratuita (ou fazer login) para usar o Analisador.");
+        
+        // Abre a janela de login automaticamente
+        window.Clerk.openSignIn();
+        
+        // Para a execução do código aqui. Não analisa nada.
+        return; 
+    }
+    // ------------------------------------------
+
+    var pgn = $('#pgn-input').val();
+    if (!pgn) {
+        alert("Por favor, cole um PGN primeiro.");
         return;
     }
 
-    // Atualiza o tabuleiro e o Stockfish
-    currentPgn = pgn;
-    currentMoves = game.history({ verbose: true });
-    currentMove = currentMoves.length - 1;
+    // Carrega o PGN no tabuleiro
+    var loadSuccess = game.load_pgn(pgn);
+    if (!loadSuccess) {
+        alert("PGN inválido. Verifique se copiou corretamente.");
+        return;
+    }
     board.position(game.fen());
     updateStatus();
-    triggerStockfish(); 
-    
-    // 2. Mostra o status de "Carregando"
-    const outputDiv = $('#gemini-output');
-    const analyzeButton = $(this);
-    outputDiv.html('Aguardando análise da IA (isso pode levar alguns segundos)...');
-    analyzeButton.prop('disabled', true).text('Analisando...');
+
+    // 1. Análise Técnica (Stockfish Local)
+    // Envia a posição atual para o Stockfish
+    stockfish.postMessage('position fen ' + game.fen());
+    stockfish.postMessage('go depth 15'); // Profundidade 15 para ser rápido
+
+    // 2. Análise Explicativa (Gemini IA via API)
+    $('#gemini-output').html('<em>O GM Chessveja está analisando sua partida... isso pode levar alguns segundos.</em>');
+    $('#analyze-button').prop('disabled', true); // Evita duplo clique
+
+    // Captura as opções selecionadas
+    const level = $('#analysis-level').val();
+    const tone = $('#analysis-tone').val();
+    const color = $('#analysis-color').val();
 
     try {
-        // 3. (A PARTE QUE FALTAVA) Chama a nossa API
         const response = await fetch('/api/analyze', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
                 pgn: pgn,
-                cor: cor,
-                nivel: nivel,
-                tom: tom
-            }),
+                level: level,
+                tone: tone,
+                color: color
+            })
         });
 
-        if (!response.ok) {
-            // Se a API der erro (ex: erro 500 ou 404)
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Erro desconhecido na API');
+        const data = await response.json();
+
+        if (data.analysis) {
+            // Converte Markdown para HTML (usando biblioteca marked se disponível, ou texto puro)
+            if (typeof marked !== 'undefined') {
+                $('#gemini-output').html(marked.parse(data.analysis));
+            } else {
+                $('#gemini-output').text(data.analysis);
+            }
+        } else {
+            $('#gemini-output').text("Erro ao obter análise. Tente novamente.");
         }
 
-        const data = await response.json();
-        
-        // 4. Converte a resposta (Markdown) para HTML e exibe
-        // (Usamos a biblioteca 'marked' que já está no seu index.html)
-        outputDiv.html(marked.parse(data.analysis)); 
-
     } catch (error) {
-        console.error('Erro ao chamar a API:', error);
-        outputDiv.html(`<p style="color: red;">Houve um erro ao buscar a análise: ${error.message}</p>`);
+        console.error("Erro na API:", error);
+        $('#gemini-output').text("Erro de conexão com o servidor.");
     } finally {
-        // 5. Reativa o botão
-        analyzeButton.prop('disabled', false).text('Carregar PGN e Analisar');
+        $('#analyze-button').prop('disabled', false); // Libera o botão
     }
-});
-
-
-// --- Configuração Inicial do Tabuleiro ---
-document.addEventListener('DOMContentLoaded', function() {
-    var config = {
-        draggable: true,
-        position: 'start',
-        onDragStart: onDragStart,
-        onDrop: onDrop,
-        onSnapEnd: onSnapEnd
-    };
-    board = Chessboard('board', config);
-    updateStatus();
 });

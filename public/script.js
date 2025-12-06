@@ -47,9 +47,6 @@ function updateStatus () {
   }
 
   $status.html(status)
-  
-  // Atualiza o output do Stockfish com a avaliação se disponível
-  // (Lógica simples para limpar se necessário)
 }
 
 var config = {
@@ -79,14 +76,11 @@ $('#btn-prev').on('click', function() {
 });
 
 $('#btn-next').on('click', function() {
-    // Nota: Para implementar 'Next' real, precisaríamos salvar o histórico de movimentos.
-    // O chess.js perde o histórico ao usar undo(). 
-    // Por simplicidade, este botão está apenas decorativo ou precisaria de lógica extra.
     alert("Para avançar, carregue um PGN completo.");
 });
 
 $('#btn-end').on('click', function() {
-    // Mesma lógica do Next, precisaria carregar o PGN inteiro.
+    // Fim
 });
 
 $('#btn-flip').on('click', function() {
@@ -95,47 +89,32 @@ $('#btn-flip').on('click', function() {
 
 
 // --- LÓGICA DE ANÁLISE ---
-
-// Variável global para o Worker do Stockfish
 var stockfish = new Worker('stockfish.js');
 
 stockfish.onmessage = function(event) {
-    // Simples parse da mensagem do Stockfish para pegar o CP (Centipawns) ou Mate
-    // Exemplo de msg: "info depth 10 seldepth 15 multipv 1 score cp 25 ..."
     var msg = event.data;
     if (msg.startsWith('info') && msg.includes('score')) {
         let scoreText = "Calculando...";
-        
         if (msg.includes('mate')) {
-            let mateIndex = msg.indexOf('mate') + 5;
             let mateValue = msg.split(' ')[msg.split(' ').indexOf('mate') + 1];
             scoreText = "Mate em " + mateValue;
         } else if (msg.includes('cp')) {
-            let cpIndex = msg.indexOf('cp') + 3;
             let cpValue = parseInt(msg.split(' ')[msg.split(' ').indexOf('cp') + 1]);
-            // Ajusta para o ponto de vista (Stockfish sempre dá score para as brancas relativo ou lado a jogar)
             let eval = (cpValue / 100).toFixed(2);
             scoreText = "Avaliação: " + eval;
         }
-        
         $('#stockfish-output').text(scoreText);
     }
 };
 
 $('#analyze-button').on('click', async function() {
     
-    // --- [NOVO] TRAVA DE SEGURANÇA (LOGIN) ---
+    // 1. VERIFICAÇÃO DE LOGIN
     if (!window.Clerk || !window.Clerk.user) {
-        // Se não tiver usuário logado:
-        alert("🔒 Acesso Restrito!\n\nVocê precisa criar uma conta gratuita (ou fazer login) para usar o Analisador.");
-        
-        // Abre a janela de login automaticamente
+        alert("🔒 Acesso Restrito!\n\nVocê precisa criar uma conta gratuita para analisar.");
         window.Clerk.openSignIn();
-        
-        // Para a execução do código aqui. Não analisa nada.
         return; 
     }
-    // ------------------------------------------
 
     var pgn = $('#pgn-input').val();
     if (!pgn) {
@@ -143,7 +122,6 @@ $('#analyze-button').on('click', async function() {
         return;
     }
 
-    // Carrega o PGN no tabuleiro
     var loadSuccess = game.load_pgn(pgn);
     if (!loadSuccess) {
         alert("PGN inválido. Verifique se copiou corretamente.");
@@ -152,19 +130,20 @@ $('#analyze-button').on('click', async function() {
     board.position(game.fen());
     updateStatus();
 
-    // 1. Análise Técnica (Stockfish Local)
-    // Envia a posição atual para o Stockfish
+    // Inicia Stockfish
     stockfish.postMessage('position fen ' + game.fen());
-    stockfish.postMessage('go depth 15'); // Profundidade 15 para ser rápido
+    stockfish.postMessage('go depth 15');
 
-    // 2. Análise Explicativa (Gemini IA via API)
-    $('#gemini-output').html('<em>O GM Chessveja está analisando sua partida... isso pode levar alguns segundos.</em>');
-    $('#analyze-button').prop('disabled', true); // Evita duplo clique
+    // UI de Carregamento
+    $('#gemini-output').html('<em>O GM Chessveja está consultando seus créditos e analisando...</em>');
+    $('#analyze-button').prop('disabled', true);
 
-    // Captura as opções selecionadas
     const level = $('#analysis-level').val();
     const tone = $('#analysis-tone').val();
     const color = $('#analysis-color').val();
+    
+    // PEGA O EMAIL DO USUÁRIO LOGADO
+    const userEmail = window.Clerk.user.primaryEmailAddress.emailAddress;
 
     try {
         const response = await fetch('/api/analyze', {
@@ -174,27 +153,36 @@ $('#analyze-button').on('click', async function() {
                 pgn: pgn,
                 level: level,
                 tone: tone,
-                color: color
+                color: color,
+                email: userEmail // ENVIA O EMAIL PARA O BACKEND
             })
         });
 
         const data = await response.json();
 
-        if (data.analysis) {
-            // Converte Markdown para HTML (usando biblioteca marked se disponível, ou texto puro)
+        // SE O USUÁRIO ESTIVER SEM CRÉDITOS (ERRO 403)
+        if (response.status === 403) {
+            $('#gemini-output').html(`<strong style="color: red;">🚫 ${data.error}</strong>`);
+            alert("⚠️ SEUS CRÉDITOS ACABARAM!\n\nVocê atingiu o limite do plano Grátis. Faça o upgrade para o Plano PRO por R$ 19,90 para continuar analisando.");
+            // Aqui futuramente colocaremos o link do Stripe
+        } 
+        // SE TIVER SUCESSO
+        else if (data.analysis) {
+            let creditsMsg = `<br><br><small style="color: #25D366;">✅ Análise concluída. Créditos restantes: <strong>${data.credits}</strong></small>`;
+            
             if (typeof marked !== 'undefined') {
-                $('#gemini-output').html(marked.parse(data.analysis));
+                $('#gemini-output').html(marked.parse(data.analysis) + creditsMsg);
             } else {
-                $('#gemini-output').text(data.analysis);
+                $('#gemini-output').html(data.analysis + creditsMsg);
             }
         } else {
-            $('#gemini-output').text("Erro ao obter análise. Tente novamente.");
+            $('#gemini-output').text("Erro desconhecido. Tente novamente.");
         }
 
     } catch (error) {
         console.error("Erro na API:", error);
         $('#gemini-output').text("Erro de conexão com o servidor.");
     } finally {
-        $('#analyze-button').prop('disabled', false); // Libera o botão
+        $('#analyze-button').prop('disabled', false);
     }
 });

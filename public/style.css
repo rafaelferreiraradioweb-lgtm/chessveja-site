@@ -24,6 +24,8 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
+    /* Ajuste para o menu fixo não cobrir o topo no mobile */
+    padding-top: 0; 
 }
 
 h1, h2, h3 {
@@ -44,7 +46,7 @@ section {
 
 /* ---- CABEÇALHO & NAVEGAÇÃO ---- */
 header {
-    background-color: rgba(30, 30, 30, 0.9);
+    background-color: rgba(30, 30, 30, 0.95); /* Mais opaco para leitura */
     position: fixed;
     width: 100%;
     top: 0;
@@ -65,12 +67,14 @@ nav {
     font-weight: 700;
     color: var(--accent-gold);
     text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    gap: 30px;
+    gap: 20px;
 }
 
 nav a {
@@ -79,6 +83,7 @@ nav a {
     font-size: 1rem;
     font-weight: 500;
     transition: color 0.3s ease;
+    white-space: nowrap; /* Evita quebra de linha no texto do link */
 }
 
 nav a:hover {
@@ -93,6 +98,7 @@ nav a:hover {
     justify-content: center;
     text-align: center;
     background: linear-gradient(rgba(30, 30, 30, 0.7), rgba(30, 30, 30, 0.7)), url(https://images.unsplash.com/photo-1580541832626-2a7131ee809f?q=80&w=2070) no-repeat center center/cover;
+    padding-top: 100px; /* Compensar o menu fixo */
 }
 
 .hero-content h1 {
@@ -213,27 +219,6 @@ nav a:hover {
     font-style: italic;
 }
 
-
-/* ---- SEÇÃO GALERIA ---- */
-#galeria {
-    background-color: var(--bg-medium);
-}
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-.gallery-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-    transition: transform 0.3s ease;
-}
-.gallery-container img:hover {
-    transform: scale(1.05);
-}
-
 /* ---- RODAPÉ ---- */
 footer {
     background-color: #111;
@@ -268,14 +253,6 @@ footer {
     color: var(--text-dark);
 }
 
-/* ---- RESPONSIVIDADE ---- */
-@media (max-width: 768px) {
-    h1 { font-size: 2.8rem; }
-    h2 { font-size: 2rem; }
-    nav ul { display: none; } /* Simplificação para mobile, pode ser melhorado com JS */
-    .pricing-card.popular { transform: scale(1); }
-}
-
 /* ---- SEÇÃO LICHESS ---- */
 #lichess-widgets {
     background-color: var(--bg-medium);
@@ -285,7 +262,7 @@ footer {
     display: flex;
     justify-content: center;
     gap: 40px;
-    flex-wrap: wrap; /* Isso faz com que empilhe no celular */
+    flex-wrap: wrap;
 }
 
 .widget-card {
@@ -295,7 +272,7 @@ footer {
     border: 1px solid var(--bg-light);
     text-align: center;
     width: 100%;
-    max-width: 500px; /* Define uma largura máxima para cada widget */
+    max-width: 500px;
 }
 
 .widget-card h3 {
@@ -312,7 +289,7 @@ footer {
 .iframe-container {
     width: 100%;
     height: 0;
-    padding-bottom: 121%; /* Proporção para os widgets do Lichess */
+    padding-bottom: 121%;
     position: relative;
     overflow: hidden;
 }
@@ -326,125 +303,11 @@ footer {
     border-radius: 5px;
 }
 
-
-/* ---- SEÇÃO DE MATERIAIS E LOJA ---- */
-#materiais {
-    background-color: var(--bg-dark);
-}
-
-.subsecao {
-    margin-bottom: 60px;
-}
-
-.subsecao h3 {
-    text-align: center;
-    font-size: 2.2rem;
-    color: var(--text-light);
-    margin-bottom: 30px;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-}
-
-.material-card {
-    background-color: var(--bg-medium);
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    padding: 25px;
-    border: 1px solid var(--bg-light);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.material-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-
-.material-card img {
-    max-width: 100%;
-    height: 250px; /* Altura fixa para as capas */
-    object-fit: contain; /* <-- MUDANÇA PRINCIPAL AQUI */
-    background-color: var(--bg-dark); /* Cor de fundo para as bordas */
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-.material-card h4 {
-    font-size: 1.4rem;
-    color: var(--accent-gold);
-    margin-bottom: 10px;
-    flex-grow: 1; /* Empurra o botão para baixo */
-}
-
-.material-card p {
-    color: var(--text-dark);
-    margin-bottom: 20px;
-    min-height: 60px; /* Altura mínima para descrições */
-}
-
-.material-card.pago {
-    position: relative;
-}
-
-.preco-tag {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background-color: var(--accent-gold);
-    color: var(--bg-dark);
-    padding: 5px 15px;
-    border-radius: 5px;
-    font-weight: 700;
-    font-size: 1rem;
-}
-/* ---- Estilos da Galeria com Legendas ---- */
-.gallery-item {
-    position: relative; /* Necessário para a legenda flutuar sobre a imagem */
-    overflow: hidden; /* Garante que a legenda não vaze para fora */
-    border-radius: 5px;
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block; /* Remove espaços extras */
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover img {
-    transform: scale(1.05); /* Efeito de zoom suave na imagem */
-}
-
-.gallery-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo preto semi-transparente */
-    color: white;
-    padding: 15px;
-    text-align: center;
-    opacity: 0; /* Legenda começa escondida */
-    transition: opacity 0.3s ease; /* Transição suave */
-    font-size: 0.9rem;
-}
-
-.gallery-item:hover .gallery-caption {
-    opacity: 1; /* Legenda aparece no hover */
-}
-
 /* ---- SEÇÃO DE VÍDEOS ---- */
 #videos {
-    background-color: var(--bg-medium); /* Cor de fundo diferente */
-    padding-top: 60px; /* Adiciona espaço acima */
-    padding-bottom: 60px; /* Adiciona espaço abaixo */
+    background-color: var(--bg-medium);
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
 
 #videos h2 {
@@ -456,7 +319,7 @@ footer {
 
 .video-grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cria colunas responsivas */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     margin-bottom: 40px;
 }
@@ -468,16 +331,16 @@ footer {
     border: 1px solid var(--bg-light);
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease; /* Adiciona transição suave */
+    transition: transform 0.3s ease;
 }
 
 .video-card:hover {
-    transform: translateY(-5px); /* Efeito de levantar no hover */
+    transform: translateY(-5px);
 }
 
 .video-wrapper {
     position: relative;
-    padding-bottom: 56.25%; /* Proporção 16:9 para vídeos */
+    padding-bottom: 56.25%; /* 16:9 */
     height: 0;
     overflow: hidden;
 }
@@ -495,72 +358,64 @@ footer {
     font-size: 1.1rem;
     color: var(--text-light);
     text-align: center;
-    flex-grow: 1; /* Garante que todos os cards tenham a mesma altura */
-    min-height: 50px; /* Altura mínima para títulos */
-    display: flex; /* Para alinhar verticalmente */
-    align-items: center; /* Alinha o título no centro vertical */
-    justify-content: center; /* Alinha o título no centro horizontal */
+    flex-grow: 1;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .youtube-channel-link {
-    text-align: center; /* Centraliza o botão */
+    text-align: center;
 }
 
-/* ---- NOVO ANALISADOR (Layout Corrigido - FINAL) ---- */
+/* ---- ANALISADOR ---- */
 #analisador {
     padding-top: 60px;
     padding-bottom: 60px;
-    background-color: var(--bg-dark); /* Fundo da seção inteira */
+    background-color: var(--bg-dark);
 }
 
 .analyzer-layout {
     display: flex;
-    /* Por padrão (mobile), empilha as colunas */
     flex-direction: column; 
-    gap: 30px; /* Espaço entre tabuleiro e coluna de análise no mobile */
+    gap: 30px;
     max-width: 1200px; 
     margin: 0 auto; 
 }
 
 .board-column {
-    /* Ocupa a largura total no mobile */
     width: 100%; 
-    max-width: 480px; /* Limita o tamanho do tabuleiro */
-    margin: 0 auto; /* Centraliza o tabuleiro no mobile */
+    max-width: 480px;
+    margin: 0 auto;
 }
 
 .analysis-column {
-    /* Ocupa a largura total no mobile */
     width: 100%; 
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* Regras para telas maiores (lado a lado) */
-@media (min-width: 900px) { /* Ponto de quebra ajustado */
+@media (min-width: 900px) {
     .analyzer-layout {
-        /* Volta para o layout em linha (lado a lado) */
         flex-direction: row; 
-        gap: 40px; /* Espaço entre as colunas */
-        align-items: flex-start; /* Alinha as colunas no topo */
+        gap: 40px;
+        align-items: flex-start;
     }
 
     .board-column {
-        /* Define uma largura fixa para o tabuleiro */
-        flex: 0 0 480px; /* Não cresce, não encolhe, base 480px */
+        flex: 0 0 480px;
         width: 480px; 
-        margin: 0; /* Remove margem automática */
+        margin: 0;
     }
 
     .analysis-column {
-        /* Ocupa todo o espaço restante */
         flex: 1; 
-        width: auto; /* Largura automática baseada no flex */
+        width: auto;
     }
 }
 
-/* --- Estilos internos das colunas (mantidos) --- */
 .chessboard {
     width: 100%;
     margin-bottom: 20px;
@@ -571,7 +426,6 @@ footer {
     justify-content: center;
     flex-wrap: wrap; 
     gap: 10px;
-    /* margin-bottom: 20px; */ /* Removido para dar espaço ao novo botão */
 }
 .board-controls button {
     padding: 10px 15px;
@@ -652,14 +506,13 @@ footer {
     resize: vertical; 
 }
 
-/* ---- INÍCIO DOS NOVOS ESTILOS (Dropdowns, CTA, Flip Button) ---- */
+/* ---- ESTILOS DAS NOVAS FUNÇÕES (Dropdowns, CTA, Flip) ---- */
 
-/* 1. Estilos das Opções (Dropdowns) */
 .options-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Uma coluna no mobile */
+    grid-template-columns: 1fr;
     gap: 15px;
-    margin-bottom: 20px; /* Espaço antes da caixa de PGN */
+    margin-bottom: 20px;
 }
 
 .options-grid > div {
@@ -683,14 +536,12 @@ footer {
     font-size: 1rem;
 }
 
-/* Em telas maiores, mostra em 3 colunas */
 @media (min-width: 900px) {
     .options-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* 2. Estilos do CTA (Isca do WhatsApp) */
 .cta-analisador {
     background-color: var(--bg-medium);
     color: var(--text-light);
@@ -698,7 +549,7 @@ footer {
     border-radius: 8px;
     text-align: center;
     border: 1px solid var(--bg-light);
-    margin-top: 20px; /* <- MUDANÇA AQUI: Era margin-bottom */
+    margin-top: 20px;
 }
 
 .cta-analisador h3 {
@@ -715,7 +566,7 @@ footer {
 
 .cta-button-whatsapp {
     display: inline-block;
-    background-color: #25D366; /* Cor do WhatsApp */
+    background-color: #25D366;
     color: white;
     padding: 15px 30px;
     border-radius: 5px;
@@ -730,16 +581,15 @@ footer {
     box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
 }
 
-/* 3. Estilo do Botão Inverter Tabuleiro */
 .board-controls-secondary {
     text-align: center;
-    margin-top: 15px; /* Espaço abaixo das setas */
-    margin-bottom: 20px; /* Espaço antes da caixa de status */
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
 .board-controls-secondary button {
     padding: 10px 20px;
-    background-color: var(--bg-light); /* Mesmo estilo dos outros botões de controle */
+    background-color: var(--bg-light);
     color: var(--text-light);
     border: 1px solid var(--bg-medium);
     border-radius: 5px;
@@ -752,4 +602,50 @@ footer {
     background-color: var(--accent-gold);
     color: var(--bg-dark);
 }
-/* ---- FIM DOS NOVOS ESTILOS ---- */
+
+/* ------------------------------------------- */
+/* ---- RESPONSIVIDADE (MENU MOBILE) --------- */
+/* ------------------------------------------- */
+
+/* Para telas menores que 768px (Celulares) */
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 2rem; }
+
+    /* Ajuste do Cabeçalho para Mobile */
+    header {
+        position: relative; /* Deixa de ser fixo para não cobrir o conteúdo ao abrir o menu */
+        padding: 15px;
+    }
+
+    nav {
+        flex-direction: column; /* Empilha a logo e o menu */
+        gap: 15px;
+    }
+
+    /* FORÇAR O MENU A APARECER */
+    nav ul {
+        display: flex; /* Garante que apareça */
+        flex-direction: column; /* Um link embaixo do outro */
+        width: 100%;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Estilo de Botão para os Links no Mobile */
+    nav a {
+        display: block;
+        padding: 12px;
+        background-color: var(--bg-light); /* Fundo cinza claro */
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #444;
+    }
+
+    /* Ajuste do padding do corpo para não ter espaço branco no topo */
+    #inicio {
+        padding-top: 40px; 
+    }
+    
+    .pricing-card.popular { transform: scale(1); }
+}

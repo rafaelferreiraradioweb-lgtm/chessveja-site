@@ -1,33 +1,99 @@
 var board = null
 var game = new Chess()
+var $status = $('#status')
 
-// Configuração simples do tabuleiro
-var config = { draggable: true, position: 'start', onDrop: handleMove }
-board = Chessboard('board', config)
-
-function handleMove(source, target) {
-    var move = game.move({ from: source, to: target, promotion: 'q' });
-    if (move === null) return 'snapback'; 
+// Configuração do Tabuleiro
+function onDragStart (source, piece, position, orientation) {
+  if (game.game_over()) return false
+  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+    return false
+  }
 }
 
-// LÓGICA DO BOTÃO
+function onDrop (source, target) {
+  var move = game.move({ from: source, to: target, promotion: 'q' })
+  if (move === null) return 'snapback'
+  updateStatus()
+}
+
+function onSnapEnd () { board.position(game.fen()) }
+
+function updateStatus () {
+  var status = ''
+  var moveColor = 'Brancas'
+  if (game.turn() === 'b') { moveColor = 'Pretas' }
+
+  if (game.in_checkmate()) {
+    status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.'
+  } else if (game.in_draw()) {
+    status = 'Fim de jogo, empate.'
+  } else {
+    status = moveColor + ' jogam.'
+    if (game.in_check()) { status += ', ' + moveColor + ' está em xeque.' }
+  }
+  $status.html(status)
+}
+
+var config = {
+  draggable: true,
+  position: 'start',
+  onDragStart: onDragStart,
+  onDrop: onDrop,
+  onSnapEnd: onSnapEnd
+}
+board = Chessboard('board', config)
+updateStatus()
+
+// --- BOTÕES DO TABULEIRO (FUNCIONANDO) ---
+$('#btn-start').on('click', function() { game.reset(); board.start(); updateStatus(); });
+$('#btn-prev').on('click', function() { game.undo(); board.position(game.fen()); updateStatus(); });
+$('#btn-flip').on('click', function() { board.flip(); });
+// Next e End precisariam de lógica de histórico, deixamos simples por enquanto
+
+// --- STOCKFISH LOCAL (NAVEGADOR) ---
+var stockfish = new Worker('stockfish.js');
+stockfish.onmessage = function(event) {
+    var msg = event.data;
+    if (msg.startsWith('info') && msg.includes('score')) {
+        let scoreText = "Calculando...";
+        if (msg.includes('mate')) {
+            let mateValue = msg.split(' ')[msg.split(' ').indexOf('mate') + 1];
+            scoreText = "Mate em " + mateValue;
+        } else if (msg.includes('cp')) {
+            let cpValue = parseInt(msg.split(' ')[msg.split(' ').indexOf('cp') + 1]);
+            let eval = (cpValue / 100).toFixed(2);
+            scoreText = "Avaliação: " + eval;
+        }
+        $('#stockfish-output').text(scoreText);
+    }
+};
+
+// --- BOTÃO ANALISAR (LOGIN + OPENAI) ---
 $('#analyze-button').on('click', async function() {
     
-    // --- [TRAVA] VERIFICA SE ESTÁ LOGADO ---
+    // 1. TRAVA DE LOGIN
     if (!window.Clerk || !window.Clerk.user) {
-        alert("🔒 RECURSO EXCLUSIVO\n\nVocê precisa fazer Login Grátis para usar o Analisador Premium.");
-        window.Clerk.openSignIn(); // Abre a janela de login
-        return; // Para tudo aqui
+        alert("🔒 RECURSO EXCLUSIVO\n\nFaça Login para usar o Analisador Premium com ChatGPT.");
+        window.Clerk.openSignIn();
+        return;
     }
-    // ---------------------------------------
 
     var pgn = $('#pgn-input').val();
-    if (!pgn) { alert("Cole o PGN da partida!"); return; }
+    if (!pgn) { alert("Por favor, cole um PGN primeiro."); return; }
 
-    game.load_pgn(pgn);
+    var loadSuccess = game.load_pgn(pgn);
+    if (!loadSuccess) { alert("PGN inválido."); return; }
+    
     board.position(game.fen());
+    updateStatus();
 
-    $('#gemini-output').html('<em>Enviando para o ChatGPT... aguarde...</em>');
+    // Roda o Stockfish
+    stockfish.postMessage('position fen ' + game.fen());
+    stockfish.postMessage('go depth 15');
+
+    // Avisa que está pensando
+    $('#ai-result').html('<em>O GM Chessveja (ChatGPT) está analisando... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
 
     try {
@@ -36,8 +102,8 @@ $('#analyze-button').on('click', async function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 pgn: pgn,
-                level: $('#analysis-level').val(),
-                tone: $('#analysis-tone').val(),
+                level: $('#analysis-level').val(), // Pega o nível (ex: 1500-2000)
+                tone: $('#analysis-tone').val(),   // Pega o tom (ex: Humorado)
                 color: $('#analysis-color').val()
             })
         });
@@ -45,19 +111,18 @@ $('#analyze-button').on('click', async function() {
         const data = await response.json();
         
         if (data.analysis) {
-             // Formata o texto bonito (Markdown)
              if (typeof marked !== 'undefined') {
-                 $('#gemini-output').html(marked.parse(data.analysis));
+                 $('#ai-result').html(marked.parse(data.analysis));
              } else {
-                 $('#gemini-output').html(data.analysis);
+                 $('#ai-result').html(data.analysis);
              }
         } else {
-             $('#gemini-output').text("Erro ao receber análise.");
+             $('#ai-result').text("Erro na análise.");
         }
 
     } catch (error) {
         console.error(error);
-        $('#gemini-output').text("Erro de conexão com o servidor.");
+        $('#ai-result').text("Erro de conexão com o servidor.");
     } finally {
         $('#analyze-button').prop('disabled', false);
     }

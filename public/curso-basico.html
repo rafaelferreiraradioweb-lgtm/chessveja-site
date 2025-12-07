@@ -8,63 +8,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* Centraliza o conteúdo principal */
-        .conteudo-centralizado {
-            max-width: 800px; /* Largura máxima para não ficar esticado */
-            margin: 0 auto;   /* Margem automática nas laterais (centraliza) */
-            padding: 20px;
-            text-align: center; /* Centraliza textos */
+        /* CSS ESPECIAL PARA CENTRALIZAR TUDO */
+        body {
+            background-color: #f9f9f9;
         }
-
-        /* Estilo dos Cartões de Aula */
-        .aula-card {
+        
+        .container-central {
+            max-width: 800px;
+            margin: 0 auto;
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra suave */
-            padding: 30px;
-            margin-bottom: 40px; /* Espaço entre um tópico e outro */
-            border-left: 5px solid #ffd700; /* Detalhe dourado na borda */
-            text-align: left; /* Texto dentro do card fica alinhado à esquerda para leitura */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center; /* Centraliza tudo */
         }
 
-        .aula-card h2 {
-            color: #333;
-            margin-bottom: 15px;
-            text-align: center; /* Título do card centralizado */
+        h1 { color: #d4af37; margin-top: 0; margin-bottom: 10px; }
+        h2 { color: #2c3e50; margin-bottom: 15px; margin-top: 40px; }
+        h3 { color: #2c3e50; margin-bottom: 10px; }
+        
+        .secao-aula {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
         }
 
-        .aula-card p {
+        .img-aula {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            display: inline-block;
+        }
+
+        p {
             font-size: 1.1rem;
             line-height: 1.6;
             color: #555;
-            margin-bottom: 20px;
+            text-align: center; /* Texto centralizado */
+            margin-bottom: 15px;
         }
 
-        /* Estilo das Imagens */
-        .aula-card img {
-            display: block;
-            max-width: 100%; /* Imagem nunca passa da largura da tela */
-            height: auto;
-            margin: 20px auto; /* Centraliza a imagem */
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        /* Botão Voltar */
         .btn-voltar {
             display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
+            margin-top: 20px;
+            padding: 12px 25px;
             background-color: #333;
             color: #fff;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 30px;
             font-weight: bold;
+            transition: 0.3s;
         }
-        .btn-voltar:hover {
-            background-color: #ffd700;
-            color: #000;
-        }
+        .btn-voltar:hover { background-color: #d4af37; color: #000; }
     </style>
 </head>
 <body>
@@ -80,73 +77,100 @@
         </nav>
     </header>
 
-    <main class="conteudo-centralizado">
+    <main style="padding: 20px;">
         
-        <h1 style="margin-top: 40px; margin-bottom: 10px;">Aprenda Xadrez do Zero</h1>
-        <p style="margin-bottom: 40px; font-size: 1.2rem;">O guia definitivo para você conhecer as peças e seus movimentos.</p>
-
-        <div class="aula-card">
-            <h2>1. O Tabuleiro</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" alt="Tabuleiro de Xadrez">
-            <p>
-                O tabuleiro possui 64 casas, alternando entre claras e escuras. 
-                <strong>Regra de Ouro:</strong> O tabuleiro deve ser posicionado de modo que a casa no canto direito inferior de cada jogador seja uma casa <em>branca</em> (ou clara).
+        <div class="container-central">
+            
+            <h1>Aprenda Xadrez do Zero</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 40px;">
+                Conheça as peças e os conceitos essenciais para começar a vencer.
             </p>
-        </div>
 
-        <div class="aula-card">
-            <h2>2. O Peão</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" alt="Movimento do Peão">
-            <p>
-                Os peões são a infantaria. Eles andam apenas para frente.
-                <br><br>
-                • <strong>Movimento:</strong> Uma casa por vez (no primeiro lance podem andar duas).<br>
-                • <strong>Captura:</strong> Capturam na diagonal, uma casa à frente.
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>1. O Tabuleiro e as Peças</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" class="img-aula" alt="Tabuleiro">
+                <p>O tabuleiro tem 64 casas. Regra de ouro: <strong>"Casa branca na direita"</strong>.</p>
+            </div>
 
-        <div class="aula-card">
-            <h2>3. A Torre</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" alt="Movimento da Torre">
-            <p>
-                A Torre é uma peça forte. Ela se move em <strong>linha reta</strong>, tanto na horizontal quanto na vertical, quantas casas quiser (desde que não pule outras peças).
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>2. O Peão</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" class="img-aula" alt="Peão">
+                <p>Anda para frente (uma casa). Captura na diagonal.</p>
+            </div>
 
-        <div class="aula-card">
-            <h2>4. O Bispo</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" alt="Movimento do Bispo">
-            <p>
-                O Bispo se move apenas nas <strong>diagonais</strong>. Cada jogador começa com dois bispos: um que corre pelas casas brancas e outro pelas casas pretas.
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>3. A Torre</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" class="img-aula" alt="Torre">
+                <p>Move-se em linha reta (horizontal ou vertical).</p>
+            </div>
 
-        <div class="aula-card">
-            <h2>5. A Dama</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" alt="Movimento da Dama">
-            <p>
-                A peça mais poderosa! A Dama combina os poderes da Torre e do Bispo. Ela pode andar em retas ou diagonais, para qualquer direção.
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>4. O Bispo</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" class="img-aula" alt="Bispo">
+                <p>Move-se apenas nas diagonais.</p>
+            </div>
 
-        <div class="aula-card">
-            <h2>6. O Rei</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" alt="Movimento do Rei">
-            <p>
-                O Rei é a peça mais importante, mas é lento. Ele anda para qualquer lado, mas <strong>apenas uma casa por vez</strong>. O objetivo do jogo é capturar (dar xeque-mate) no Rei adversário.
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>5. A Dama (Rainha)</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" class="img-aula" alt="Dama">
+                <p>A peça mais poderosa. Move-se para qualquer direção.</p>
+            </div>
 
-        <div class="aula-card">
-            <h2>7. O Cavalo</h2>
-            <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" alt="Movimento do Cavalo">
-            <p>
-                A única peça que pode <strong>pular</strong> outras! O Cavalo anda em forma de "L" (duas casas para um lado e uma para o outro).
-            </p>
-        </div>
+            <div class="secao-aula">
+                <h2>6. O Rei</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" class="img-aula" alt="Rei">
+                <p>A peça mais importante. Anda uma casa para qualquer lado.</p>
+            </div>
 
-        <a href="index.html" class="btn-voltar">← Voltar para a Página Inicial</a>
-        <br><br><br>
+            <div class="secao-aula">
+                <h2>7. O Cavalo</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" class="img-aula" alt="Cavalo">
+                <p>Move-se em "L". É a única peça que pode pular outras.</p>
+            </div>
+
+
+            <h1 style="margin-top: 60px; border-top: 2px solid #ffd700; padding-top: 40px;">Fundamentos do Jogo</h1>
+            <p>Domine estes 6 conceitos para jogar de verdade.</p>
+
+            <div class="secao-aula">
+                <h2>Captura</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227563.35d6888c.668x375o.c70e70405202.png" class="img-aula" alt="Captura">
+                <p>Como tirar as peças do oponente do tabuleiro.</p>
+            </div>
+
+            <div class="secao-aula">
+                <h2>Defesa</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227567.85b2e04f.668x375o.225d314810f5.png" class="img-aula" alt="Defesa">
+                <p>Como proteger suas peças e fugir de ataques.</p>
+            </div>
+
+            <div class="secao-aula">
+                <h2>Combate</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227571.74542289.668x375o.762124552467.png" class="img-aula" alt="Combate">
+                <p>Capture, defenda e calcule trocas.</p>
+            </div>
+
+            <div class="secao-aula">
+                <h2>Xeque</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25146.40b54320.668x375o.50b719487928.png" class="img-aula" alt="Xeque">
+                <p>Ameaçando o Rei! Ele é obrigado a fugir.</p>
+            </div>
+
+            <div class="secao-aula">
+                <h2>Mate em 1</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/19080.a7e75069.668x375o.104434224098.jpeg" class="img-aula" alt="Mate em 1">
+                <p>Vença o jogo com um único lance.</p>
+            </div>
+
+            <div class="secao-aula">
+                <h2>Roque</h2>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227579.e10a26b6.668x375o.5c4114251421.png" class="img-aula" alt="Roque">
+                <p>O movimento especial para proteger o Rei.</p>
+            </div>
+
+            <a href="index.html" class="btn-voltar">← Voltar para a Página Inicial</a>
+        
+        </div>
 
     </main>
 

@@ -1,9 +1,8 @@
 var board = null
 var game = new Chess()
 var $status = $('#status')
-var $fen = $('#fen')
-var $pgn = $('#pgn')
 
+// Configuração do Tabuleiro
 function onDragStart (source, piece, position, orientation) {
   if (game.game_over()) return false
   if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -13,27 +12,17 @@ function onDragStart (source, piece, position, orientation) {
 }
 
 function onDrop (source, target) {
-  var move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q' 
-  })
-
+  var move = game.move({ from: source, to: target, promotion: 'q' })
   if (move === null) return 'snapback'
-
   updateStatus()
 }
 
-function onSnapEnd () {
-  board.position(game.fen())
-}
+function onSnapEnd () { board.position(game.fen()) }
 
 function updateStatus () {
   var status = ''
   var moveColor = 'Brancas'
-  if (game.turn() === 'b') {
-    moveColor = 'Pretas'
-  }
+  if (game.turn() === 'b') { moveColor = 'Pretas' }
 
   if (game.in_checkmate()) {
     status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.'
@@ -41,11 +30,8 @@ function updateStatus () {
     status = 'Fim de jogo, empate.'
   } else {
     status = moveColor + ' jogam.'
-    if (game.in_check()) {
-      status += ', ' + moveColor + ' está em xeque.'
-    }
+    if (game.in_check()) { status += ', ' + moveColor + ' está em xeque.' }
   }
-
   $status.html(status)
 }
 
@@ -57,40 +43,16 @@ var config = {
   onSnapEnd: onSnapEnd
 }
 board = Chessboard('board', config)
-
 updateStatus()
 
-// --- CONTROLES DO TABULEIRO ---
-$('#btn-start').on('click', function() {
-    game.reset();
-    board.start();
-    updateStatus();
-    $('#stockfish-output').text('Aguardando posição...');
-    $('#gemini-output').text('Aguardando análise...');
-});
+// --- BOTÕES DO TABULEIRO (FUNCIONANDO) ---
+$('#btn-start').on('click', function() { game.reset(); board.start(); updateStatus(); });
+$('#btn-prev').on('click', function() { game.undo(); board.position(game.fen()); updateStatus(); });
+$('#btn-flip').on('click', function() { board.flip(); });
+// Next e End precisariam de lógica de histórico, deixamos simples por enquanto
 
-$('#btn-prev').on('click', function() {
-    game.undo();
-    board.position(game.fen());
-    updateStatus();
-});
-
-$('#btn-next').on('click', function() {
-    alert("Para avançar, carregue um PGN completo.");
-});
-
-$('#btn-end').on('click', function() {
-    // Fim
-});
-
-$('#btn-flip').on('click', function() {
-    board.flip();
-});
-
-
-// --- LÓGICA DE ANÁLISE ---
+// --- STOCKFISH LOCAL (NAVEGADOR) ---
 var stockfish = new Worker('stockfish.js');
-
 stockfish.onmessage = function(event) {
     var msg = event.data;
     if (msg.startsWith('info') && msg.includes('score')) {
@@ -107,41 +69,32 @@ stockfish.onmessage = function(event) {
     }
 };
 
+// --- BOTÃO ANALISAR (LOGIN + OPENAI) ---
 $('#analyze-button').on('click', async function() {
     
-    // 1. TRAVA DE SEGURANÇA (LOGIN)
-    // Se não tiver usuário logado, barra e pede login.
+    // 1. TRAVA DE LOGIN
     if (!window.Clerk || !window.Clerk.user) {
-        alert("🔒 Acesso Restrito!\n\nVocê precisa fazer login (grátis) para analisar suas partidas.");
+        alert("🔒 RECURSO EXCLUSIVO\n\nFaça Login para usar o Analisador Premium com ChatGPT.");
         window.Clerk.openSignIn();
-        return; 
+        return;
     }
 
     var pgn = $('#pgn-input').val();
-    if (!pgn) {
-        alert("Por favor, cole um PGN primeiro.");
-        return;
-    }
+    if (!pgn) { alert("Por favor, cole um PGN primeiro."); return; }
 
     var loadSuccess = game.load_pgn(pgn);
-    if (!loadSuccess) {
-        alert("PGN inválido. Verifique se copiou corretamente.");
-        return;
-    }
+    if (!loadSuccess) { alert("PGN inválido."); return; }
+    
     board.position(game.fen());
     updateStatus();
 
-    // Inicia Stockfish
+    // Roda o Stockfish
     stockfish.postMessage('position fen ' + game.fen());
     stockfish.postMessage('go depth 15');
 
-    // UI de Carregamento
-    $('#gemini-output').html('<em>O GM Chessveja está analisando sua partida... aguarde...</em>');
+    // Avisa que está pensando
+    $('#ai-result').html('<em>O GM Chessveja (ChatGPT) está analisando... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
-
-    const level = $('#analysis-level').val();
-    const tone = $('#analysis-tone').val();
-    const color = $('#analysis-color').val();
 
     try {
         const response = await fetch('/api/analyze', {
@@ -149,29 +102,27 @@ $('#analyze-button').on('click', async function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 pgn: pgn,
-                level: level,
-                tone: tone,
-                color: color
-                // Email removido: acesso ilimitado para logados
+                level: $('#analysis-level').val(), // Pega o nível (ex: 1500-2000)
+                tone: $('#analysis-tone').val(),   // Pega o tom (ex: Humorado)
+                color: $('#analysis-color').val()
             })
         });
 
         const data = await response.json();
-
+        
         if (data.analysis) {
-            // Sucesso! Mostra a análise
-            if (typeof marked !== 'undefined') {
-                $('#gemini-output').html(marked.parse(data.analysis));
-            } else {
-                $('#gemini-output').html(data.analysis);
-            }
+             if (typeof marked !== 'undefined') {
+                 $('#ai-result').html(marked.parse(data.analysis));
+             } else {
+                 $('#ai-result').html(data.analysis);
+             }
         } else {
-            $('#gemini-output').text("Erro ao analisar. Tente novamente.");
+             $('#ai-result').text("Erro na análise.");
         }
 
     } catch (error) {
-        console.error("Erro na API:", error);
-        $('#gemini-output').text("Erro de conexão com o servidor.");
+        console.error(error);
+        $('#ai-result').text("Erro de conexão com o servidor.");
     } finally {
         $('#analyze-button').prop('disabled', false);
     }

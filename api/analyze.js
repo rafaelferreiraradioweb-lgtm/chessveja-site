@@ -1,47 +1,47 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from 'openai';
 
-// Configuração da IA (Usa a chave que já está no Vercel)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Conecta com a OpenAI usando a chave que está no Vercel
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export default async function handler(req, res) {
-    // Apenas aceita POST
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método não permitido' });
-    }
+  // Só aceita método POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido' });
+  }
 
-    try {
-        const { pgn, level, tone, color } = req.body;
+  try {
+    const { pgn, level, tone, color } = req.body;
 
-        // --- ANÁLISE DA IA (GEMINI) ---
-        // Usando o modelo Flash que é rápido e gratuito
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // O Pedido para o ChatGPT
+    const prompt = `
+      Você é o GM Chessveja (Rafael Ferreira).
+      Analise esta partida de xadrez (PGN abaixo).
+      Foco nas peças: ${color}. Nível do aluno: ${level}. Tom: ${tone}.
+      
+      PGN:
+      ${pgn}
 
-        const prompt = `
-        Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez humano, didático e direto.
-        Analise esta partida de xadrez (PGN abaixo) focando no jogador das peças: ${color}.
-        
-        Nível do aluno: ${level} (rating online).
-        Tom da análise: ${tone}.
+      Sua missão:
+      1. Identifique o erro principal ou momento chave.
+      2. Explique o conceito estratégico por trás.
+      3. Dê 3 dicas práticas para melhorar.
+    `;
 
-        PGN:
-        ${pgn}
+    // Envia para o ChatGPT (GPT-3.5 Turbo é rápido e barato)
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo",
+    });
 
-        Sua missão:
-        1. Identifique o momento crítico onde o jogo virou.
-        2. Explique O PORQUÊ do erro (o plano por trás).
-        3. Dê 3 dicas práticas para esse jogador.
-        4. Use negrito (**texto**) para destacar conceitos.
-        5. Seja breve e impactante (máximo 4 parágrafos).
-        `;
+    // Pega a resposta
+    const analysis = completion.choices[0].message.content;
 
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+    return res.status(200).json({ analysis: analysis });
 
-        // Retorna a análise (sem lógica de créditos)
-        return res.status(200).json({ analysis: responseText });
-
-    } catch (error) {
-        console.error("Erro na API:", error);
-        return res.status(500).json({ error: 'Erro interno ao processar análise.' });
-    }
+  } catch (error) {
+    console.error("Erro na OpenAI:", error);
+    return res.status(500).json({ error: 'Erro ao processar análise.' });
+  }
 }

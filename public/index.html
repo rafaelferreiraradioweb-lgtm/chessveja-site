@@ -62,7 +62,7 @@
         </section>
 
         <section id="analisador">
-            <h2>Analisador de Partidas</h2>
+            <h2>Analisador de Partidas (Premium OpenAI)</h2>
             <div class="analyzer-layout">
                 <div class="board-column">
                     <div id="board" class="chessboard"></div>
@@ -78,27 +78,20 @@
                     <div id="game-info" class="game-info-box">
                         <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
                     </div>
-                    <div class="cta-analisador">
-                        <h3>Gostou da Análise?</h3>
-                        <p>Essa ferramenta gratuita mostra o 'quê' deu errado. Nas minhas <strong>aulas particulares</strong>, eu mostro o 'porquê'.</p>
-                        <p>Aprenda a parar de cometer esses erros e eleve seu jogo para o próximo nível.</p>
-                        <a href="https://api.whatsapp.com/send?phone=5582996535079&text=Oi!%20Vim%20pelo%20Analisador%20de%20PGN%20e%20quero%20saber%20mais%20sobre%20as%20aulas" target="_blank" class="cta-button-whatsapp">
-                            Agende sua Aula Experimental!
-                        </a>
-                    </div>
                 </div>
+                
                 <div class="analysis-column">
-                    <h3>Controles da Partida</h3>
+                    <h3>Configurações da Análise</h3>
                     <div class="options-grid">
                         <div>
-                            <label for="analysis-color">Analisar do ponto de vista:</label>
+                            <label for="analysis-color">Analisar:</label>
                             <select id="analysis-color" name="analysis-color">
                                 <option value="brancas" selected>Brancas</option>
                                 <option value="pretas">Pretas</option>
                             </select>
                         </div>
                         <div>
-                            <label for="analysis-level">Meu nível (Rating Online):</label>
+                            <label for="analysis-level">Seu nível:</label>
                             <select id="analysis-level" name="analysis-level">
                                 <option value="iniciante" selected>Iniciante (Até 1500)</option>
                                 <option value="intermediario">Intermediário (1501-2000)</option>
@@ -106,7 +99,7 @@
                             </select>
                         </div>
                         <div>
-                            <label for="analysis-tone">Tom da Análise:</label>
+                            <label for="analysis-tone">Tom:</label>
                             <select id="analysis-tone" name="analysis-tone">
                                 <option value="tecnico" selected>Técnico</option>
                                 <option value="motivacional">Motivacional</option>
@@ -114,15 +107,18 @@
                             </select>
                         </div>
                     </div>
+
                     <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
+                    
                     <button id="analyze-button">Carregar PGN e Analisar</button>
+                    
                     <div id="engine-analysis" class="engine-box">
                         <h4>Análise do Stockfish</h4>
                         <div id="stockfish-output">Aguardando posição...</div>
                     </div>
-                    <div id="analysis-result" class="gemini-box">
-                        <h4>Análise do IA do Chessveja</h4>
-                        <div id="gemini-output">Aguardando análise...</div>
+                    <div id="gemini-output" class="gemini-box">
+                        <h4>Análise do GM Chessveja (ChatGPT)</h4>
+                        <div id="ai-result">Aguardando análise...</div>
                     </div>
                 </div>
             </div>
@@ -133,7 +129,7 @@
             <div class="video-grid-container" style="max-width: 800px; margin: 0 auto;">
                 <div class="video-card">
                     <div class="video-wrapper">
-                        <iframe src="https://www.youtube.com/embed/gadzp7dLrFQ" title="A Armadilha do Gambito da Dama Aceito: Lasker Trap" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/gadzp7dLrFQ" title="A Armadilha do Gambito da Dama Aceito: Lasker Trap" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <h4>ENFRENTANDO A GRUNFELD DO MEQUINHO SACRIFICANDO</h4>
                 </div>
@@ -148,14 +144,8 @@
             <div class="lichess-container">
                 <div class="widget-card">
                     <h3>Puzzle Diário do Lichess</h3>
-                    <p>Teste sua tática com o puzzle do dia!</p>
-                    <div class="iframe-container">
-                        <div class="widget-card">
-            <h3>Puzzle Diário do Lichess</h3>
-            <p>Teste sua tática com o desafio do dia diretamente no Lichess!</p>
-            <a href="https://lichess.org/training/daily" target="_blank" class="cta-button">Resolver Puzzle Agora</a>
-        </div>
-                    </div>
+                    <p>Teste sua tática com o desafio do dia!</p>
+                    <a href="https://lichess.org/training/daily" target="_blank" class="cta-button">Resolver Puzzle Agora</a>
                 </div>
                 <div class="widget-card">
                     <h3>Lichess TV Ao Vivo</h3>
@@ -172,28 +162,28 @@
             <div class="pricing-container">
                 <div class="pricing-card">
                     <h3>Aula Experimental</h3>
-                    <p class="description">A porta de entrada para o universo da estratégia. Conheça nossa metodologia e dê o primeiro xeque em sua jornada.</p>
+                    <p class="description">A porta de entrada para o universo da estratégia.</p>
                     <p class="price">R$ 20,00</p>
                     <p class="duration">1 hora/aula</p>
                     <a href="#contato" class="cta-button">Quero Começar</a>
                 </div>
                 <div class="pricing-card">
                     <h3>Aula Individual Avulsa</h3>
-                    <p class="description">Foco total nas suas necessidades. Uma aula personalizada para aprimorar pontos específicos do seu jogo.</p>
+                    <p class="description">Foco total nas suas necessidades.</p>
                     <p class="price">R$ 50,00</p>
                     <p class="duration">1 hora/aula</p>
                     <a href="#contato" class="cta-button">Agendar Aula</a>
                 </div>
                 <div class="pricing-card popular">
                     <h3>Plano Mensal Individual</h3>
-                    <p class="description">O caminho para a consistência e o progresso real. Um acompanhamento contínuo para quem leva a evolução a sério.</p>
+                    <p class="description">O caminho para a consistência e o progresso real.</p>
                     <p class="price">R$ 180,00<span class="per-month">/mês</span></p>
                     <p class="duration">4 aulas por mês</p>
                     <a href="#contato" class="cta-button">Iniciar Plano Mensal</a>
                 </div>
                 <div class="pricing-card">
                     <h3>Grupos e Empresas</h3>
-                    <p class="description">Utilize o xadrez para potencializar o raciocínio estratégico em sua equipe. Ideal para empresas, associações e clubes.</p>
+                    <p class="description">Ideal para empresas, associações e clubes.</p>
                     <p class="price">Sob Consulta</p>
                     <p class="duration">Pacotes para até 6 pessoas</p>
                     <a href="#contato" class="cta-button">Solicitar Orçamento</a>
@@ -208,12 +198,12 @@
                 <div class="teacher-card">
                     <img src="https://i.imgur.com/eTdI5X5.jpeg" alt="Foto do Professor Rafael">
                     <h3>Rafael Ferreira</h3>
-                    <p>Com vasta experiência como professor em instituições e projetos sociais, Rafael possui profundo conhecimento para ensinar o jogo de forma eficaz. Sua abordagem é centrada no aluno, desenvolvendo raciocínio lógico e concentração. Certificado pela FEXEAL, seu compromisso é oferecer aulas dinâmicas e motivadoras.</p>
+                    <p>Com vasta experiência como professor, Rafael desenvolve raciocínio lógico e concentração. Certificado pela FEXEAL.</p>
                 </div>
                 <div class="teacher-card">
                     <img src="https://imgur.com/dCdVx65.jpg" alt="Foto da Professora Graziela">
                     <h3>Graziela Garcia</h3>
-                    <p>Educadora com Pós-Graduação no ensino da Matemática e certificada como Instrutora de Xadrez pela FEXEAL. Graziela possui ampla experiência com aulas particulares desde 2002. Sua paixão pelo ensino e sua dedicação fazem dela uma professora comprometida com o desenvolvimento integral de seus alunos.</p>
+                    <p>Educadora com Pós-Graduação em Matemática e Instrutora de Xadrez pela FEXEAL.</p>
                 </div>
             </div>
         </section>
@@ -222,7 +212,6 @@
 
     <footer id="contato">
         <h2>Entre em Contato</h2>
-        <p>Pronto para começar sua jornada no xadrez?</p>
         <div class="contact-info">
             <a href="https://api.whatsapp.com/send?phone=5582996535079" target="_blank" class="contact-button">WhatsApp</a>
             <a href="mailto:cursosdexadrez@gmail.com" class="contact-button">Email</a>
@@ -231,37 +220,17 @@
     </footer>
 
     <script>
-        // Sua Chave Pública
-        const pubKey = "pk_test_d29uZHJvdXMtc3RhbGxpb24tNy5jbGVyay5hY2NvdW50cy5kZXYk";
-
-        // Função que roda quando a página carrega
         window.addEventListener('load', async function () {
-            
-            // Tenta carregar o Clerk
-            try {
-                await Clerk.load();
-                console.log("Clerk carregado com sucesso!");
-            } catch (err) {
-                console.error("Erro ao carregar o Clerk:", err);
-                document.getElementById('auth-container').innerHTML = "Erro no Login";
-                return;
-            }
-
+            try { await Clerk.load(); } catch (err) { console.error(err); }
             const authContainer = document.getElementById('auth-container');
-
             if (Clerk.user) {
-                // CENÁRIO A: USUÁRIO ESTÁ LOGADO
-                // Mostra a bolinha com a foto dele (User Button)
                 authContainer.innerHTML = '<div id="user-button"></div>';
                 Clerk.mountUserButton(document.getElementById('user-button'));
             } else {
-                // CENÁRIO B: USUÁRIO NÃO ESTÁ LOGADO
-                // Mostra o botão "Entrar"
                 authContainer.innerHTML = `
-                    <button onclick="Clerk.openSignIn()" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit; transition: all 0.3s;">
+                    <button onclick="Clerk.openSignIn()" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit;">
                         Entrar
-                    </button>
-                `;
+                    </button>`;
             }
         });
     </script>

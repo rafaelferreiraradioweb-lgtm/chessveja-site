@@ -3,66 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprenda do Zero - Chessveja</title>
+    <title>Xadrez Básico - Chessveja</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* FORÇA TUDO A FICAR NO CENTRO */
+        /* CONFIGURAÇÃO PARA CENTRALIZAR TUDO (SEM MUDAR CORES DO FUNDO) */
         .conteudo-centralizado {
-            max-width: 900px; /* Largura máxima para não esticar demais */
+            max-width: 900px; /* Largura para não esticar demais */
             margin: 0 auto;   /* Centraliza o bloco na tela */
-            text-align: center; /* Centraliza todos os textos */
+            text-align: center; /* Centraliza todos os textos e imagens */
             padding: 20px;
         }
 
         .secao-aula {
-            margin-bottom: 50px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(128, 128, 128, 0.3); /* Linha suave separando */
+            margin-bottom: 60px; /* Espaço entre tópicos */
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.3); /* Linha sutil separando */
         }
 
         /* Centraliza as imagens */
         .img-aula {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            display: inline-block; /* Comporta-se como texto para centralizar */
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); /* Sombra para destacar a imagem */
         }
 
-        /* Garante que o texto fique no meio */
+        /* Títulos */
+        h1 { margin-top: 40px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { margin-top: 30px; color: #e0e0e0; } /* Cor clara para destacar no fundo escuro */
+        h3 { color: #d4af37; margin-top: 20px; }
+
+        /* Textos */
         p {
-            text-align: center;
             font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: inherit; /* Usa a cor padrão do seu site */
         }
 
-        h1, h2 {
-            text-align: center;
-            margin-top: 30px;
+        strong { color: #d4af37; } /* Destaque dourado */
+
+        /* Lista de Princípios Centralizada */
+        ul.lista-centralizada {
+            list-style-type: none; /* Remove bolinhas padrão */
+            padding: 0;
         }
-        
+        ul.lista-centralizada li {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
         /* Botão Voltar */
         .btn-voltar {
             display: inline-block;
-            margin-top: 30px;
+            margin-top: 40px;
             padding: 12px 30px;
-            background-color: var(--primary-color, #333); /* Usa cor do seu tema */
-            color: #fff;
+            background-color: #d4af37;
+            color: #000;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
-            border: 1px solid #ffd700;
+            transition: 0.3s;
         }
         .btn-voltar:hover {
-            background-color: #ffd700;
-            color: #000;
+            background-color: #fff;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -83,89 +96,142 @@
         
         <div class="conteudo-centralizado">
             
-            <h1>Aprenda Xadrez do Zero</h1>
-            <p>Conheça as peças e os conceitos essenciais para começar a vencer.</p>
+            <h1>Xadrez Básico: Conceitos, Movimentos e Fundamentos</h1>
+            <p>
+                Aprender xadrez é compreender uma linguagem própria feita de estratégia, lógica e criatividade. Nesta seção, você encontra os principais conceitos para começar a jogar de forma segura e entender como cada peça pode ser usada com eficiência desde a sua primeira partida.
+            </p>
 
             <div class="secao-aula">
-                <h2>1. O Tabuleiro e as Peças</h2>
-                <p>O tabuleiro tem 64 casas. Regra de ouro: <strong>"Casa branca na direita"</strong>.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" class="img-aula" alt="Tabuleiro">
+                <h2>O Tabuleiro e a Posição Inicial</h2>
+                <p>
+                    O xadrez é jogado em um tabuleiro de 64 casas alternadas entre claras e escuras. Cada jogador começa com 16 peças: rei, dama, duas torres, dois bispos, dois cavalos e oito peões.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" class="img-aula" alt="Tabuleiro de Xadrez">
+                <p>
+                    A regra básica para montar o tabuleiro é simples: <strong>a casa clara sempre fica à direita de cada jogador.</strong>
+                </p>
+            </div>
+
+            <h1 style="border-top: 1px solid #555; padding-top: 40px;">Movimentos das Peças</h1>
+
+            <div class="secao-aula">
+                <h3>♔ Rei</h3>
+                <p>
+                    Move-se uma casa por vez em qualquer direção. É a peça mais importante: se o rei estiver em ameaça, você deve defendê-lo obrigatoriamente.
+                </p>
+                <p><strong>Fundamento:</strong> mantenha o rei seguro e evite expô-lo cedo demais.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" class="img-aula" alt="Movimento do Rei">
             </div>
 
             <div class="secao-aula">
-                <h2>2. O Peão</h2>
-                <p>Anda para frente (uma casa). Captura na diagonal.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" class="img-aula" alt="Peão">
+                <h3>♕ Dama</h3>
+                <p>
+                    Combina o movimento da torre e do bispo, deslocando-se por linhas retas ou diagonais.
+                </p>
+                <p><strong>Fundamento:</strong> peça poderosa, mas vulnerável a ataques; use com equilíbrio.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" class="img-aula" alt="Movimento da Dama">
             </div>
 
             <div class="secao-aula">
-                <h2>3. A Torre</h2>
-                <p>Move-se em linha reta (horizontal ou vertical).</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" class="img-aula" alt="Torre">
+                <h3>♖ Torres</h3>
+                <p>
+                    Andam em linhas retas — horizontais e verticais.
+                </p>
+                <p><strong>Fundamento:</strong> tornam-se mais fortes no final do jogo e quando têm colunas abertas à frente.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" class="img-aula" alt="Movimento da Torre">
             </div>
 
             <div class="secao-aula">
-                <h2>4. O Bispo</h2>
-                <p>Move-se apenas nas diagonais.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" class="img-aula" alt="Bispo">
+                <h3>♗ Bispos</h3>
+                <p>
+                    Movem-se pelas diagonais, cada um permanecendo sempre em uma cor (clara ou escura).
+                </p>
+                <p><strong>Fundamento:</strong> atuam melhor em posições abertas e trabalham muito bem em dupla.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" class="img-aula" alt="Movimento do Bispo">
             </div>
 
             <div class="secao-aula">
-                <h2>5. A Dama (Rainha)</h2>
-                <p>A peça mais poderosa. Move-se para qualquer direção.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" class="img-aula" alt="Dama">
+                <h3>♘ Cavalos</h3>
+                <p>
+                    Saltam em “L”: duas casas para um lado e uma para outro.
+                </p>
+                <p><strong>Fundamento:</strong> ótimos para controlar casas centrais e surpreender adversários, pois podem pular peças.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" class="img-aula" alt="Movimento do Cavalo">
             </div>
 
             <div class="secao-aula">
-                <h2>6. O Rei</h2>
-                <p>A peça mais importante. Anda uma casa para qualquer lado.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" class="img-aula" alt="Rei">
+                <h3>♙ Peões</h3>
+                <p>
+                    Movem-se para frente, porém capturam na diagonal. No primeiro lance podem andar duas casas.
+                </p>
+                <p><strong>Fundamento:</strong> formam a estrutura que define toda a estratégia da partida.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" class="img-aula" alt="Movimento do Peão">
+            </div>
+
+            <h1 style="border-top: 1px solid #555; padding-top: 40px;">Conceitos Essenciais</h1>
+
+            <div class="secao-aula">
+                <h3>✔ Xeque</h3>
+                <p>
+                    Quando o rei está sob ataque. O jogador deve sair do xeque imediatamente movendo o rei, bloqueando ou capturando a peça atacante.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25146.40b54320.668x375o.50b719487928.png" class="img-aula" alt="Exemplo de Xeque">
             </div>
 
             <div class="secao-aula">
-                <h2>7. O Cavalo</h2>
-                <p>Move-se em "L". É a única peça que pode pular outras.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" class="img-aula" alt="Cavalo">
-            </div>
-
-
-            <h1 style="margin-top: 80px; border-top: 2px solid #ffd700; padding-top: 40px; display: inline-block;">Fundamentos do Jogo</h1>
-            <p style="margin-bottom: 40px;">Domine estes 6 conceitos para jogar de verdade.</p>
-
-            <div class="secao-aula">
-                <h2>Captura</h2>
-                <p>Como tirar as peças do oponente do tabuleiro.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227563.35d6888c.668x375o.c70e70405202.png" class="img-aula" alt="Captura">
+                <h3>✔ Xeque-mate</h3>
+                <p>
+                    O rei está em xeque e não existe defesa possível. A partida termina.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/19080.a7e75069.668x375o.104434224098.jpeg" class="img-aula" alt="Exemplo de Xeque-Mate">
             </div>
 
             <div class="secao-aula">
-                <h2>Defesa</h2>
-                <p>Como proteger suas peças e fugir de ataques.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227567.85b2e04f.668x375o.225d314810f5.png" class="img-aula" alt="Defesa">
+                <h3>✔ Capturas</h3>
+                <p>
+                    Capturar é substituir a peça adversária pela sua. Porém, nem toda peça capturada representa vantagem. O equilíbrio de material é fundamental.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227563.35d6888c.668x375o.c70e70405202.png" class="img-aula" alt="Exemplo de Captura">
             </div>
 
-            <div class="secao-aula">
-                <h2>Combate</h2>
-                <p>Capture, defenda e calcule trocas.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227571.74542289.668x375o.762124552467.png" class="img-aula" alt="Combate">
-            </div>
+            <h1 style="border-top: 1px solid #555; padding-top: 40px;">Movimentos Especiais</h1>
 
             <div class="secao-aula">
-                <h2>Xeque</h2>
-                <p>Ameaçando o Rei! Ele é obrigado a fugir.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25146.40b54320.668x375o.50b719487928.png" class="img-aula" alt="Xeque">
-            </div>
-
-            <div class="secao-aula">
-                <h2>Mate em 1</h2>
-                <p>Vença o jogo com um único lance.</p>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/19080.a7e75069.668x375o.104434224098.jpeg" class="img-aula" alt="Mate em 1">
-            </div>
-
-            <div class="secao-aula">
-                <h2>Roque</h2>
-                <p>O movimento especial para proteger o Rei.</p>
+                <h3>Roque</h3>
+                <p>
+                    Lance que envolve rei e torre para melhorar a segurança do rei.<br>
+                    <strong>Roque pequeno:</strong> lado do rei | <strong>Roque grande:</strong> lado da dama
+                </p>
                 <img src="https://images.chesscomfiles.com/uploads/v1/images/227579.e10a26b6.668x375o.5c4114251421.png" class="img-aula" alt="Roque">
+            </div>
+
+            <div class="secao-aula">
+                <h3>Promoção do Peão</h3>
+                <p>
+                    Quando um peão chega à última fileira, pode se transformar em dama, torre, bispo ou cavalo — geralmente dama.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227581.4a8b7536.668x375o.217277688005.png" class="img-aula" alt="Promoção">
+            </div>
+
+            <div class="secao-aula">
+                <h3>En Passant</h3>
+                <p>
+                    Captura especial feita por um peão quando o adversário avança duas casas e passa por uma casa controlada pelo seu peão.
+                </p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227583.5c42666d.668x375o.c00223531398.png" class="img-aula" alt="En Passant">
+            </div>
+
+            <h1 style="border-top: 1px solid #555; padding-top: 40px;">Princípios de Uso das Peças</h1>
+            
+            <div class="secao-aula">
+                <ul class="lista-centralizada">
+                    <li><strong>Controle o centro:</strong> peças bem posicionadas no centro têm mais alcance.</li>
+                    <li><strong>Desenvolva rapidamente:</strong> leve suas peças (especialmente cavalos e bispos) para casas ativas.</li>
+                    <li><strong>Proteja o rei:</strong> faça o roque cedo.</li>
+                    <li><strong>Coordenação:</strong> as peças funcionam melhor quando trabalham em conjunto.</li>
+                    <li><strong>Planejamento:</strong> sempre jogue com uma ideia, mesmo que simples.</li>
+                    <li><strong>Evite erros comuns:</strong> mover a mesma peça muitas vezes, expor a dama cedo, ignorar ameaças.</li>
+                </ul>
             </div>
 
             <a href="index.html" class="btn-voltar">← Voltar para a Página Inicial</a>

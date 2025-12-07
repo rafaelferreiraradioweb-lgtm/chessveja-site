@@ -1,5 +1,6 @@
 # chessveja-site
-"Site de aulas de xadrez pro Chessveja."
+"Site de aulas de xadrez prof Chessveja."
+
 
 
 

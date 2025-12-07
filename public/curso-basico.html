@@ -8,60 +8,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS ESPECIAL PARA CENTRALIZAR TUDO */
-        body {
-            background-color: #f9f9f9;
-        }
-        
-        .container-central {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            text-align: center; /* Centraliza tudo */
+        /* FORÇA TUDO A FICAR NO CENTRO */
+        .conteudo-centralizado {
+            max-width: 900px; /* Largura máxima para não esticar demais */
+            margin: 0 auto;   /* Centraliza o bloco na tela */
+            text-align: center; /* Centraliza todos os textos */
+            padding: 20px;
         }
 
-        h1 { color: #d4af37; margin-top: 0; margin-bottom: 10px; }
-        h2 { color: #2c3e50; margin-bottom: 15px; margin-top: 40px; }
-        h3 { color: #2c3e50; margin-bottom: 10px; }
-        
         .secao-aula {
-            margin-bottom: 40px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 30px;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.3); /* Linha suave separando */
         }
 
+        /* Centraliza as imagens */
         .img-aula {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            display: inline-block;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
+        /* Garante que o texto fique no meio */
         p {
+            text-align: center;
             font-size: 1.1rem;
             line-height: 1.6;
-            color: #555;
-            text-align: center; /* Texto centralizado */
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
+        h1, h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        /* Botão Voltar */
         .btn-voltar {
             display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: #333;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background-color: var(--primary-color, #333); /* Usa cor do seu tema */
             color: #fff;
             text-decoration: none;
-            border-radius: 30px;
+            border-radius: 5px;
             font-weight: bold;
-            transition: 0.3s;
+            border: 1px solid #ffd700;
         }
-        .btn-voltar:hover { background-color: #d4af37; color: #000; }
+        .btn-voltar:hover {
+            background-color: #ffd700;
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -77,95 +79,93 @@
         </nav>
     </header>
 
-    <main style="padding: 20px;">
+    <main>
         
-        <div class="container-central">
+        <div class="conteudo-centralizado">
             
             <h1>Aprenda Xadrez do Zero</h1>
-            <p style="font-size: 1.2rem; margin-bottom: 40px;">
-                Conheça as peças e os conceitos essenciais para começar a vencer.
-            </p>
+            <p>Conheça as peças e os conceitos essenciais para começar a vencer.</p>
 
             <div class="secao-aula">
                 <h2>1. O Tabuleiro e as Peças</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" class="img-aula" alt="Tabuleiro">
                 <p>O tabuleiro tem 64 casas. Regra de ouro: <strong>"Casa branca na direita"</strong>.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25134.1f380756.668x375o.0f3e82760920.png" class="img-aula" alt="Tabuleiro">
             </div>
 
             <div class="secao-aula">
                 <h2>2. O Peão</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" class="img-aula" alt="Peão">
                 <p>Anda para frente (uma casa). Captura na diagonal.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25136.63402432.668x375o.a6509a278146.png" class="img-aula" alt="Peão">
             </div>
 
             <div class="secao-aula">
                 <h2>3. A Torre</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" class="img-aula" alt="Torre">
                 <p>Move-se em linha reta (horizontal ou vertical).</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25138.e5614942.668x375o.28424107406a.png" class="img-aula" alt="Torre">
             </div>
 
             <div class="secao-aula">
                 <h2>4. O Bispo</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" class="img-aula" alt="Bispo">
                 <p>Move-se apenas nas diagonais.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25139.75624255.668x375o.568453414002.png" class="img-aula" alt="Bispo">
             </div>
 
             <div class="secao-aula">
                 <h2>5. A Dama (Rainha)</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" class="img-aula" alt="Dama">
                 <p>A peça mais poderosa. Move-se para qualquer direção.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25140.75624255.668x375o.482859292850.png" class="img-aula" alt="Dama">
             </div>
 
             <div class="secao-aula">
                 <h2>6. O Rei</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" class="img-aula" alt="Rei">
                 <p>A peça mais importante. Anda uma casa para qualquer lado.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25141.75624255.668x375o.382859292850.png" class="img-aula" alt="Rei">
             </div>
 
             <div class="secao-aula">
                 <h2>7. O Cavalo</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" class="img-aula" alt="Cavalo">
                 <p>Move-se em "L". É a única peça que pode pular outras.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25137.75624255.668x375o.282859292850.png" class="img-aula" alt="Cavalo">
             </div>
 
 
-            <h1 style="margin-top: 60px; border-top: 2px solid #ffd700; padding-top: 40px;">Fundamentos do Jogo</h1>
-            <p>Domine estes 6 conceitos para jogar de verdade.</p>
+            <h1 style="margin-top: 80px; border-top: 2px solid #ffd700; padding-top: 40px; display: inline-block;">Fundamentos do Jogo</h1>
+            <p style="margin-bottom: 40px;">Domine estes 6 conceitos para jogar de verdade.</p>
 
             <div class="secao-aula">
                 <h2>Captura</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227563.35d6888c.668x375o.c70e70405202.png" class="img-aula" alt="Captura">
                 <p>Como tirar as peças do oponente do tabuleiro.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227563.35d6888c.668x375o.c70e70405202.png" class="img-aula" alt="Captura">
             </div>
 
             <div class="secao-aula">
                 <h2>Defesa</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227567.85b2e04f.668x375o.225d314810f5.png" class="img-aula" alt="Defesa">
                 <p>Como proteger suas peças e fugir de ataques.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227567.85b2e04f.668x375o.225d314810f5.png" class="img-aula" alt="Defesa">
             </div>
 
             <div class="secao-aula">
                 <h2>Combate</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227571.74542289.668x375o.762124552467.png" class="img-aula" alt="Combate">
                 <p>Capture, defenda e calcule trocas.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227571.74542289.668x375o.762124552467.png" class="img-aula" alt="Combate">
             </div>
 
             <div class="secao-aula">
                 <h2>Xeque</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/25146.40b54320.668x375o.50b719487928.png" class="img-aula" alt="Xeque">
                 <p>Ameaçando o Rei! Ele é obrigado a fugir.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/25146.40b54320.668x375o.50b719487928.png" class="img-aula" alt="Xeque">
             </div>
 
             <div class="secao-aula">
                 <h2>Mate em 1</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/article/19080.a7e75069.668x375o.104434224098.jpeg" class="img-aula" alt="Mate em 1">
                 <p>Vença o jogo com um único lance.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/article/19080.a7e75069.668x375o.104434224098.jpeg" class="img-aula" alt="Mate em 1">
             </div>
 
             <div class="secao-aula">
                 <h2>Roque</h2>
-                <img src="https://images.chesscomfiles.com/uploads/v1/images/227579.e10a26b6.668x375o.5c4114251421.png" class="img-aula" alt="Roque">
                 <p>O movimento especial para proteger o Rei.</p>
+                <img src="https://images.chesscomfiles.com/uploads/v1/images/227579.e10a26b6.668x375o.5c4114251421.png" class="img-aula" alt="Roque">
             </div>
 
             <a href="index.html" class="btn-voltar">← Voltar para a Página Inicial</a>

@@ -1,91 +1,47 @@
-import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Configurações
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Configuração da IA (Usa a chave que já está no Vercel)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Conecta ao Banco
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export default async function handler(req, res) {
+    // Apenas aceita POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método não permitido' });
     }
 
     try {
-        const { pgn, level, tone, color, email } = req.body;
+        const { pgn, level, tone, color } = req.body;
 
-        if (!email) {
-            return res.status(400).json({ error: 'Email não fornecido.' });
-        }
-
-        // --- 1. CONTROLE DE CRÉDITOS (SUPABASE) ---
-        
-        // Passo A: Verifica se o usuário já existe na tabela 'users_credits'
-        let { data: user, error: fetchError } = await supabase
-            .from('users_credits')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-        // Se der erro (ex: não achou), e o erro não for de conexão, assumimos que é usuário novo
-        if (!user) {
-            // Passo B: Cria o usuário novo com 5 créditos GRÁTIS
-            const { data: newUser, error: createError } = await supabase
-                .from('users_credits')
-                .insert([
-                    { email: email, credits: 5, plan: 'free' }
-                ])
-                .select()
-                .single();
-            
-            if (createError) {
-                console.error("Erro ao criar usuário:", createError);
-                return res.status(500).json({ error: 'Erro ao registrar usuário.' });
-            }
-            user = newUser;
-        }
-
-        // Passo C: Verifica se tem créditos
-        if (user.credits <= 0) {
-            return res.status(403).json({ error: 'Seus créditos acabaram. Faça o upgrade!' });
-        }
-
-        // Passo D: Desconta 1 crédito
-        const { error: updateError } = await supabase
-            .from('users_credits')
-            .update({ credits: user.credits - 1 })
-            .eq('email', email);
-
-        if (updateError) {
-            console.error("Erro ao descontar crédito:", updateError);
-        }
-
-        // --- 2. ANÁLISE DA IA (GEMINI) ---
+        // --- ANÁLISE DA IA (GEMINI) ---
+        // Usando o modelo Flash que é rápido e gratuito
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `
-        Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez humano.
-        Analise esta partida (Peças: ${color}, Nível: ${level}, Tom: ${tone}).
-        Seja didático. Identifique o erro principal e dê 3 dicas.
+        Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez humano, didático e direto.
+        Analise esta partida de xadrez (PGN abaixo) focando no jogador das peças: ${color}.
         
+        Nível do aluno: ${level} (rating online).
+        Tom da análise: ${tone}.
+
         PGN:
         ${pgn}
+
+        Sua missão:
+        1. Identifique o momento crítico onde o jogo virou.
+        2. Explique O PORQUÊ do erro (o plano por trás).
+        3. Dê 3 dicas práticas para esse jogador.
+        4. Use negrito (**texto**) para destacar conceitos.
+        5. Seja breve e impactante (máximo 4 parágrafos).
         `;
 
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
 
-        // Retorna a análise E o saldo atualizado
-        return res.status(200).json({ 
-            analysis: responseText, 
-            credits: user.credits - 1 
-        });
+        // Retorna a análise (sem lógica de créditos)
+        return res.status(200).json({ analysis: responseText });
 
     } catch (error) {
-        console.error("Erro geral na API:", error);
-        return res.status(500).json({ error: 'Erro interno no servidor.' });
+        console.error("Erro na API:", error);
+        return res.status(500).json({ error: 'Erro interno ao processar análise.' });
     }
 }

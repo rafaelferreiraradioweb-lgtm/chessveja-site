@@ -109,9 +109,10 @@ stockfish.onmessage = function(event) {
 
 $('#analyze-button').on('click', async function() {
     
-    // 1. VERIFICAÇÃO DE LOGIN
+    // 1. TRAVA DE SEGURANÇA (LOGIN)
+    // Se não tiver usuário logado, barra e pede login.
     if (!window.Clerk || !window.Clerk.user) {
-        alert("🔒 Acesso Restrito!\n\nVocê precisa criar uma conta gratuita para analisar.");
+        alert("🔒 Acesso Restrito!\n\nVocê precisa fazer login (grátis) para analisar suas partidas.");
         window.Clerk.openSignIn();
         return; 
     }
@@ -135,15 +136,12 @@ $('#analyze-button').on('click', async function() {
     stockfish.postMessage('go depth 15');
 
     // UI de Carregamento
-    $('#gemini-output').html('<em>O GM Chessveja está consultando seus créditos e analisando...</em>');
+    $('#gemini-output').html('<em>O GM Chessveja está analisando sua partida... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
 
     const level = $('#analysis-level').val();
     const tone = $('#analysis-tone').val();
     const color = $('#analysis-color').val();
-    
-    // PEGA O EMAIL DO USUÁRIO LOGADO
-    const userEmail = window.Clerk.user.primaryEmailAddress.emailAddress;
 
     try {
         const response = await fetch('/api/analyze', {
@@ -153,30 +151,22 @@ $('#analyze-button').on('click', async function() {
                 pgn: pgn,
                 level: level,
                 tone: tone,
-                color: color,
-                email: userEmail // ENVIA O EMAIL PARA O BACKEND
+                color: color
+                // Email removido: acesso ilimitado para logados
             })
         });
 
         const data = await response.json();
 
-        // SE O USUÁRIO ESTIVER SEM CRÉDITOS (ERRO 403)
-        if (response.status === 403) {
-            $('#gemini-output').html(`<strong style="color: red;">🚫 ${data.error}</strong>`);
-            alert("⚠️ SEUS CRÉDITOS ACABARAM!\n\nVocê atingiu o limite do plano Grátis. Faça o upgrade para o Plano PRO por R$ 19,90 para continuar analisando.");
-            // Aqui futuramente colocaremos o link do Stripe
-        } 
-        // SE TIVER SUCESSO
-        else if (data.analysis) {
-            let creditsMsg = `<br><br><small style="color: #25D366;">✅ Análise concluída. Créditos restantes: <strong>${data.credits}</strong></small>`;
-            
+        if (data.analysis) {
+            // Sucesso! Mostra a análise
             if (typeof marked !== 'undefined') {
-                $('#gemini-output').html(marked.parse(data.analysis) + creditsMsg);
+                $('#gemini-output').html(marked.parse(data.analysis));
             } else {
-                $('#gemini-output').html(data.analysis + creditsMsg);
+                $('#gemini-output').html(data.analysis);
             }
         } else {
-            $('#gemini-output').text("Erro desconhecido. Tente novamente.");
+            $('#gemini-output').text("Erro ao analisar. Tente novamente.");
         }
 
     } catch (error) {

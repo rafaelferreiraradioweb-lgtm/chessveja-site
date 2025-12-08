@@ -1,12 +1,10 @@
 import OpenAI from 'openai';
 
-// Conecta com a OpenAI usando a chave que está no Vercel
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export default async function handler(req, res) {
-  // Só aceita método POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
@@ -14,34 +12,51 @@ export default async function handler(req, res) {
   try {
     const { pgn, level, tone, color } = req.body;
 
-    // O Pedido para o ChatGPT
+    // --- PROMPT "ESTILO OUTUBRO" (COMPLETO E DETALHADO) ---
     const prompt = `
-      Você é o GM Chessveja (Rafael Ferreira).
-      Analise esta partida de xadrez (PGN abaixo).
-      Foco nas peças: ${color}. Nível do aluno: ${level}. Tom: ${tone}.
-      
-      PGN:
+      Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez especialista.
+      O usuário jogou de: ${color}.
+      Nível do usuário: ${level}.
+      Tom da análise: ${tone}.
+
+      PGN da Partida:
       ${pgn}
 
-      Sua missão:
-      1. Identifique o erro principal ou momento chave.
-      2. Explique o conceito estratégico por trás.
-      3. Dê 3 dicas práticas para melhorar.
-    `;
+      Por favor, analise a partida profundamente e gere um relatório estruturado EXATAMENTE nestes 4 tópicos:
 
-    // Envia para o ChatGPT (GPT-3.5 Turbo é rápido e barato)
+      ### 1. Abertura
+      - Identifique o nome exato da abertura e da variante.
+      - Explique se os movimentos iniciais seguiram a teoria ou se houve novidade/erro cedo.
+
+      ### 2. Planos Estratégicos
+      - **Plano das Brancas:** O que as brancas deveriam tentar fazer nessa posição? (Ex: Atacar na ala do rei, dominar o centro, trocar peças...)
+      - **Plano das Pretas:** O que as pretas deveriam buscar?
+      - Quem executou melhor o plano?
+
+      ### 3. Análise Lance a Lance (Momentos Críticos)
+      - Não liste todos os lances. Liste apenas os momentos chave onde o jogo mudou.
+      - Use o formato: "Lance X (Peça): Comentário".
+      - Identifique o ERRO CRÍTICO que definiu a partida.
+      - Sugira o MELHOR LANCE que deveria ter sido feito no lugar do erro.
+
+      ### 4. Conclusão e Dicas
+      - Resuma o desempenho do jogador.
+      - Dê 2 dicas práticas para ele treinar e não errar isso de novo.
+
+      Use formatação Markdown (negrito, itálico) para facilitar a leitura.
+    `;
+    // -----------------------------------------------------------
+
     const completion = await openai.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo", // O modelo clássico e rápido que usávamos
+      temperature: 0.7,
     });
 
-    // Pega a resposta
-    const analysis = completion.choices[0].message.content;
-
-    return res.status(200).json({ analysis: analysis });
+    return res.status(200).json({ analysis: completion.choices[0].message.content });
 
   } catch (error) {
-    console.error("Erro na OpenAI:", error);
+    console.error("Erro OpenAI:", error);
     return res.status(500).json({ error: 'Erro ao processar análise.' });
   }
 }

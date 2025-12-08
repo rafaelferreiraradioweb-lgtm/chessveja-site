@@ -5,7 +5,6 @@ const openai = new OpenAI({
 });
 
 export default async function handler(req, res) {
-  // Só aceita método POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
@@ -13,39 +12,45 @@ export default async function handler(req, res) {
   try {
     const { pgn, level, tone, color } = req.body;
 
-    // --- PROMPT DETALHADO (ESTILO OUTUBRO) ---
+    // --- PROMPT "ESTILO OUTUBRO" (COMPLETO E DETALHADO) ---
     const prompt = `
-      Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez didático e perspicaz.
-      Analise a seguinte partida de xadrez focando no jogador das peças: ${color}.
-      Nível do aluno: ${level}.
-      Tom da análise: ${tone} (mas sempre profissional e instrutivo).
+      Você é o GM Chessveja (Rafael Ferreira), um treinador de xadrez especialista.
+      O usuário jogou de: ${color}.
+      Nível do usuário: ${level}.
+      Tom da análise: ${tone}.
 
       PGN da Partida:
       ${pgn}
 
-      SAÍDA ESPERADA (Formate usando HTML simples com <b>negrito</b> e quebras de linha <br>):
-      
-      1. <b>Resumo da Abertura</b>: Diga o nome da abertura, se o aluno jogou a teoria correta e quem saiu melhor.
-      
-      2. <b>Momentos Críticos (Lance a Lance)</b>: 
-         - Cite os lances onde o jogo mudou (Erros Graves ou Lances Brilhantes).
-         - Explique o PORQUÊ do erro e qual seria o lance correto.
-         - <i>Exemplo: "No lance 12... <b>Bispo f4</b> foi impreciso porque permite Cavalo g5. O melhor seria..."</i>
+      Por favor, analise a partida profundamente e gere um relatório estruturado EXATAMENTE nestes 4 tópicos:
 
-      3. <b>Planos Estratégicos</b>:
-         - Quais eram os planos para as Brancas e para as Pretas nessa posição?
-         - O aluno seguiu o plano correto ou jogou sem objetivo?
+      ### 1. Abertura
+      - Identifique o nome exato da abertura e da variante.
+      - Explique se os movimentos iniciais seguiram a teoria ou se houve novidade/erro cedo.
 
-      4. <b>Conclusão</b>:
-         - Dê 3 dicas práticas de treino para este jogador não cometer os mesmos erros.
+      ### 2. Planos Estratégicos
+      - **Plano das Brancas:** O que as brancas deveriam tentar fazer nessa posição? (Ex: Atacar na ala do rei, dominar o centro, trocar peças...)
+      - **Plano das Pretas:** O que as pretas deveriam buscar?
+      - Quem executou melhor o plano?
 
-      Seja detalhista na estratégia e nos planos, não fique apenas falando lances do computador.
+      ### 3. Análise Lance a Lance (Momentos Críticos)
+      - Não liste todos os lances. Liste apenas os momentos chave onde o jogo mudou.
+      - Use o formato: "Lance X (Peça): Comentário".
+      - Identifique o ERRO CRÍTICO que definiu a partida.
+      - Sugira o MELHOR LANCE que deveria ter sido feito no lugar do erro.
+
+      ### 4. Conclusão e Dicas
+      - Resuma o desempenho do jogador.
+      - Dê 2 dicas práticas para ele treinar e não errar isso de novo.
+
+      Use formatação Markdown (negrito, itálico) para facilitar a leitura.
     `;
     // -----------------------------------------------------------
 
     const completion = await openai.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo", // O modelo clássico e rápido que usávamos
+      temperature: 0.7,
     });
 
     return res.status(200).json({ analysis: completion.choices[0].message.content });

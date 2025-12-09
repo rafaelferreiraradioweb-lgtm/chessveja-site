@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chessveja - Aulas de Xadrez em Maceió</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
@@ -81,7 +79,7 @@
                 </div>
                 
                 <div class="analysis-column">
-                    <h3>Configurações da Análise</h3>
+                    <h3>Estilo da Análise</h3>
                     <div class="options-grid">
                         <div>
                             <label for="analysis-color">Analisar:</label>
@@ -117,8 +115,21 @@
                         <div id="stockfish-output">Aguardando posição...</div>
                     </div>
                     <div id="gemini-output" class="gemini-box">
-                        <h4>Análise do GM Chessveja (ChatGPT)</h4>
+                        <h4>Análise da IA do Chessveja</h4>
                         <div id="ai-result">Aguardando análise...</div>
+                    </div>
+
+                    <div id="feedback-area" style="display: none; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+                        <h4 style="color: #d4af37; margin-bottom: 10px;">O que achou da análise?</h4>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Envie uma sugestão para o Rafael melhorar o sistema:</p>
+                        
+                        <form action="https://formspree.io/f/xpzvqoyk" method="POST">
+                            <textarea name="message" placeholder="Escreva sua sugestão aqui..." style="width: 100%; height: 80px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;"></textarea>
+                            <input type="hidden" name="email" id="user-email-field">
+                            <button type="submit" style="margin-top: 10px; background-color: #2c3e50; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                                Enviar Sugestão
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -223,14 +234,22 @@
         window.addEventListener('load', async function () {
             try { await Clerk.load(); } catch (err) { console.error(err); }
             const authContainer = document.getElementById('auth-container');
+            const feedbackArea = document.getElementById('feedback-area');
+            const emailField = document.getElementById('user-email-field');
+
             if (Clerk.user) {
                 authContainer.innerHTML = '<div id="user-button"></div>';
                 Clerk.mountUserButton(document.getElementById('user-button'));
+                if(feedbackArea) {
+                    feedbackArea.style.display = 'block';
+                    if(emailField) emailField.value = Clerk.user.primaryEmailAddress; 
+                }
             } else {
                 authContainer.innerHTML = `
                     <button onclick="Clerk.openSignIn()" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit;">
                         Entrar
                     </button>`;
+                if(feedbackArea) feedbackArea.style.display = 'none';
             }
         });
     </script>

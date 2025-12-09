@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* CENTRALIZAÇÃO MANTENDO O FUNDO ORIGINAL */
         .conteudo-centralizado {
             max-width: 900px;
             margin: 0 auto;
@@ -22,40 +21,19 @@
             border-bottom: 1px solid rgba(128, 128, 128, 0.3);
         }
 
-        /* IMAGENS DAS PEÇAS (PADRÃO LICHESS / CBURNETT) */
         .img-aula {
             display: inline-block;
-            max-width: 120px; /* Tamanho elegante */
+            max-width: 120px;
             height: auto;
             margin: 20px 0;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); /* Sombra para destacar do fundo */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
             transition: transform 0.2s;
         }
-        .img-aula:hover {
-            transform: scale(1.1); /* Efeito de zoom leve ao passar o mouse */
-        }
+        .img-aula:hover { transform: scale(1.1); }
 
-        /* Botão Praticar no Lichess (Pequeno e Discreto) */
-        .btn-lichess {
-            display: block; /* Fica em uma linha nova */
-            width: fit-content;
-            margin: 10px auto;
-            padding: 8px 16px;
-            background-color: #2c3e50; /* Cor escura do Lichess */
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .btn-lichess:hover {
-            background-color: #d4af37; /* Dourado ao passar o mouse */
-            color: #000;
-            border-color: #d4af37;
-        }
-
-        /* Tipografia */
-        h1 { margin-top: 50px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+        /* CORREÇÃO DO TOPO: Margem extra para não cortar o título */
+        h1 { margin-top: 100px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; }
+        
         h2 { margin-top: 30px; color: #e0e0e0; font-size: 1.8rem; }
         h3 { color: #d4af37; margin-top: 20px; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
         
@@ -71,7 +49,6 @@
 
         strong { color: #d4af37; }
 
-        /* Botão Voltar Principal */
         .btn-voltar {
             display: inline-block;
             margin-top: 40px;
@@ -87,6 +64,13 @@
 
         ul.lista-centralizada { list-style: none; padding: 0; }
         ul.lista-centralizada li { margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px; }
+
+        .btn-lichess {
+            display: block; width: fit-content; margin: 10px auto; padding: 8px 16px;
+            background-color: #2c3e50; color: #fff; text-decoration: none; border-radius: 4px;
+            font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-lichess:hover { background-color: #d4af37; color: #000; border-color: #d4af37; }
     </style>
 </head>
 <body>
@@ -112,11 +96,14 @@
             </p>
 
             <div class="secao-aula">
-                <h2>O Tabuleiro</h2>
+                <h2>O Tabuleiro e a Posição Inicial</h2>
                 <p>
-                    O xadrez é jogado em um tabuleiro de 64 casas. A regra básica para montar o tabuleiro é simples: <strong>a casa clara sempre fica à direita de cada jogador.</strong>
+                    O xadrez é jogado em um tabuleiro de 64 casas alternadas entre claras e escuras. Cada jogador começa com 16 peças.
                 </p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/ea/Chess_Board.svg/1024px-Chess_Board.svg.png" class="img-aula" style="max-width: 300px;" alt="Tabuleiro">
+                <p>
+                    A regra básica para montar o tabuleiro é simples: <strong>a casa clara sempre fica à direita de cada jogador.</strong>
+                </p>
                 <a href="https://lichess.org/learn#/1" target="_blank" class="btn-lichess">♟️ Praticar Montagem no Lichess</a>
             </div>
 
@@ -124,54 +111,42 @@
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg" style="width:30px;"> Torres</h3>
-                <p>
-                    Andam em linhas retas — horizontais e verticais. Tornam-se mais fortes no final do jogo e quando têm colunas abertas.
-                </p>
+                <p>Andam em linhas retas — horizontais e verticais.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg" class="img-aula" alt="Torre">
                 <a href="https://lichess.org/learn#/1" target="_blank" class="btn-lichess">♟️ Praticar Movimento da Torre</a>
             </div>
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg" style="width:30px;"> Bispos</h3>
-                <p>
-                    Movem-se pelas diagonais, cada um permanecendo sempre em uma cor. Trabalham muito bem em dupla.
-                </p>
+                <p>Movem-se pelas diagonais, cada um permanecendo sempre em uma cor.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg" class="img-aula" alt="Bispo">
                 <a href="https://lichess.org/learn#/2" target="_blank" class="btn-lichess">♟️ Praticar Movimento do Bispo</a>
             </div>
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg" style="width:30px;"> Dama</h3>
-                <p>
-                    Combina o movimento da torre e do bispo. É a peça mais poderosa, mas vulnerável a ataques; use com equilíbrio.
-                </p>
+                <p>Combina o movimento da torre e do bispo. É a peça mais poderosa.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg" class="img-aula" alt="Dama">
                 <a href="https://lichess.org/learn#/3" target="_blank" class="btn-lichess">♟️ Praticar Movimento da Dama</a>
             </div>
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg" style="width:30px;"> Rei</h3>
-                <p>
-                    Move-se uma casa por vez em qualquer direção. É a peça mais importante: se o rei estiver em ameaça, você deve defendê-lo obrigatoriamente.
-                </p>
+                <p>Move-se uma casa por vez. Se estiver em perigo, deve ser defendido.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg" class="img-aula" alt="Rei">
                 <a href="https://lichess.org/learn#/4" target="_blank" class="btn-lichess">♟️ Praticar Movimento do Rei</a>
             </div>
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg" style="width:30px;"> Cavalos</h3>
-                <p>
-                    Saltam em “L”: duas casas para um lado e uma para outro. Ótimos para controlar o centro e surpreender, pois podem pular peças.
-                </p>
+                <p>Saltam em “L”. Podem pular outras peças.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg" class="img-aula" alt="Cavalo">
                 <a href="https://lichess.org/learn#/5" target="_blank" class="btn-lichess">♟️ Praticar Movimento do Cavalo</a>
             </div>
 
             <div class="secao-aula">
                 <h3><img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg" style="width:30px;"> Peões</h3>
-                <p>
-                    Movem-se para frente, porém capturam na diagonal. No primeiro lance podem andar duas casas. Definem a estrutura da partida.
-                </p>
+                <p>Movem-se para frente, capturam na diagonal.</p>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg" class="img-aula" alt="Peão">
                 <a href="https://lichess.org/learn#/6" target="_blank" class="btn-lichess">♟️ Praticar Movimento do Peão</a>
             </div>
@@ -185,14 +160,14 @@
             </div>
 
             <div class="secao-aula">
-                <h3>✔ Xeque-mate (Mate em 1)</h3>
-                <p>O rei está cercado e o jogo acaba. Vença com um único lance.</p>
+                <h3>✔ Xeque-mate</h3>
+                <p>Vença o jogo encurralando o rei.</p>
                 <a href="https://lichess.org/learn#/11" target="_blank" class="btn-lichess">♟️ Praticar Mate em 1</a>
             </div>
 
             <div class="secao-aula">
-                <h3>✔ Capturas e Combate</h3>
-                <p>Capturar é substituir a peça adversária pela sua. Calcule bem as trocas!</p>
+                <h3>✔ Capturas</h3>
+                <p>Ganhe material tirando peças do adversário.</p>
                 <a href="https://lichess.org/learn#/7" target="_blank" class="btn-lichess">♟️ Praticar Capturas</a>
             </div>
 
@@ -200,13 +175,13 @@
 
             <div class="secao-aula">
                 <h3>Roque</h3>
-                <p>Lance que envolve rei e torre para melhorar a segurança do rei.</p>
+                <p>Proteja seu rei com um movimento especial.</p>
                 <a href="https://lichess.org/learn#/14" target="_blank" class="btn-lichess">♟️ Aprender o Roque</a>
             </div>
 
             <div class="secao-aula">
                 <h3>Promoção e En Passant</h3>
-                <p>Quando o peão chega ao fim ou captura de passagem.</p>
+                <p>Truques especiais dos peões.</p>
                 <a href="https://lichess.org/learn#/15" target="_blank" class="btn-lichess">♟️ Aprender Promoção</a>
             </div>
 
@@ -214,11 +189,9 @@
             
             <div class="secao-aula">
                 <ul class="lista-centralizada">
-                    <li><strong>Controle o centro:</strong> domine as casas e4, d4, e5, d5.</li>
-                    <li><strong>Desenvolva rapidamente:</strong> tire cavalos e bispos da linha inicial.</li>
-                    <li><strong>Proteja o rei:</strong> faça o roque o quanto antes.</li>
-                    <li><strong>Coordenação:</strong> não ataque com uma peça sozinha.</li>
-                    <li><strong>Planejamento:</strong> sempre pergunte "qual a ideia do meu oponente?".</li>
+                    <li><strong>Controle o centro:</strong> Casas e4, d4, e5, d5.</li>
+                    <li><strong>Desenvolvimento:</strong> Ative suas peças menores.</li>
+                    <li><strong>Segurança:</strong> Roque rápido.</li>
                 </ul>
                 <a href="https://lichess.org/learn#/16" target="_blank" class="btn-lichess" style="margin-top:20px;">♟️ Ver Exemplos de Valor das Peças</a>
             </div>

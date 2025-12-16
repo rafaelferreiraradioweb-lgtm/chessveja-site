@@ -58,13 +58,14 @@
             text-align: center;
             margin-bottom: 30px;
             font-size: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
         }
 
         h2 {
             color: var(--accent-gold);
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
             margin-top: 40px;
+            margin-bottom: 15px;
             font-size: 1.3rem;
         }
 
@@ -96,7 +97,13 @@
         }
 
         /* Destaque para prêmios */
-        .premio { color: var(--accent-gold); font-weight: bold; }
+        .premio-box {
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-gold);
+        }
+        .premio-item { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
 
         /* Botão do WhatsApp */
         .whatsapp-section {
@@ -145,7 +152,7 @@
         
         @media (max-width: 600px) {
             .content-box { padding: 20px; }
-            th, td { font-size: 0.9rem; padding: 8px; }
+            th, td { font-size: 0.85rem; padding: 8px; }
         }
     </style>
 </head>
@@ -182,13 +189,15 @@
 
             <h2>2. Formato e Cronograma do Torneio</h2>
             <p>O campeonato será disputado em quatro (4) etapas semanais, utilizando a plataforma Lichess.</p>
-            <p><strong>Variante:</strong> Xadrez 960 (Fischer Random).<br>
-            <strong>Plataforma:</strong> Lichess (será criado um "Arena Tournament" para cada etapa).<br>
-            <strong>Organização Técnica:</strong> Toda a organização direta do torneio (criação e gestão das Arenas) é feita pela plataforma Lichess.<br>
-            <strong>Frequência:</strong> Semanal, sempre às segundas-feiras.<br>
-            <strong>Horário:</strong> Início às 22:45 (Horário de Brasília/BRT).<br>
-            <strong>Duração:</strong> 1 (uma) hora e 30 minutos por etapa.<br>
-            <strong>Ritmo de Jogo (Time Control):</strong> Arena Lichess 3+2.</p>
+            <p>
+                <strong>Variante:</strong> Xadrez 960 (Fischer Random).<br>
+                <strong>Plataforma:</strong> Lichess (será criado um "Arena Tournament" para cada etapa).<br>
+                <strong>Organização Técnica:</strong> Toda a organização direta do torneio (criação e gestão das Arenas) é feita pela plataforma Lichess.<br>
+                <strong>Frequência:</strong> Semanal, sempre às segundas-feiras.<br>
+                <strong>Horário:</strong> Início às 22:45 (Horário de Brasília/BRT).<br>
+                <strong>Duração:</strong> 1 (uma) hora e 30 minutos por etapa.<br>
+                <strong>Ritmo de Jogo (Time Control):</strong> Arena Lichess 3+2.
+            </p>
 
             <p><strong>📅 Cronograma das Etapas:</strong></p>
             <table>
@@ -216,4 +225,90 @@
                         <td>22:45 BRT</td>
                     </tr>
                     <tr>
-                        <td>4ª
+                        <td>4ª</td>
+                        <td>12 de Janeiro</td>
+                        <td>22:45 BRT</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>3. Sistema de Pontuação por Etapa (Estilo Fórmula 1)</h2>
+            <p>Ao final de cada etapa, os 10 primeiros colocados no ranking da Arena Lichess receberão pontos para a Classificação Geral do Campeonato, conforme a tabela:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Pontos</th>
+                        <th>Posição</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1º Lugar</td>
+                        <td>10 pts</td>
+                        <td>6º Lugar</td>
+                        <td>5 pts</td>
+                    </tr>
+                    <tr>
+                        <td>2º Lugar</td>
+                        <td>9 pts</td>
+                        <td>7º Lugar</td>
+                        <td>4 pts</td>
+                    </tr>
+                    <tr>
+                        <td>3º Lugar</td>
+                        <td>8 pts</td>
+                        <td>8º Lugar</td>
+                        <td>3 pts</td>
+                    </tr>
+                    <tr>
+                        <td>4º Lugar</td>
+                        <td>7 pts</td>
+                        <td>9º Lugar</td>
+                        <td>2 pts</td>
+                    </tr>
+                    <tr>
+                        <td>5º Lugar</td>
+                        <td>6 pts</td>
+                        <td>10º Lugar</td>
+                        <td>1 pt</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. Classificação Geral e Premiação</h2>
+            <p>A Classificação Geral é a soma total dos pontos acumulados por cada jogador nas quatro (4) etapas.</p>
+            <p>Serão premiados os 3 (três) primeiros colocados na Classificação Geral final:</p>
+            
+            <div class="premio-box">
+                <div class="premio-item">1º Lugar: R$ 50,00</div>
+                <div class="premio-item">2º Lugar: R$ 30,00</div>
+                <div class="premio-item">3º Lugar: R$ 20,00</div>
+            </div>
+            <br>
+            <p><strong>Critério de Desempate Geral:</strong> Em caso de empate na pontuação final, o desempate será definido pelo maior número de vitórias (primeiros lugares) em etapas.</p>
+
+            <h2>5. Regras Adicionais e Comunicação</h2>
+            <p><strong>Divulgação de Links:</strong> O link para participar de cada Arena do torneio 960 será disponibilizado exclusivamente no grupo de WhatsApp do Xadrez das Estrelas.</p>
+            <p><strong>Contato para Organização/Premiação:</strong> Para questões de organização, resultados e recebimento da premiação, o contato deve ser feito com Rafael Chessveja.</p>
+            <p><strong>Fair Play:</strong> O uso de qualquer tipo de assistência eletrônica (engines de xadrez, bases de dados) é estritamente proibido. Jogadores detectados pelo sistema Lichess serão banidos do torneio e da Classificação Geral.</p>
+
+            <div class="whatsapp-section">
+                <p style="color: #fff; font-weight: bold;">Entre no grupo para ter as informações e links das etapas:</p>
+                <a href="https://chat.whatsapp.com/JnTfMuNBZKK8a4w8uLKf8g" target="_blank" class="whatsapp-btn">
+                    Entrar no Grupo WhatsApp
+                </a>
+            </div>
+
+            <a href="index.html" class="back-button">Voltar para a Página Inicial</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Chessveja</p>
+    </footer>
+
+</body>
+</html>

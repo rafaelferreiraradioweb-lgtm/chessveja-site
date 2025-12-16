@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulamento - Campeonato Lichess 960</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --accent-green: #4CAF50;
+            --accent-gold: #d4af37;
+            --whatsapp: #25D366;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            padding: 1rem;
+            border-bottom: 2px solid #333;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+        }
+
+        nav a:hover { color: var(--accent-green); }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .content-box {
+            background-color: var(--bg-card);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: var(--accent-green);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--accent-gold);
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        p, li { margin-bottom: 15px; color: #ccc; }
+
+        strong { color: #fff; }
+
+        /* Estilo das Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+        }
+
+        th {
+            background-color: #333;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* Destaque para prêmios */
+        .premio-box {
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-gold);
+        }
+        .premio-item { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
+
+        /* Botão do WhatsApp */
+        .whatsapp-section {
+            background-color: #0c1c13;
+            border: 1px solid var(--whatsapp);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: var(--whatsapp);
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            margin-top: 15px;
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 40px auto 0;
+            color: #888;
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid #333;
+        }
+        
+        @media (max-width: 600px) {
+            .content-box { padding: 20px; }
+            th, td { font-size: 0.85rem; padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="index.html">← Voltar para o Início</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-box">
+            <h1>Regulamento Simplificado: Campeonato Lichess 960 (Fischer Random) - Edição Xadrez das Estrelas</h1>
+
+            <h2>1. Definição do Xadrez 960 (Fischer Random)</h2>
+            <p>O Xadrez 960 (ou Fischer Random Chess) é uma variante do xadrez em que a posição inicial das peças maiores (Torres, Cavalos, Bispos e Dama) é randomizada, com base em regras específicas, resultando em 960 posições de partida possíveis.</p>
+            
+            <p><strong>Regras de Posicionamento:</strong><br>
+            As peças da primeira fileira são embaralhadas aleatoriamente, com duas regras:</p>
+            <ul>
+                <li>Os Bispos devem ficar em casas de cores opostas.</li>
+                <li>O Rei deve ficar entre as duas Torres.</li>
+            </ul>
+
+            <p><strong>Regras de Roque</strong></p>
+            <p><strong>Roque Menor (g1/g8)</strong><br>
+            O Rei vai para g1 (ou g8) e a Torre para f1 (ou f8).</p>
+
+            <p><strong>Roque Maior (c1/c8)</strong><br>
+            O Rei vai para c1 (ou c8) e a Torre para d1 (ou d8).</p>
+
+            <p>As peças brancas e pretas são espelhadas (se o Rei branco estiver em 'f1', o Rei preto estará em 'f8').</p>
+
+            <h2>2. Formato e Cronograma do Torneio</h2>
+            <p>O campeonato será disputado em quatro (4) etapas semanais, utilizando a plataforma Lichess.</p>
+            <p>
+                <strong>Variante:</strong> Xadrez 960 (Fischer Random).<br>
+                <strong>Plataforma:</strong> Lichess (será criado um "Arena Tournament" para cada etapa).<br>
+                <strong>Organização Técnica:</strong> Toda a organização direta do torneio (criação e gestão das Arenas) é feita pela plataforma Lichess.<br>
+                <strong>Frequência:</strong> Semanal, sempre às segundas-feiras.<br>
+                <strong>Horário:</strong> Início às 22:45 (Horário de Brasília/BRT).<br>
+                <strong>Duração:</strong> 1 (uma) hora e 30 minutos por etapa.<br>
+                <strong>Ritmo de Jogo (Time Control):</strong> Arena Lichess 3+2.
+            </p>
+
+            <p><strong>📅 Cronograma das Etapas:</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Etapa</th>
+                        <th>Data (Segunda-feira)</th>
+                        <th>Horário de Início</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1ª</td>
+                        <td>22 de Dezembro</td>
+                        <td>22:45 BRT</td>
+                    </tr>
+                    <tr>
+                        <td>2ª</td>
+                        <td>29 de Dezembro</td>
+                        <td>22:45 BRT</td>
+                    </tr>
+                    <tr>
+                        <td>3ª</td>
+                        <td>5 de Janeiro</td>
+                        <td>22:45 BRT</td>
+                    </tr>
+                    <tr>
+                        <td>4ª</td>
+                        <td>12 de Janeiro</td>
+                        <td>22:45 BRT</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>3. Sistema de Pontuação por Etapa (Estilo Fórmula 1)</h2>
+            <p>Ao final de cada etapa, os 10 primeiros colocados no ranking da Arena Lichess receberão pontos para a Classificação Geral do Campeonato, conforme a tabela:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Pontos</th>
+                        <th>Posição</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1º Lugar</td>
+                        <td>10 pts</td>
+                        <td>6º Lugar</td>
+                        <td>5 pts</td>
+                    </tr>
+                    <tr>
+                        <td>2º Lugar</td>
+                        <td>9 pts</td>
+                        <td>7º Lugar</td>
+                        <td>4 pts</td>
+                    </tr>
+                    <tr>
+                        <td>3º Lugar</td>
+                        <td>8 pts</td>
+                        <td>8º Lugar</td>
+                        <td>3 pts</td>
+                    </tr>
+                    <tr>
+                        <td>4º Lugar</td>
+                        <td>7 pts</td>
+                        <td>9º Lugar</td>
+                        <td>2 pts</td>
+                    </tr>
+                    <tr>
+                        <td>5º Lugar</td>
+                        <td>6 pts</td>
+                        <td>10º Lugar</td>
+                        <td>1 pt</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. Classificação Geral e Premiação</h2>
+            <p>A Classificação Geral é a soma total dos pontos acumulados por cada jogador nas quatro (4) etapas.</p>
+            <p>Serão premiados os 3 (três) primeiros colocados na Classificação Geral final:</p>
+            
+            <div class="premio-box">
+                <div class="premio-item">1º Lugar: R$ 50,00</div>
+                <div class="premio-item">2º Lugar: R$ 30,00</div>
+                <div class="premio-item">3º Lugar: R$ 20,00</div>
+            </div>
+            <br>
+            <p><strong>Critério de Desempate Geral:</strong> Em caso de empate na pontuação final, o desempate será definido pelo maior número de vitórias (primeiros lugares) em etapas.</p>
+
+            <h2>5. Regras Adicionais e Comunicação</h2>
+            <p><strong>Divulgação de Links:</strong> O link para participar de cada Arena do torneio 960 será disponibilizado exclusivamente no grupo de WhatsApp do Xadrez das Estrelas.</p>
+            <p><strong>Contato para Organização/Premiação:</strong> Para questões de organização, resultados e recebimento da premiação, o contato deve ser feito com Rafael Chessveja.</p>
+            <p><strong>Fair Play:</strong> O uso de qualquer tipo de assistência eletrônica (engines de xadrez, bases de dados) é estritamente proibido. Jogadores detectados pelo sistema Lichess serão banidos do torneio e da Classificação Geral.</p>
+
+            <div class="whatsapp-section">
+                <p style="color: #fff; font-weight: bold;">Entre no grupo para ter as informações e links das etapas:</p>
+                <a href="https://chat.whatsapp.com/JnTfMuNBZKK8a4w8uLKf8g" target="_blank" class="whatsapp-btn">
+                    Entrar no Grupo WhatsApp
+                </a>
+            </div>
+
+            <a href="index.html" class="back-button">Voltar para a Página Inicial</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Chessveja</p>
+    </footer>
+
+</body>
+</html>

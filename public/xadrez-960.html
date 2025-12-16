@@ -1,58 +1,169 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regras do Xadrez 960 - Chessveja</title>
+    <title>Regulamento - Campeonato Lichess 960</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --accent-green: #4CAF50;
+            --accent-gold: #d4af37;
+            --whatsapp: #25D366;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             line-height: 1.6;
         }
+
         header {
-            background-color: #1e1e1e;
-            padding: 20px;
-            text-align: center;
+            background-color: var(--bg-card);
+            padding: 1rem;
             border-bottom: 2px solid #333;
+            text-align: center;
         }
+
         nav a {
             color: #fff;
             text-decoration: none;
             margin: 0 15px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-weight: 600;
         }
-        nav a:hover { color: #4CAF50; }
-        .container {
-            max-width: 800px;
+
+        nav a:hover { color: var(--accent-green); }
+
+        main {
+            max-width: 900px;
             margin: 40px auto;
             padding: 20px;
-            background-color: #1e1e1e;
-            border-radius: 8px;
         }
-        h1, h2, h3 { color: #4CAF50; }
-        ul { background-color: #252525; padding: 20px 40px; border-radius: 5px; }
-        li { margin-bottom: 10px; }
-        .footer {
+
+        .content-box {
+            background-color: var(--bg-card);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: var(--accent-green);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            color: var(--accent-gold);
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        h3 { color: #fff; margin-top: 20px; font-size: 1.1rem; }
+
+        p, li { margin-bottom: 10px; color: #ccc; }
+
+        ul {
+            background-color: #252525;
+            padding: 20px 40px;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        /* Estilo das Tabelas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #333;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        /* Destaque para prêmios */
+        .prize-box {
+            background: linear-gradient(45deg, #1e1e1e, #2a2a2a);
+            border: 1px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .prize-value { font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .gold { color: #FFD700; }
+        .silver { color: #C0C0C0; }
+        .bronze { color: #CD7F32; }
+
+        /* Botão do WhatsApp */
+        .whatsapp-section {
+            background-color: #0c1c13;
+            border: 1px solid var(--whatsapp);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background-color: var(--whatsapp);
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            margin-top: 15px;
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 40px auto 0;
+            color: #888;
+            text-decoration: underline;
+        }
+
+        footer {
             text-align: center;
             padding: 20px;
             margin-top: 40px;
             font-size: 0.8rem;
             color: #888;
+            border-top: 1px solid #333;
         }
-        .cta-button {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-weight: bold;
+
+        @media (max-width: 600px) {
+            th, td { padding: 8px; font-size: 0.9rem; }
+            .content-box { padding: 20px; }
         }
     </style>
 </head>
@@ -60,37 +171,30 @@
 
     <header>
         <nav>
-            <a href="index.html">Início</a>
-            <a href="xadrez-960.html" style="color:#4CAF50;">Xadrez 960</a>
+            <a href="index.html">← Voltar para o Início</a>
         </nav>
     </header>
 
-    <div class="container">
-        <h1>O que é o Xadrez 960?</h1>
-        <p>Também conhecido como <strong>Fischer Random Chess</strong>, o Xadrez 960 elimina a memorização de aberturas.</p>
+    <main>
+        <div class="content-box">
+            <h1>♟️ Regulamento: Campeonato Lichess 960</h1>
+            <p style="text-align: center; color: #888;">Edição Xadrez das Estrelas</p>
 
-        <h2>Como funciona?</h2>
-        <p>As peças da primeira fileira são embaralhadas aleatoriamente, com duas regras:</p>
-        <ul>
-            <li>Os Bispos devem ficar em casas de cores opostas.</li>
-            <li>O Rei deve ficar entre as duas Torres.</li>
-        </ul>
+            <h2>1. Definição do Xadrez 960</h2>
+            <p>O Xadrez 960 (ou Fischer Random Chess) é uma variante onde a posição inicial das peças maiores é randomizada, resultando em 960 posições possíveis.</p>
+            
+            <h3>Regras de Posicionamento:</h3>
+            <ul>
+                <li>Os Bispos devem ficar em casas de cores opostas.</li>
+                <li>O Rei deve ficar entre as duas Torres.</li>
+                <li>Peças brancas e pretas são espelhadas.</li>
+            </ul>
 
-        <h2>Regras de Roque</h2>
-        <h3>Roque Menor (g1/g8)</h3>
-        <p>O Rei vai para g1 (ou g8) e a Torre para f1 (ou f8).</p>
+            <h3>Regras de Roque (Importante)</h3>
+            <p><strong>Roque Menor (g1/g8):</strong> Rei vai para g1 e Torre para f1.<br>
+            <strong>Roque Maior (c1/c8):</strong> Rei vai para c1 e Torre para d1.</p>
 
-        <h3>Roque Maior (c1/c8)</h3>
-        <p>O Rei vai para c1 (ou c8) e a Torre para d1 (ou d8).</p>
-
-        <div style="text-align: center;">
-            <a href="index.html" class="cta-button">Voltar ao Início</a>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p>&copy; 2025 Chessveja</p>
-    </div>
-
-</body>
-</html>
+            <h2>2. Formato e Cronograma</h2>
+            <p>O campeonato será disputado em 4 etapas semanais na plataforma <strong>Lichess</strong>.</p>
+            <ul>
+                <li><strong>Ritmo:</strong> 3+2 (

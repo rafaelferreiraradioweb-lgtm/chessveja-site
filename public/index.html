@@ -11,14 +11,6 @@
     <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
 
-    <script
-    async
-    crossorigin="anonymous"
-    data-clerk-publishable-key="pk_test_d29uZHJvdXMtc3RhbGxpb24tNy5jbGVyay5hY2NvdW50cy5kZXYk"
-    src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-    type="text/javascript"
-    ></script>
-
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -42,10 +34,6 @@
                 <li><a href="#professores">Professores</a></li>
                 <li><a href="#aulas">Aulas</a></li>
                 <li><a href="#analisador">Analisador AI</a></li>
-                
-                <li id="auth-container">
-                    <span style="color: #666; font-size: 0.8rem;">Carregando...</span>
-                </li>
             </ul>
         </nav>
     </header>
@@ -120,13 +108,13 @@
                         <div id="ai-result">Aguardando análise...</div>
                     </div>
 
-                    <div id="feedback-area" style="display: none; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+                    <div id="feedback-area" style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
                         <h4 style="color: #d4af37; margin-bottom: 10px;">O que achou da análise?</h4>
                         <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Envie uma sugestão para o Rafael melhorar o sistema:</p>
                         
                         <form action="https://formspree.io/f/xanrdlev" method="POST">
-                            <textarea name="message" placeholder="Escreva sua sugestão aqui..." style="width: 100%; height: 80px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;"></textarea>
-                            <input type="hidden" name="email" id="user-email-field">
+                            <input type="email" name="email" placeholder="Seu e-mail (opcional)" style="width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
+                            <textarea name="message" placeholder="Escreva sua sugestão aqui..." style="width: 100%; height: 80px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;" required></textarea>
                             <button type="submit" style="margin-top: 10px; background-color: #2c3e50; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">
                                 Enviar Sugestão
                             </button>
@@ -230,47 +218,6 @@
              </div>
         <p class="copyright">&copy; 2025 Chessveja. Todos os direitos reservados.</p>
     </footer>
-
-    <script>
-        window.addEventListener('load', async function () {
-            const authContainer = document.getElementById('auth-container');
-            const feedbackArea = document.getElementById('feedback-area');
-            const emailField = document.getElementById('user-email-field');
-
-            try { 
-                // Aguarda o Clerk carregar completamente
-                await window.Clerk.load(); 
-                
-                if (window.Clerk.user) {
-                    authContainer.innerHTML = '<div id="user-button"></div>';
-                    window.Clerk.mountUserButton(document.getElementById('user-button'));
-                    
-                    if(feedbackArea) {
-                        feedbackArea.style.display = 'block';
-                        // Código corrigido para capturar o email do Clerk
-                        if(emailField) emailField.value = window.Clerk.user.primaryEmailAddress.emailAddress; 
-                    }
-                } else {
-                    // Botão criado com evento seguro para evitar o erro de UI Components
-                    authContainer.innerHTML = `
-                        <button id="btn-entrar-seguro" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit;">
-                            Entrar
-                        </button>`;
-                    
-                    if(feedbackArea) feedbackArea.style.display = 'none';
-
-                    // Só aciona a janela de login quando clicado
-                    document.getElementById('btn-entrar-seguro').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        window.Clerk.openSignIn();
-                    });
-                }
-            } catch (err) { 
-                console.error("Erro ao iniciar o Clerk:", err); 
-                authContainer.innerHTML = '<span style="color: red; font-size: 0.8rem;">Erro no sistema de login</span>';
-            }
-        });
-    </script>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="stockfish.js"></script>

@@ -68,27 +68,10 @@ stockfish.onmessage = function(event) {
     }
 };
 
-// --- BOTÃO ANALISAR (LOGIN + OPENAI) ---
+// --- BOTÃO ANALISAR (ACESSO LIVRE) ---
 $('#analyze-button').on('click', async function() {
     
-    // 1. TRAVA DE LOGIN BLINDADA
-    if (typeof window.Clerk === 'undefined') {
-        alert("O sistema está carregando. Por favor, aguarde alguns segundos e tente novamente.");
-        return;
-    }
-
-    if (!window.Clerk.user) {
-        alert("🔒 RECURSO EXCLUSIVO\n\nFaça Login para usar o Analisador Premium com a IA.");
-        try {
-            window.Clerk.openSignIn();
-        } catch (e) {
-            console.error("Erro ao abrir a tela de login:", e);
-            alert("Erro ao carregar o login. Atualize a página e tente de novo.");
-        }
-        return;
-    }
-
-    // 2. VALIDAÇÃO DO PGN
+    // VALIDAÇÃO DO PGN
     var pgn = $('#pgn-input').val();
     if (!pgn) { alert("Por favor, cole um PGN primeiro."); return; }
 
@@ -106,7 +89,7 @@ $('#analyze-button').on('click', async function() {
     $('#ai-result').html('<em>A IA do Chessveja está analisando... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
 
-    // 3. COMUNICAÇÃO COM O SERVIDOR (API)
+    // COMUNICAÇÃO COM O SERVIDOR (API)
     try {
         const response = await fetch('/api/analyze', {
             method: 'POST',

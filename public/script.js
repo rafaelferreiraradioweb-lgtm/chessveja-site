@@ -1,38 +1,38 @@
-var board = null
-var game = new Chess()
-var $status = $('#status')
+var board = null;
+var game = new Chess();
+var $status = $('#status');
 
 // Configuração do Tabuleiro
 function onDragStart (source, piece, position, orientation) {
-  if (game.game_over()) return false
+  if (game.game_over()) return false;
   if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
       (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false
+    return false;
   }
 }
 
 function onDrop (source, target) {
-  var move = game.move({ from: source, to: target, promotion: 'q' })
-  if (move === null) return 'snapback'
-  updateStatus()
+  var move = game.move({ from: source, to: target, promotion: 'q' });
+  if (move === null) return 'snapback';
+  updateStatus();
 }
 
-function onSnapEnd () { board.position(game.fen()) }
+function onSnapEnd () { board.position(game.fen()); }
 
 function updateStatus () {
-  var status = ''
-  var moveColor = 'Brancas'
-  if (game.turn() === 'b') { moveColor = 'Pretas' }
+  var status = '';
+  var moveColor = 'Brancas';
+  if (game.turn() === 'b') { moveColor = 'Pretas'; }
 
   if (game.in_checkmate()) {
-    status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.'
+    status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.';
   } else if (game.in_draw()) {
-    status = 'Fim de jogo, empate.'
+    status = 'Fim de jogo, empate.';
   } else {
-    status = moveColor + ' jogam.'
-    if (game.in_check()) { status += ', ' + moveColor + ' está em xeque.' }
+    status = moveColor + ' jogam.';
+    if (game.in_check()) { status += ', ' + moveColor + ' está em xeque.'; }
   }
-  $status.html(status)
+  $status.html(status);
 }
 
 var config = {
@@ -41,15 +41,14 @@ var config = {
   onDragStart: onDragStart,
   onDrop: onDrop,
   onSnapEnd: onSnapEnd
-}
-board = Chessboard('board', config)
-updateStatus()
+};
+board = Chessboard('board', config);
+updateStatus();
 
-// --- BOTÕES DO TABULEIRO (FUNCIONANDO) ---
+// --- BOTÕES DO TABULEIRO ---
 $('#btn-start').on('click', function() { game.reset(); board.start(); updateStatus(); });
 $('#btn-prev').on('click', function() { game.undo(); board.position(game.fen()); updateStatus(); });
 $('#btn-flip').on('click', function() { board.flip(); });
-// Next e End precisariam de lógica de histórico, deixamos simples por enquanto
 
 // --- STOCKFISH LOCAL (NAVEGADOR) ---
 var stockfish = new Worker('stockfish.js');
@@ -72,13 +71,24 @@ stockfish.onmessage = function(event) {
 // --- BOTÃO ANALISAR (LOGIN + OPENAI) ---
 $('#analyze-button').on('click', async function() {
     
-    // 1. TRAVA DE LOGIN
-    if (!window.Clerk || !window.Clerk.user) {
-        alert("🔒 RECURSO EXCLUSIVO\n\nFaça Login para usar o Analisador Premium com ChatGPT.");
-        window.Clerk.openSignIn();
+    // 1. TRAVA DE LOGIN BLINDADA
+    if (typeof window.Clerk === 'undefined') {
+        alert("O sistema está carregando. Por favor, aguarde alguns segundos e tente novamente.");
         return;
     }
 
+    if (!window.Clerk.user) {
+        alert("🔒 RECURSO EXCLUSIVO\n\nFaça Login para usar o Analisador Premium com a IA.");
+        try {
+            window.Clerk.openSignIn();
+        } catch (e) {
+            console.error("Erro ao abrir a tela de login:", e);
+            alert("Erro ao carregar o login. Atualize a página e tente de novo.");
+        }
+        return;
+    }
+
+    // 2. VALIDAÇÃO DO PGN
     var pgn = $('#pgn-input').val();
     if (!pgn) { alert("Por favor, cole um PGN primeiro."); return; }
 
@@ -93,17 +103,18 @@ $('#analyze-button').on('click', async function() {
     stockfish.postMessage('go depth 15');
 
     // Avisa que está pensando
-    $('#ai-result').html('<em>O GM Chessveja (ChatGPT) está analisando... aguarde...</em>');
+    $('#ai-result').html('<em>A IA do Chessveja está analisando... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
 
+    // 3. COMUNICAÇÃO COM O SERVIDOR (API)
     try {
         const response = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 pgn: pgn,
-                level: $('#analysis-level').val(), // Pega o nível (ex: 1500-2000)
-                tone: $('#analysis-tone').val(),   // Pega o tom (ex: Humorado)
+                level: $('#analysis-level').val(),
+                tone: $('#analysis-tone').val(),
                 color: $('#analysis-color').val()
             })
         });
@@ -121,8 +132,8 @@ $('#analyze-button').on('click', async function() {
         }
 
     } catch (error) {
-        console.error(error);
-        $('#ai-result').text("Erro de conexão com o servidor.");
+        console.error("Erro na API de Análise:", error);
+        $('#ai-result').text("Erro de conexão com o servidor. Tente novamente mais tarde.");
     } finally {
         $('#analyze-button').prop('disabled', false);
     }

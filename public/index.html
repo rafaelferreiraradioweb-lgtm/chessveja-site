@@ -51,7 +51,7 @@
     </header>
 
     <main>
-    
+        
         <section id="inicio">
             <div class="hero-content">
                 <h1>APRENDA E SUBA DE NÍVEL NO XADREZ</h1>
@@ -233,24 +233,41 @@
 
     <script>
         window.addEventListener('load', async function () {
-            try { await Clerk.load(); } catch (err) { console.error(err); }
             const authContainer = document.getElementById('auth-container');
             const feedbackArea = document.getElementById('feedback-area');
             const emailField = document.getElementById('user-email-field');
 
-            if (Clerk.user) {
-                authContainer.innerHTML = '<div id="user-button"></div>';
-                Clerk.mountUserButton(document.getElementById('user-button'));
-                if(feedbackArea) {
-                    feedbackArea.style.display = 'block';
-                    if(emailField) emailField.value = Clerk.user.primaryEmailAddress; 
+            try { 
+                // Aguarda o Clerk carregar completamente
+                await window.Clerk.load(); 
+                
+                if (window.Clerk.user) {
+                    authContainer.innerHTML = '<div id="user-button"></div>';
+                    window.Clerk.mountUserButton(document.getElementById('user-button'));
+                    
+                    if(feedbackArea) {
+                        feedbackArea.style.display = 'block';
+                        // Código corrigido para capturar o email do Clerk
+                        if(emailField) emailField.value = window.Clerk.user.primaryEmailAddress.emailAddress; 
+                    }
+                } else {
+                    // Botão criado com evento seguro para evitar o erro de UI Components
+                    authContainer.innerHTML = `
+                        <button id="btn-entrar-seguro" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit;">
+                            Entrar
+                        </button>`;
+                    
+                    if(feedbackArea) feedbackArea.style.display = 'none';
+
+                    // Só aciona a janela de login quando clicado
+                    document.getElementById('btn-entrar-seguro').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.Clerk.openSignIn();
+                    });
                 }
-            } else {
-                authContainer.innerHTML = `
-                    <button onclick="Clerk.openSignIn()" style="background:none; border:2px solid var(--accent-gold); border-radius: 5px; color: var(--accent-gold); font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 5px 15px; font-family: inherit;">
-                        Entrar
-                    </button>`;
-                if(feedbackArea) feedbackArea.style.display = 'none';
+            } catch (err) { 
+                console.error("Erro ao iniciar o Clerk:", err); 
+                authContainer.innerHTML = '<span style="color: red; font-size: 0.8rem;">Erro no sistema de login</span>';
             }
         });
     </script>
@@ -260,5 +277,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-

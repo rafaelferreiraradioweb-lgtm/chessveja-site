@@ -3,34 +3,14 @@ var game = new Chess();
 var $status = $('#status');
 
 // Configuração do Tabuleiro
-function onDragStart (source, piece, position, orientation) {
-  if (game.game_over()) return false;
-  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false;
-  }
-}
-
-function onDrop (source, target) {
-  var move = game.move({ from: source, to: target, promotion: 'q' });
-  if (move === null) return 'snapback';
-  updateStatus();
-}
-
-function onSnapEnd () { board.position(game.fen()); }
-
 function updateStatus () {
   var status = '';
-  var moveColor = 'Brancas';
-  if (game.turn() === 'b') { moveColor = 'Pretas'; }
-
-  if (game.in_checkmate()) {
-    status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.';
-  } else if (game.in_draw()) {
-    status = 'Fim de jogo, empate.';
-  } else {
+  var moveColor = game.turn() === 'b' ? 'Pretas' : 'Brancas';
+  if (game.in_checkmate()) status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.';
+  else if (game.in_draw()) status = 'Fim de jogo, empate.';
+  else {
     status = moveColor + ' jogam.';
-    if (game.in_check()) { status += ', ' + moveColor + ' está em xeque.'; }
+    if (game.in_check()) status += ', ' + moveColor + ' está em xeque.';
   }
   $status.html(status);
 }
@@ -38,85 +18,59 @@ function updateStatus () {
 var config = {
   draggable: true,
   position: 'start',
-  onDragStart: onDragStart,
-  onDrop: onDrop,
-  onSnapEnd: onSnapEnd
+  onDragStart: (s, p) => { if (game.game_over() || (game.turn()==='w' && p.search(/^b/)!==-1) || (game.turn()==='b' && p.search(/^w/)!==-1)) return false },
+  onDrop: (s, t) => { 
+      var move = game.move({ from: s, to: t, promotion: 'q' });
+      if (move === null) return 'snapback';
+      updateStatus();
+  },
+  onSnapEnd: () => { board.position(game.fen()) }
 };
 board = Chessboard('board', config);
 updateStatus();
 
-// --- BOTÕES DO TABULEIRO ---
-$('#btn-start').on('click', function() { game.reset(); board.start(); updateStatus(); });
-$('#btn-prev').on('click', function() { game.undo(); board.position(game.fen()); updateStatus(); });
-$('#btn-flip').on('click', function() { board.flip(); });
+// Botões
+$('#btn-start').on('click', () => { game.reset(); board.start(); updateStatus(); });
+$('#btn-prev').on('click', () => { game.undo(); board.position(game.fen()); updateStatus(); });
+$('#btn-flip').on('click', () => { board.flip(); });
 
-// --- STOCKFISH LOCAL (NAVEGADOR) ---
+// Stockfish
 var stockfish = new Worker('stockfish.js');
-stockfish.onmessage = function(event) {
-    var msg = event.data;
-    if (msg.startsWith('info') && msg.includes('score')) {
-        let scoreText = "Calculando...";
-        if (msg.includes('mate')) {
-            let mateValue = msg.split(' ')[msg.split(' ').indexOf('mate') + 1];
-            scoreText = "Mate em " + mateValue;
-        } else if (msg.includes('cp')) {
-            let cpValue = parseInt(msg.split(' ')[msg.split(' ').indexOf('cp') + 1]);
-            let eval = (cpValue / 100).toFixed(2);
-            scoreText = "Avaliação: " + eval;
+stockfish.onmessage = (e) => {
+    if (e.data.startsWith('info') && e.data.includes('score')) {
+        let out = e.data.includes('mate') ? "Mate detectado" : "Calculando...";
+        if (e.data.includes('cp')) {
+            let v = parseInt(e.data.split(' ')[e.data.split(' ').indexOf('cp') + 1]);
+            out = "Avaliação: " + (v / 100).toFixed(2);
         }
-        $('#stockfish-output').text(scoreText);
+        $('#stockfish-output').text(out);
     }
 };
 
-// --- BOTÃO ANALISAR (ACESSO LIVRE) ---
+// BOTÃO ANALISAR (LIVRE)
 $('#analyze-button').on('click', async function() {
-    
-    // VALIDAÇÃO DO PGN
     var pgn = $('#pgn-input').val();
-    if (!pgn) { alert("Por favor, cole um PGN primeiro."); return; }
-
-    var loadSuccess = game.load_pgn(pgn);
-    if (!loadSuccess) { alert("PGN inválido."); return; }
+    if (!pgn) { alert("Cole um PGN primeiro."); return; }
+    if (!game.load_pgn(pgn)) { alert("PGN inválido."); return; }
     
     board.position(game.fen());
     updateStatus();
-
-    // Roda o Stockfish
     stockfish.postMessage('position fen ' + game.fen());
     stockfish.postMessage('go depth 15');
 
-    // Avisa que está pensando
     $('#ai-result').html('<em>A IA do Chessveja está analisando... aguarde...</em>');
     $('#analyze-button').prop('disabled', true);
 
-    // COMUNICAÇÃO COM O SERVIDOR (API)
     try {
-        const response = await fetch('/api/analyze', {
+        const res = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                pgn: pgn,
-                level: $('#analysis-level').val(),
-                tone: $('#analysis-tone').val(),
-                color: $('#analysis-color').val()
-            })
+            body: JSON.stringify({ pgn, level: $('#analysis-level').val(), tone: $('#analysis-tone').val(), color: $('#analysis-color').val() })
         });
-
-        const data = await response.json();
-        
-        if (data.analysis) {
-             if (typeof marked !== 'undefined') {
-                 $('#ai-result').html(marked.parse(data.analysis));
-             } else {
-                 $('#ai-result').html(data.analysis);
-             }
-        } else {
-             $('#ai-result').text("Erro na análise.");
-        }
-
+        const data = await res.json();
+        $('#ai-result').html(typeof marked !== 'undefined' ? marked.parse(data.analysis || "Erro.") : (data.analysis || "Erro."));
     } catch (error) {
-        console.error("Erro na API de Análise:", error);
-        $('#ai-result').text("Erro de conexão com o servidor. Tente novamente mais tarde.");
+        $('#ai-result').text("Erro de conexão.");
     } finally {
         $('#analyze-button').prop('disabled', false);
     }

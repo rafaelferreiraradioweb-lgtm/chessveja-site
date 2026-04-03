@@ -10,14 +10,6 @@
     <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
-
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "to7wh3e3fy");
-    </script>
 </head>
 <body>
 
@@ -47,7 +39,7 @@
             </div>
         </section>
 
-        <section id="analisador">
+        <section id="analisador" style="scroll-margin-top: 100px;">
             <h2>Analisador de Partidas (Premium OpenAI)</h2>
             <div class="analyzer-layout">
                 <div class="board-column">
@@ -106,37 +98,69 @@
                         <h4>Análise da IA do Chessveja</h4>
                         <div id="ai-result">Aguardando análise...</div>
                     </div>
-
-                    <div id="feedback-area" style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
-                        <h4 style="color: #d4af37; margin-bottom: 10px;">O que achou da análise?</h4>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Envie uma sugestão para o Rafael melhorar o sistema:</p>
-                        
-                        <form action="https://formspree.io/f/xanrdlev" method="POST">
-                            <input type="email" name="email" placeholder="Seu e-mail (opcional)" style="width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
-                            <textarea name="message" placeholder="Escreva sua sugestão aqui..." style="width: 100%; height: 80px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;" required></textarea>
-                            <button type="submit" style="margin-top: 10px; background-color: #2c3e50; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">
-                                Enviar Sugestão
-                            </button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="videos">
-            <h2>Vídeo em Destaque</h2>
-            <div class="video-grid-container" style="max-width: 800px; margin: 0 auto;">
-                <div class="video-card">
-                    <div class="video-wrapper">
-                        <iframe src="https://www.youtube.com/embed/gadzp7dLrFQ" title="A Armadilha do Gambito da Dama Aceito: Lasker Trap" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <h4>ENFRENTANDO A GRUNFELD DO MEQUINHO SACRIFICANDO</h4>
+        <section id="aulas" style="scroll-margin-top: 100px;">
+            <h2>Encontre o Plano Ideal para sua Evolução</h2>
+            <div class="pricing-container">
+                <div class="pricing-card">
+                    <h3>Aula Experimental</h3>
+                    <p class="description">A porta de entrada para o universo da estratégia.</p>
+                    <p class="price">R$ 20,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Quero Começar</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Aula Individual Avulsa</h3>
+                    <p class="description">Foco total nas suas necessidades.</p>
+                    <p class="price">R$ 50,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Agendar Aula</a>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>Plano Mensal Individual</h3>
+                    <p class="description">O caminho para a consistência e o progresso real.</p>
+                    <p class="price">R$ 180,00<span class="per-month">/mês</span></p>
+                    <p class="duration">4 aulas por mês</p>
+                    <a href="#contato" class="cta-button">Iniciar Plano Mensal</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Grupos e Empresas</h3>
+                    <p class="description">Ideal para empresas, associações e clubes.</p>
+                    <p class="price">Sob Consulta</p>
+                    <p class="duration">Pacotes para até 6 pessoas</p>
+                    <a href="#contato" class="cta-button">Solicitar Orçamento</a>
+                </div>
+            </div>
+            <p class="availability">Aulas disponíveis nos formatos online e presencial.</p>
+        </section>
+
+        <section id="professores" style="scroll-margin-top: 100px;">
+            <h2>Conheça a Equipe Chessveja</h2>
+            <div class="teachers-container">
+                <div class="teacher-card">
+                    <img src="https://i.imgur.com/eTdI5X5.jpeg" alt="Foto do Professor Rafael">
+                    <h3>Rafael Ferreira</h3>
+                    <p>Com vasta experiência como professor, Rafael desenvolve raciocínio lógico e concentração. Certificado pela FEXEAL.</p>
+                </div>
+                <div class="teacher-card">
+                    <img src="https://imgur.com/dCdVx65.jpg" alt="Foto da Professora Graziela">
+                    <h3>Graziela Garcia</h3>
+                    <p>Educadora com Pós-Graduação em Matemática e Instrutora de Xadrez pela FEXEAL.</p>
                 </div>
             </div>
         </section>
-        </main>
+
+    </main>
 
     <footer id="contato">
+        <h2>Entre em Contato</h2>
+        <div class="contact-info">
+            <a href="https://api.whatsapp.com/send?phone=5582996535079" target="_blank" class="contact-button">WhatsApp</a>
+            <a href="mailto:cursosdexadrez@gmail.com" class="contact-button">Email</a>
+        </div>
         <p class="copyright">&copy; 2026 Chessveja. Todos os direitos reservados.</p>
     </footer>
     

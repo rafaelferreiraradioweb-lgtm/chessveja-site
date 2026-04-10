@@ -3,179 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicas de Mestre - Chessveja</title>
+    <title>Chessveja - Aulas de Xadrez em Maceió</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        body { background-color: #1e1e1e; color: #fff; font-family: 'Roboto', sans-serif; }
-        .dicas-header { text-align: center; padding: 60px 20px 40px; }
-        .dicas-header h1 { color: #d4af37; font-family: 'Poppins', sans-serif; font-size: 2.8rem; margin-bottom: 10px; }
-        .dicas-header p { color: #ccc; font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
-        
-        .dicas-container { max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
-        .fase-titulo { color: #d4af37; font-family: 'Poppins', sans-serif; border-bottom: 2px solid #333; padding-bottom: 10px; margin: 50px 0 30px; font-size: 1.8rem; text-align: center;}
-        
-        /* Layout em Grade para caber as 22 Dicas perfeitamente */
-        .dicas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        
-        .dica-card { background: #2a2a2a; border-top: 4px solid #d4af37; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
-        .dica-card:hover { transform: translateY(-5px); }
-        .dica-card h3 { margin-top: 0; color: #fff; font-size: 1.1rem; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
-        .dica-numero { background: #d4af37; color: #000; padding: 4px 10px; border-radius: 5px; font-weight: bold; font-size: 1rem; flex-shrink: 0; }
-        .dica-card p { color: #bbb; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; margin-top: 15px; }
-        
-        .img-separadora { width: 100%; height: 350px; object-fit: cover; border-radius: 10px; border: 1px solid #444; margin: 40px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        
-        .cta-final { text-align: center; margin-top: 60px; padding: 50px 20px; background: #111; border-radius: 10px; border: 1px solid #333; }
-        .cta-final h3 { color: #d4af37; margin-bottom: 20px; font-size: 1.8rem; }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
 </head>
 <body>
 
     <header>
         <nav>
-            <a href="index.html" class="logo">
+            <a href="#inicio" class="logo">
                 <img src="minha_logo.png" alt="Logo do Chessveja" style="height: 70px;">
             </a>
             <ul>
                 <li><a href="xadrez-960.html">Xadrez 960</a></li>
                 <li><a href="curso-basico.html">Aprenda do Zero</a></li>
                 <li><a href="cursos.html">Cursos em Vídeo</a></li>
-                <li><a href="dicas.html" style="color: #d4af37; font-weight: bold;">Dicas de Mestre</a></li>
+                <li><a href="dicas.html">Dicas de Mestre</a></li>
                 <li><a href="portfolio-chessveja.pdf" target="_blank">Portfólio</a></li>
-                <li><a href="index.html#professores">Professores</a></li>
-                <li><a href="index.html#aulas">Aulas</a></li>
-                <li><a href="index.html#analisador">Analisador AI</a></li>
+                <li><a href="#professores">Professores</a></li>
+                <li><a href="#aulas">Aulas</a></li>
+                <li><a href="#analisador">Analisador AI</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <div class="dicas-header">
-            <h1>22 Dicas Importantes Para Jogar Xadrez</h1>
-            <p>Guia definitivo do Professor Rafael Ferreira para evoluir o seu jogo. Do desenvolvimento à simplificação de finais.</p>
-        </div>
+        <section id="inicio">
+            <div class="hero-content">
+                <h1>APRENDA E SUBA DE NÍVEL NO XADREZ</h1>
+                <p>Aulas de xadrez em Maceió e online com Rafael Ferreira e Graziela Garcia. Você aprende a pensar xadrez, não apenas repetir movimentos.</p>
+                <a href="#aulas" class="cta-button">Agende sua Aula Experimental</a>
+            </div>
+        </section>
 
-        <div class="dicas-container">
-            
-            <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Tabuleiro de Xadrez Clássico" class="img-separadora">
+        <section id="analisador" style="scroll-margin-top: 100px;">
+            <h2>Analisador de Partidas (Premium OpenAI)</h2>
+            <div class="analyzer-layout">
+                <div class="board-column">
+                    <div id="board" class="chessboard"></div>
+                    <div class="board-controls">
+                        <button id="btn-start">Início</button>
+                        <button id="btn-prev">◀</button>
+                        <button id="btn-next">▶</button>
+                        <button id="btn-end">Fim</button>
+                    </div>
+                    <div class="board-controls-secondary"> 
+                        <button id="btn-flip">Inverter Tabuleiro</button>
+                    </div>
+                    <div id="game-info" class="game-info-box">
+                        <strong>Status:</strong> <span id="status">Cole um PGN para começar.</span>
+                    </div>
+                </div>
+                
+                <div class="analysis-column">
+                    <h3>Estilo da Análise</h3>
+                    <div class="options-grid">
+                        <div>
+                            <label for="analysis-color">Analisar:</label>
+                            <select id="analysis-color" name="analysis-color">
+                                <option value="brancas" selected>Brancas</option>
+                                <option value="pretas">Pretas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="analysis-level">Seu nível:</label>
+                            <select id="analysis-level" name="analysis-level">
+                                <option value="iniciante" selected>Iniciante (Até 1500)</option>
+                                <option value="intermediario">Intermediário (1501-2000)</option>
+                                <option value="avancado">Avançado (Acima de 2000)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="analysis-tone">Tom:</label>
+                            <select id="analysis-tone" name="analysis-tone">
+                                <option value="tecnico" selected>Técnico</option>
+                                <option value="motivacional">Motivacional</option>
+                                <option value="humorado">Humorado</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <h2 class="fase-titulo">Parte 1: Abertura e Desenvolvimento</h2>
-            
-            <div class="dicas-grid">
-                <div class="dica-card">
-                    <h3><span class="dica-numero">1</span> DESENVOLVA RAPIDAMENTE TODAS AS PEÇAS</h3>
-                    <p>A abertura é a fase do jogo na qual o principal objetivo é desenvolver as peças e fazer o roque o mais rapidamente possível. O jogador que terminar o seu desenvolvimento primeiro ganhará a iniciativa.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">2</span> DESENVOLVA OS CAVALOS ANTES DOS BISPOS</h3>
-                    <p>Enquanto os bispos conseguem controlar várias casas de suas posições originais, os cavalos dominam apenas as casas vizinhas e demoram mais para chegar ao campo adversário se houver peões obstruindo.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">3</span> NÃO MOVA DUAS VEZES A MESMA PEÇA DURANTE A ABERTURA</h3>
-                    <p>Mexer a mesma peça mais de uma vez durante a abertura é uma perda de tempo e pode significar a perda da iniciativa. Tente colocar suas peças nas melhores posições de primeira.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">4</span> NÃO FAÇA MOVIMENTOS DESNECESSÁRIOS DE PEÕES</h3>
-                    <p>Durante a abertura deve-se restringir ao máximo o movimento de peões. O tempo gasto poderia ser utilizado para desenvolver uma peça. Mova-os para ocupar o centro ou abrir diagonais.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">5</span> COLOQUE A DAMA ATRÁS DA SUA PRÓPRIA LINHA DE PEÕES</h3>
-                    <p>Por ser muito poderosa, a dama é alvo constante. Na abertura, é conveniente colocá-la atrás de um peão (preferivelmente na segunda fila), liberando a primeira fila para as torres.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">6</span> NUNCA TROQUE PEÇA DESENVOLVIDA POR NÃO DESENVOLVIDA</h3>
-                    <p>É um péssimo negócio trocar uma peça bem colocada por uma má colocada. Você perde o tempo consumido por aquela peça no tabuleiro.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">7</span> FAÇA O ROQUE O MAIS RÁPIDO POSSÍVEL</h3>
-                    <p>O rei no centro estará sempre vulnerável a ataques. Rocar significa colocá-lo atrás de uma barreira de peões e permitir o rápido desenvolvimento de uma torre.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">8</span> O ROQUE PEQUENO É MAIS SEGURO DO QUE O GRANDE</h3>
-                    <p>Além de mais rápido (move apenas duas peças), deixa o rei mais longe do centro. No entanto, rocar na ala oposta ao do adversário pode criar chances de ataque.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">9</span> TENTE IMPEDIR O ROQUE DO SEU ADVERSÁRIO</h3>
-                    <p>Se o adversário demorar para rocar, tente prolongar a estadia do rei dele no centro controlando as casas de passagem. Manter o rei inimigo no centro muitas vezes vale o sacrifício de um peão.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">10</span> DOMINE O MAIOR TERRITÓRIO POSSÍVEL</h3>
-                    <p>Vantagem de espaço significa maior mobilidade e flexibilidade para transferir peças entre alas. Posições restringidas dificultam manobras de defesa.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">11</span> AVANCE PEÕES PARA GANHAR ESPAÇO</h3>
-                    <p>É o principal recurso para restringir o inimigo, mas deve ser feito com cuidado: quanto mais distantes da base, mais difíceis de defender, e cada avanço cria fraquezas adjacentes.</p>
+                    <textarea id="pgn-input" placeholder="Cole o PGN da sua partida aqui..."></textarea>
+                    
+                    <button id="analyze-button">Carregar PGN e Analisar</button>
+                    
+                    <div id="engine-analysis" class="engine-box">
+                        <h4>Análise do Stockfish</h4>
+                        <div id="stockfish-output">Aguardando posição...</div>
+                    </div>
+                    <div id="gemini-output" class="gemini-box">
+                        <h4>Análise da IA do Chessveja</h4>
+                        <div id="ai-result">Aguardando análise...</div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Estratégia e Foco no Xadrez" class="img-separadora">
-
-            <h2 class="fase-titulo">Parte 2: Estratégias e Meio-Jogo</h2>
-
-            <div class="dicas-grid">
-                <div class="dica-card">
-                    <h3><span class="dica-numero">12</span> MANTENHA SUAS PEÇAS O MAIS PRÓXIMO DO CENTRO</h3>
-                    <p>Uma peça no centro controla mais casas e se movimenta mais rápido para ambos os lados do tabuleiro. Quem se movimenta mais rápido tem mais chances de sucesso no ataque.</p>
+        <section id="aulas" style="scroll-margin-top: 100px;">
+            <h2>Encontre o Plano Ideal para sua Evolução</h2>
+            <div class="pricing-container">
+                <div class="pricing-card">
+                    <h3>Aula Experimental</h3>
+                    <p class="description">A porta de entrada para o universo da estratégia.</p>
+                    <p class="price">R$ 20,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Quero Começar</a>
                 </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">13</span> NÃO DÊ CHEQUES DESNECESSÁRIOS</h3>
-                    <p>Cheque desnecessário é aquele facilmente defendido pelo adversário, muitas vezes com lances que acabam favorecendo o desenvolvimento inimigo.</p>
+                <div class="pricing-card">
+                    <h3>Aula Individual Avulsa</h3>
+                    <p class="description">Foco total nas suas necessidades.</p>
+                    <p class="price">R$ 50,00</p>
+                    <p class="duration">1 hora/aula</p>
+                    <a href="#contato" class="cta-button">Agendar Aula</a>
                 </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">14</span> EVITE OS PEÕES DOBRADOS</h3>
-                    <p>Dois peões da mesma cor numa mesma coluna têm menos mobilidade e são mais vulneráveis. Porém, o domínio da coluna semi-aberta adjacente pode ser uma compensação.</p>
+                <div class="pricing-card popular">
+                    <h3>Plano Mensal Individual</h3>
+                    <p class="description">O caminho para a consistência e o progresso real.</p>
+                    <p class="price">R$ 180,00<span class="per-month">/mês</span></p>
+                    <p class="duration">4 aulas por mês</p>
+                    <a href="#contato" class="cta-button">Iniciar Plano Mensal</a>
                 </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">15</span> EVITE OS PEÕES ISOLADOS</h3>
-                    <p>Peões que não têm amigos nas colunas vizinhas não podem ser defendidos por outros peões, apenas por peças. A casa em frente a eles se torna débil e pode ser ocupada pelo inimigo.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">16</span> EVITE AS ILHAS DE PEÕES</h3>
-                    <p>Grupos de peões separados formam "ilhas". Quanto mais ilhas, mais bases precisam ser defendidas por peças. Nos finais, ter menos ilhas é uma vantagem significativa.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">17</span> EVITE AVANÇAR OS PEÕES COLGANTES</h3>
-                    <p>Dois peões vizinhos isolados do resto controlam bem o centro, mas se um deles avança, cria-se um peão atrasado e uma casa débil que o adversário pode explorar.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">18</span> SEMPRE QUE POSSÍVEL, CRIE UM PEÃO PASSADO</h3>
-                    <p>Um peão sem oponentes na mesma coluna ou nas colunas vizinhas é uma arma perigosa, pois tem chances reais de avançar e promover.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">19</span> COLOQUE UMA TORRE ATRÁS DE UM PEÃO PASSADO</h3>
-                    <p>As torres são muito mais ativas quando colocadas atrás de peões passados, tanto para empurrar os próprios peões quanto para atacar os peões do adversário.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">20</span> BLOQUEIE OS PEÕES PASSADOS DO ADVERSÁRIO</h3>
-                    <p>Eles são armas poderosas e devem ser bloqueados o mais rápido possível colocando uma peça no seu caminho. O cavalo e o bispo são as melhores peças para isso.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">21</span> EVITE AVANÇAR PEÕES QUE PROTEGEM O SEU REI</h3>
-                    <p>Cada movimento de peão em frente ao rei cria uma debilidade que, mesmo parecendo irrelevante, pode vir a ser explorada fatalmente mais tarde.</p>
-                </div>
-                <div class="dica-card">
-                    <h3><span class="dica-numero">22</span> EVITE TROCAS DESNECESSÁRIAS</h3>
-                    <p>Troque apenas quando: o oponente tem a iniciativa, você tem posição restrita, para estragar a estrutura de peões dele, se tiver vantagem material ou para simplificar para um final ganho.</p>
+                <div class="pricing-card">
+                    <h3>Grupos e Empresas</h3>
+                    <p class="description">Ideal para empresas, associações e clubes.</p>
+                    <p class="price">Sob Consulta</p>
+                    <p class="duration">Pacotes para até 6 pessoas</p>
+                    <a href="#contato" class="cta-button">Solicitar Orçamento</a>
                 </div>
             </div>
+            <p class="availability">Aulas disponíveis nos formatos online e presencial.</p>
+        </section>
 
-            <div class="cta-final">
-                <h3>Pronto para transformar a teoria em vitória?</h3>
-                <p style="color: #bbb; margin-bottom: 30px;">Aprenda a aplicar todos esses 22 conceitos na prática com a orientação do Professor Rafael.</p>
-                <a href="index.html#aulas" class="cta-button" style="background: #d4af37; color: #000; padding: 15px 40px; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 1.2rem;">Agendar Aula Experimental</a>
+        <section id="professores" style="scroll-margin-top: 100px;">
+            <h2>Conheça a Equipe Chessveja</h2>
+            <div class="teachers-container">
+                <div class="teacher-card">
+                    <img src="https://i.imgur.com/eTdI5X5.jpeg" alt="Foto do Professor Rafael">
+                    <h3>Rafael Ferreira</h3>
+                    <p>Com vasta experiência como professor, Rafael desenvolve raciocínio lógico e concentração. Certificado pela FEXEAL.</p>
+                </div>
+                <div class="teacher-card">
+                    <img src="https://imgur.com/dCdVx65.jpg" alt="Foto da Professora Graziela">
+                    <h3>Graziela Garcia</h3>
+                    <p>Educadora com Pós-Graduação em Matemática e Instrutora de Xadrez pela FEXEAL.</p>
+                </div>
             </div>
+        </section>
 
-        </div>
     </main>
 
-    <footer id="contato" style="background: #111; padding: 40px 20px; text-align: center; border-top: 2px solid #333;">
-        <div class="contact-info" style="margin-bottom: 20px;">
-            <a href="https://api.whatsapp.com/send?phone=5582996535079" target="_blank" class="contact-button" style="color: #d4af37; text-decoration: none; margin: 0 10px;">WhatsApp</a>
-            <a href="mailto:cursosdexadrez@gmail.com" class="contact-button" style="color: #d4af37; text-decoration: none; margin: 0 10px;">Email</a>
+    <footer id="contato">
+        <h2>Entre em Contato</h2>
+        <div class="contact-info">
+            <a href="https://api.whatsapp.com/send?phone=5582996535079" target="_blank" class="contact-button">WhatsApp</a>
+            <a href="mailto:cursosdexadrez@gmail.com" class="contact-button">Email</a>
         </div>
-        <p class="copyright" style="color: #666; font-size: 0.9rem;">&copy; 2026 Chessveja. Todos os direitos reservados.</p>
+        <p class="copyright">&copy; 2026 Chessveja. Todos os direitos reservados.</p>
     </footer>
     
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="stockfish.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

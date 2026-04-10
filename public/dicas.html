@@ -8,17 +8,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body { background-color: #1e1e1e; color: #fff; font-family: 'Roboto', sans-serif; }
-        .dicas-header { text-align: center; padding: 60px 20px 40px; }
+        .dicas-header { text-align: center; padding: 60px 20px 40px; max-width: 1000px; margin: 0 auto; }
         .dicas-header h1 { color: #d4af37; font-family: 'Poppins', sans-serif; font-size: 2.8rem; margin-bottom: 10px; }
         .dicas-header p { color: #ccc; font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
         
-        .dicas-container { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; }
-        .fase-titulo { color: #d4af37; font-family: 'Poppins', sans-serif; border-bottom: 2px solid #333; padding-bottom: 10px; margin: 50px 0 30px; font-size: 1.8rem; }
+        .dicas-container { max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
+        .fase-titulo { color: #d4af37; font-family: 'Poppins', sans-serif; border-bottom: 2px solid #333; padding-bottom: 10px; margin: 50px 0 30px; font-size: 1.8rem; text-align: center;}
         
-        .dica-card { background: #2a2a2a; border-left: 4px solid #d4af37; padding: 25px; margin-bottom: 25px; border-radius: 0 8px 8px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .dica-card h3 { margin-top: 0; color: #fff; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
-        .dica-numero { background: #d4af37; color: #000; padding: 5px 12px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; }
-        .dica-card p { color: #bbb; line-height: 1.6; margin-bottom: 0; }
+        .dicas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        
+        .dica-card { background: #2a2a2a; border-top: 4px solid #d4af37; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
+        .dica-card:hover { transform: translateY(-5px); }
+        .dica-card h3 { margin-top: 0; color: #fff; font-size: 1.1rem; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
+        .dica-numero { background: #d4af37; color: #000; padding: 4px 10px; border-radius: 5px; font-weight: bold; font-size: 1rem; flex-shrink: 0; }
+        .dica-card p { color: #bbb; line-height: 1.6; font-size: 0.95rem; margin-bottom: 0; margin-top: 15px; }
         
         .img-separadora { width: 100%; height: 350px; object-fit: cover; border-radius: 10px; border: 1px solid #444; margin: 40px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         
@@ -48,78 +51,117 @@
 
     <main>
         <div class="dicas-header">
-            <h1>Dicas Importantes Para Jogar Xadrez</h1>
-            <p>Guia prático para evoluir o seu jogo em todas as fases da partida. Conteúdo oficial do Professor Rafael Ferreira.</p>
+            <h1>22 Dicas Importantes Para Jogar Xadrez</h1>
+            <p>Guia definitivo do Professor Rafael Ferreira para evoluir o seu jogo. Do desenvolvimento à simplificação de finais.</p>
         </div>
 
         <div class="dicas-container">
             
-            <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Tabuleiro de Xadrez Clássico" class="img-separadora">
+            <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Tabuleiro de Xadrez Clássico" class="img-separadora">
 
-            <h2 class="fase-titulo">Parte 1: Princípios da Abertura</h2>
+            <h2 class="fase-titulo">Parte 1: Abertura e Desenvolvimento</h2>
             
-            <div class="dica-card">
-                <h3><span class="dica-numero">1</span> Desenvolva rapidamente todas as peças</h3>
-                <p>A abertura é a fase do jogo na qual o principal objetivo é desenvolver as peças e fazer o roque o mais rapidamente possível. A abertura estará completa quando um ou ambos os jogadores tiverem as suas torres conectadas. O jogador que terminar o seu desenvolvimento primeiro, ganhará a iniciativa.</p>
+            <div class="dicas-grid">
+                <div class="dica-card">
+                    <h3><span class="dica-numero">1</span> DESENVOLVA RAPIDAMENTE TODAS AS PEÇAS</h3>
+                    <p>A abertura é a fase do jogo na qual o principal objetivo é desenvolver as peças e fazer o roque o mais rapidamente possível. O jogador que terminar o seu desenvolvimento primeiro ganhará a iniciativa.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">2</span> DESENVOLVA OS CAVALOS ANTES DOS BISPOS</h3>
+                    <p>Enquanto os bispos conseguem controlar várias casas de suas posições originais, os cavalos dominam apenas as casas vizinhas e demoram mais para chegar ao campo adversário se houver peões obstruindo.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">3</span> NÃO MOVA DUAS VEZES A MESMA PEÇA DURANTE A ABERTURA</h3>
+                    <p>Mexer a mesma peça mais de uma vez durante a abertura é uma perda de tempo e pode significar a perda da iniciativa. Tente colocar suas peças nas melhores posições de primeira.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">4</span> NÃO FAÇA MOVIMENTOS DESNECESSÁRIOS DE PEÕES</h3>
+                    <p>Durante a abertura deve-se restringir ao máximo o movimento de peões. O tempo gasto poderia ser utilizado para desenvolver uma peça. Mova-os para ocupar o centro ou abrir diagonais.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">5</span> COLOQUE A DAMA ATRÁS DA SUA PRÓPRIA LINHA DE PEÕES</h3>
+                    <p>Por ser muito poderosa, a dama é alvo constante. Na abertura, é conveniente colocá-la atrás de um peão (preferivelmente na segunda fila), liberando a primeira fila para as torres.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">6</span> NUNCA TROQUE PEÇA DESENVOLVIDA POR NÃO DESENVOLVIDA</h3>
+                    <p>É um péssimo negócio trocar uma peça bem colocada por uma má colocada. Você perde o tempo consumido por aquela peça no tabuleiro.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">7</span> FAÇA O ROQUE O MAIS RÁPIDO POSSÍVEL</h3>
+                    <p>O rei no centro estará sempre vulnerável a ataques. Rocar significa colocá-lo atrás de uma barreira de peões e permitir o rápido desenvolvimento de uma torre.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">8</span> O ROQUE PEQUENO É MAIS SEGURO DO QUE O GRANDE</h3>
+                    <p>Além de mais rápido (move apenas duas peças), deixa o rei mais longe do centro. No entanto, rocar na ala oposta ao do adversário pode criar chances de ataque.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">9</span> TENTE IMPEDIR O ROQUE DO SEU ADVERSÁRIO</h3>
+                    <p>Se o adversário demorar para rocar, tente prolongar a estadia do rei dele no centro controlando as casas de passagem. Manter o rei inimigo no centro muitas vezes vale o sacrifício de um peão.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">10</span> DOMINE O MAIOR TERRITÓRIO POSSÍVEL</h3>
+                    <p>Vantagem de espaço significa maior mobilidade e flexibilidade para transferir peças entre alas. Posições restringidas dificultam manobras de defesa.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">11</span> AVANCE PEÕES PARA GANHAR ESPAÇO</h3>
+                    <p>É o principal recurso para restringir o inimigo, mas deve ser feito com cuidado: quanto mais distantes da base, mais difíceis de defender, e cada avanço cria fraquezas adjacentes.</p>
+                </div>
             </div>
 
-            <div class="dica-card">
-                <h3><span class="dica-numero">2</span> Desenvolva os cavalos antes dos bispos</h3>
-                <p>Enquanto os bispos conseguem controlar várias casas de suas posições originais, se não houver peões obstruindo sua passagem, os cavalos, por serem peças de menor mobilidade, dominam apenas as casas vizinhas e demoram mais para chegar ao campo adversário.</p>
-            </div>
+            <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Estratégia e Foco no Xadrez" class="img-separadora">
 
-            <div class="dica-card">
-                <h3><span class="dica-numero">3</span> Não mova duas vezes a mesma peça</h3>
-                <p>A cada lance, tente colocar suas peças nas melhores posições possíveis. Mexer a mesma peça mais de uma vez durante a abertura é uma perda de tempo e pode significar a perda da iniciativa.</p>
-            </div>
+            <h2 class="fase-titulo">Parte 2: Estratégias e Meio-Jogo</h2>
 
-            <div class="dica-card">
-                <h3><span class="dica-numero">4</span> Domine o maior território possível</h3>
-                <p>Aquele que possui vantagem de espaço dispõe de maior mobilidade para suas peças e, portanto, mais flexibilidade em transferir suas peças de uma ala para a outra. Cuidado: quem está numa posição restringida tem dificuldade de manobrar para a defesa do rei.</p>
-            </div>
-            
-            <div class="dica-card">
-                <h3><span class="dica-numero">5</span> Avance peões para ganhar espaço (com cuidado)</h3>
-                <p>Embora o avanço de peões seja o principal recurso para restringir a posição inimiga, essa regra deve ser observada com cuidado, pois quanto mais distante os peões estiverem da sua base, mais difíceis se tornam de serem defendidos. Cada avanço cria fraquezas nas adjacências.</p>
-            </div>
-
-            <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Estratégia e Foco no Xadrez" class="img-separadora">
-
-            <h2 class="fase-titulo">Parte 2: Estratégias de Meio-Jogo</h2>
-
-            <div class="dica-card">
-                <h3><span class="dica-numero">6</span> Mantenha suas peças o mais próximo do centro</h3>
-                <p>Uma peça no centro controla mais casas do que em qualquer outra parte do tabuleiro. Enquanto um cavalo no centro pode se mover para oito casas, um no canto tem apenas duas opções. O controle do centro é por onde as peças se movimentam para criar um ataque bem-sucedido.</p>
-            </div>
-
-            <div class="dica-card">
-                <h3><span class="dica-numero">7</span> Não dê cheques desnecessários</h3>
-                <p>Cheque desnecessário é aquele que pode ser facilmente defendido pelo adversário. Durante a abertura, a maioria dos cheques pode ser defendida com lances que favorecem o desenvolvimento do seu oponente.</p>
-            </div>
-
-            <div class="dica-card">
-                <h3><span class="dica-numero">8</span> Evite os peões dobrados</h3>
-                <p>Peões dobrados são dois peões da mesma cor, numa mesma coluna. Eles têm menos mobilidade que os peões normais e representam uma estrutura mais fraca.</p>
-            </div>
-
-            <div class="dica-card">
-                <h3><span class="dica-numero">9</span> Bloqueie sempre os peões passados do adversário</h3>
-                <p>Um peão passado, principalmente quando bem defendido por peças inimigas, pode se tornar uma arma muito poderosa e deve ser bloqueado o mais rápido possível. O cavalo e o bispo são as melhores peças para fazer esse bloqueio.</p>
-            </div>
-            
-            <div class="dica-card">
-                <h3><span class="dica-numero">10</span> Evite avançar os peões que protegem o seu rei</h3>
-                <p>Cada movimento de peão cria uma debilidade que, embora pareça irrelevante à primeira vista, pode vir a ser explorada mais tarde pelo adversário. A segurança do rei é prioridade.</p>
-            </div>
-
-            <div class="dica-card">
-                <h3><span class="dica-numero">11</span> Evite trocas desnecessárias</h3>
-                <p>Como regra geral você só deve trocar peças quando: seu adversário detém a iniciativa, você tiver uma posição restrita, para enfraquecer a estrutura de peões inimiga, tiver vantagem material, trocar peça passiva por ativa, ou para simplificar para um final ganho.</p>
+            <div class="dicas-grid">
+                <div class="dica-card">
+                    <h3><span class="dica-numero">12</span> MANTENHA SUAS PEÇAS O MAIS PRÓXIMO DO CENTRO</h3>
+                    <p>Uma peça no centro controla mais casas e se movimenta mais rápido para ambos os lados do tabuleiro. Quem se movimenta mais rápido tem mais chances de sucesso no ataque.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">13</span> NÃO DÊ CHEQUES DESNECESSÁRIOS</h3>
+                    <p>Cheque desnecessário é aquele facilmente defendido pelo adversário, muitas vezes com lances que acabam favorecendo o desenvolvimento inimigo.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">14</span> EVITE OS PEÕES DOBRADOS</h3>
+                    <p>Dois peões da mesma cor numa mesma coluna têm menos mobilidade e são mais vulneráveis. Porém, o domínio da coluna semi-aberta adjacente pode ser uma compensação.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">15</span> EVITE OS PEÕES ISOLADOS</h3>
+                    <p>Peões que não têm amigos nas colunas vizinhas não podem ser defendidos por outros peões, apenas por peças. A casa em frente a eles se torna débil e pode ser ocupada pelo inimigo.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">16</span> EVITE AS ILHAS DE PEÕES</h3>
+                    <p>Grupos de peões separados formam "ilhas". Quanto mais ilhas, mais bases precisam ser defendidas por peças. Nos finais, ter menos ilhas é uma vantagem significativa.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">17</span> EVITE AVANÇAR OS PEÕES COLGANTES</h3>
+                    <p>Dois peões vizinhos isolados do resto controlam bem o centro, mas se um deles avança, cria-se um peão atrasado e uma casa débil que o adversário pode explorar.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">18</span> SEMPRE QUE POSSÍVEL, CRIE UM PEÃO PASSADO</h3>
+                    <p>Um peão sem oponentes na mesma coluna ou nas colunas vizinhas é uma arma perigosa, pois tem chances reais de avançar e promover.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">19</span> COLOQUE UMA TORRE ATRÁS DE UM PEÃO PASSADO</h3>
+                    <p>As torres são muito mais ativas quando colocadas atrás de peões passados, tanto para empurrar os próprios peões quanto para atacar os peões do adversário.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">20</span> BLOQUEIE OS PEÕES PASSADOS DO ADVERSÁRIO</h3>
+                    <p>Eles são armas poderosas e devem ser bloqueados o mais rápido possível colocando uma peça no seu caminho. O cavalo e o bispo são as melhores peças para isso.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">21</span> EVITE AVANÇAR PEÕES QUE PROTEGEM O SEU REI</h3>
+                    <p>Cada movimento de peão em frente ao rei cria uma debilidade que, mesmo parecendo irrelevante, pode vir a ser explorada fatalmente mais tarde.</p>
+                </div>
+                <div class="dica-card">
+                    <h3><span class="dica-numero">22</span> EVITE TROCAS DESNECESSÁRIAS</h3>
+                    <p>Troque apenas quando: o oponente tem a iniciativa, você tem posição restrita, para estragar a estrutura de peões dele, se tiver vantagem material ou para simplificar para um final ganho.</p>
+                </div>
             </div>
 
             <div class="cta-final">
                 <h3>Pronto para transformar a teoria em vitória?</h3>
-                <p style="color: #bbb; margin-bottom: 30px;">Aprenda a aplicar todos esses conceitos na prática com a orientação do Professor Rafael.</p>
+                <p style="color: #bbb; margin-bottom: 30px;">Aprenda a aplicar todos esses 22 conceitos na prática com a orientação do Professor Rafael.</p>
                 <a href="index.html#aulas" class="cta-button" style="background: #d4af37; color: #000; padding: 15px 40px; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 1.2rem;">Agendar Aula Experimental</a>
             </div>
 

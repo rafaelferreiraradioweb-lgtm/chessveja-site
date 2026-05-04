@@ -13,27 +13,35 @@ export default async function handler(req, res) {
     return res.status(500).json({ analysis: 'Erro no servidor: Chave da API ausente.' });
   }
 
-  // RECURSO 4: Regra Global de Narrativa Humana
-  const regraGlobal = "Escreva o texto em um formato de narrativa fluida, contínua e humana. É estritamente proibido usar marcadores estruturais gerados por IA (como 'Cena 1', 'Introdução', 'Conclusão' ou listas genéricas). O texto deve fluir naturalmente, parecendo uma conversa real e pessoal direta com o aluno.";
+  // RECURSO DE NARRATIVA HUMANA (Regra Absoluta)
+  const regraGlobal = "Escreva o texto de forma contínua, humana e envolvente. É estritamente proibido usar marcadores estruturais frios gerados por IA (como 'Conclusão', 'Resumo' ou 'Cena 1'). O texto deve fluir como uma conversa real e pessoal direta com o aluno.";
 
-  // RECURSO 1 e 2: Definindo a Personalidade com base no "Tom" escolhido no site
+  // RECURSO DE CORES ILUSTRATIVAS
+  const ilustracaoCores = "Você DEVE destacar os lances usando formatação HTML para colorir o texto e deixá-lo ilustrativo. Para lances muito bons ou brilhantes, use verde: <span style='color: #2ecc71; font-weight: bold;'>LANCE</span>. Para erros graves ou capivaradas, use vermelho: <span style='color: #e74c3c; font-weight: bold;'>LANCE</span>. Para lances duvidosos ou imprecisões, use amarelo: <span style='color: #f1c40f; font-weight: bold;'>LANCE</span>.";
+
+  // DEFINIÇÃO DE PERSONALIDADE (Baseado no Tom)
   let personalidade = "Você é o Professor Rafael Ferreira, um mestre de xadrez experiente, com uma didática clara e objetiva.";
   
   if (tone === 'humorado') {
-    personalidade = "Assuma a persona do Capigênio, uma capivara mestre de xadrez incrivelmente inteligente (que tem como característica visual nunca usar óculos escuros). Faça comentários irônicos, com muito carisma e sotaque amigável, educando o aluno sobre as 'capivaradas' e os acertos da partida.";
+    personalidade = "Assuma a persona do Capigênio, uma capivara mestre de xadrez incrivelmente inteligente (que tem como característica visual clássica nunca usar óculos escuros). Faça comentários irônicos, com muito carisma e sotaque amigável, educando o aluno sobre as 'capivaradas' avermelhadas e os acertos da partida.";
   } else if (tone === 'motivacional') {
-    personalidade = "Você é um mestre de xadrez com uma profunda visão da filosofia estoica. Analise a partida traçando paralelos entre os desafios do tabuleiro e da vida: foque no controle emocional perante os erros, na resiliência de aceitar a derrota como um aprendizado inevitável, e na sabedoria de focar apenas no que está sob nosso controle.";
+    personalidade = "Você é um mestre de xadrez com uma profunda visão da filosofia estoica. Analise a partida traçando paralelos entre os desafios do tabuleiro e da vida: foque no controle emocional perante os erros, na resiliência de aceitar a derrota como aprendizado, e na sabedoria de focar no que está sob nosso controle.";
   }
 
-  // RECURSO 3: Define a tarefa baseada no botão clicado (Resumo, Ameaça ou Conceitos)
+  // DEFINIÇÃO DA TAREFA BASEADA NO BOTÃO
   let systemPrompt = "";
+  
   if (type === 'threat') {
-    systemPrompt = `${personalidade} ${regraGlobal} Analise a posição final do PGN e responda de forma cirúrgica e narrativa: Qual é a ameaça imediata do adversário? O que ele quer fazer no próximo lance? Ajude o aluno a enxergar o perigo oculto.`;
+    // Botão 2: Ameaça
+    systemPrompt = `${personalidade} ${regraGlobal} Analise a posição final do PGN e responda de forma cirúrgica: Qual é a ameaça imediata do adversário? O que ele quer fazer no próximo lance? Ajude o aluno a enxergar o perigo oculto.`;
+    
   } else if (type === 'concepts') {
-    systemPrompt = `${personalidade} ${regraGlobal} Extraia os principais conceitos táticos e estratégicos presentes nesta partida (ex: cravadas, desenvolvimento de peças, estrutura de peões). No final da sua explicação, passe um 'dever de casa' prático e convide o aluno a aplicar o que aprendeu nos encontros do projeto Xadrez na Praça, que acontecem de terça a quinta-feira na Praça Renasce Salgadinho.`;
+    // Botão 3: Conceitos
+    systemPrompt = `${personalidade} ${regraGlobal} Extraia os principais conceitos táticos e estratégicos presentes nesta partida (ex: cravadas, colunas abertas). No final, passe um 'dever de casa' prático e convide o aluno a aplicar o que aprendeu em partidas presenciais, nos encontros do projeto Xadrez na Praça (que ocorrem de terça a quinta na Praça Renasce Salgadinho).`;
+    
   } else {
-    // Padrão: Resumo crítico da partida
-    systemPrompt = `${personalidade} ${regraGlobal} O nível do aluno é ${level}. Faça uma análise narrativa dos momentos cruciais da partida, focando em explicar o motivo do pior erro e elogiando a melhor ideia do jogador.`;
+    // Botão 1: Resumo da Partida (Agora com 3 Fases e Cores)
+    systemPrompt = `${personalidade} ${regraGlobal} ${ilustracaoCores} O nível do aluno é ${level}. Faça uma análise narrativa detalhada da partida, mas você DEVE dividir a sua explicação de forma fluida passando obrigatoriamente pelas três fases do xadrez: 1. Abertura, 2. Meio-jogo, e 3. Final (se a partida tiver chegado até lá). Não crie uma lista robótica, faça transições suaves de uma fase para a outra. Explique o motivo técnico do pior erro e elogie a melhor ideia do jogador.`;
   }
 
   try {

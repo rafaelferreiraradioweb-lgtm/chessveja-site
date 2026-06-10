@@ -37,7 +37,7 @@
     </div>
 
     <div id="controls-section" style="display: none;">
-        <h2>♟️ Gerador de Laudo Lichess</h2>
+        <h2>♟️ Chessveja analisando suas ultimas 10 partidas rapidas no lichess</h2>
         <p>Este sistema puxa silenciosamente as últimas 10 partidas rápidas do jogador e gera um dossiê técnico.</p>
         <input type="text" id="nick" placeholder="Digite o nick do Lichess do cliente">
         <button onclick="gerarDiagnostico()">Gerar Laudo Técnico (Pode levar até 30s)</button>
@@ -81,7 +81,6 @@
         laudoArea.style.display = 'none';
 
         try {
-            // Puxa as últimas 10 partidas no ritmo Rápido do Lichess
             const lichessRes = await fetch(`https://lichess.org/api/games/user/${nick}?max=10&perfType=rapid`);
             
             if (!lichessRes.ok) throw new Error("Nick não encontrado ou sem partidas rápidas.");
@@ -94,7 +93,6 @@
 
             statusDiv.innerText = "2/2: Inteligência Artificial redigindo o Laudo Técnico... ⏳";
 
-            // Envia para o nosso cérebro na Vercel
             const apiRes = await fetch('/api/diagnose', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

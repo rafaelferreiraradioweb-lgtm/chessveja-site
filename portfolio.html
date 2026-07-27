@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio - Clube Escola de Xadrez de Maceió</title>
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        .bg-chess { background-color: #2b2b2b; }
+        .text-gold { color: #d4af37; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <!-- Navegação (Adapte para o menu que já existe no seu site) -->
+    <nav class="bg-chess text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider text-gold">CHESSVEJA & CEXM</h1>
+            <ul class="flex space-x-6 text-sm font-medium">
+                <li><a href="index.html" class="hover:text-gold transition">Início</a></li>
+                <li><a href="#instrutores" class="hover:text-gold transition">Instrutores</a></li>
+                <li><a href="#titulos" class="hover:text-gold transition">Títulos</a></li>
+                <li><a href="#projetos" class="hover:text-gold transition">Projetos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-chess text-white py-20 text-center border-b-4 border-yellow-600">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Coloque a imagem da logomarca do CEXM na sua pasta de imagens do GitHub -->
+            <img src="img/logo-cexm.jpg" alt="Logo CEXM" class="mx-auto h-40 w-40 rounded-full mb-6 border-4 border-yellow-600 object-cover">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Portfólio de Aulas de Xadrez</h2>
+            <p class="text-lg md:text-xl text-gray-300">Clube Escola de Xadrez de Maceió (CEXM) + Chessveja</p>
+        </div>
+    </header>
+
+    <!-- Instrutores Section -->
+    <section id="instrutores" class="py-16 max-w-6xl mx-auto px-4">
+        <h3 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-2 border-yellow-500 inline-block pb-2">Nossos Instrutores</h3>
+        
+        <div class="grid md:grid-cols-2 gap-12">
+            <!-- Rafael Ferreira -->
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
+                <img src="img/rafael-ferreira.jpg" alt="Rafael Ferreira" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-2">Rafael Ferreira</h4>
+                    <p class="text-sm text-yellow-600 font-semibold mb-4">Mais de 20 anos de experiência</p>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Com vasta experiência como professor de xadrez em diversas instituições educacionais (mais de 25 escolas) e projetos sociais. Instrutor formado pela Federação de Xadrez do Estado de Alagoas (FEXEAL).
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Secretaria de Educação de Alagoas</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Projeto Social Lar das Meninas</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>CEFET-AL (atual IFAL)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Graziela Garcia -->
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
+                <img src="img/graziela-garcia.jpg" alt="Graziela Garcia" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-2">Graziela Garcia</h4>
+                    <p class="text-sm text-yellow-600 font-semibold mb-4">Instrutora FEXEAL & Educadora</p>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Tecnóloga em Gestão Financeira com Pós-Graduação no ensino da Matemática. Ampla experiência no ensino fundamental e projetos educacionais da SEMED e aulas particulares desde 2002.
+                    </p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Escola Municipal Ronalço dos Anjos</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Projeto Mais Educação (SEMED)</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Colégio Santíssimo Sacramento</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Títulos Section -->
+    <section id="titulos" class="py-16 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-2 border-yellow-500 inline-block pb-2">Principais Títulos - 2023</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500 text-center">
+                    <i class="fas fa-trophy text-4xl text-yellow-500 mb-4"></i>
+                    <h4 class="font-bold text-lg">Campeão Paraolímpico</h4>
+                    <p class="text-gray-600">Copa do Brasil 2023 (FEXEAL/CBXE)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500 text-center">
+                    <i class="fas fa-globe-americas text-4xl text-yellow-500 mb-4"></i>
+                    <h4 class="font-bold text-lg">Campeão Panamericano</h4>
+                    <p class="text-gray-600">Xadrez Clássico Paradesporto (FEXEAL/CBXE)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500 text-center">
+                    <i class="fas fa-medal text-4xl text-yellow-500 mb-4"></i>
+                    <h4 class="font-bold text-lg">Campeão (Invicto)</h4>
+                    <p class="text-gray-600">Jogos Paraolímpicos do Estado de Alagoas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projetos e Oficinas -->
+    <section id="projetos" class="py-16 max-w-6xl mx-auto px-4">
+        <h3 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-2 border-yellow-500 inline-block pb-2">Projetos Destacados & Oficinas</h3>
+        
+        <div class="space-y-8">
+            <!-- Projeto 1 -->
+            <div class="bg-white p-6 rounded-lg shadow flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-2/3">
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">SESC Saúde e Esportes nas Escolas</h4>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mb-3">Julho 2024</span>
+                    <p class="text-gray-600">Atendimento em 6 escolas públicas em Maceió durante 4 semanas, impactando mais de 100 crianças nas modalidades de xadrez e damas. Ministrado pela equipe de 5 instrutores do CEXM.</p>
+                </div>
+            </div>
+            <!-- Projeto 2 -->
+            <div class="bg-white p-6 rounded-lg shadow flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-2/3">
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Oficina de Xadrez - Tribunal de Justiça (TJAL)</h4>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mb-3">2024</span>
+                    <p class="text-gray-600">O 1º Torneio de Xadrez da Justiça Alagoana, incluindo palestra sobre noções de regras e torneios. Promovido pelo Tribunal com organização e arbitragem de Rafael Ferreira.</p>
+                </div>
+            </div>
+             <!-- Projeto 3 -->
+             <div class="bg-white p-6 rounded-lg shadow flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-2/3">
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">Xadrez na Praça do Santo Eduardo</h4>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mb-3">Jan a Ago 2023</span>
+                    <p class="text-gray-600">Projeto gratuito realizado duas vezes por semana na praça, atraindo grande público para aprender e praticar sob a organização de Rafael e Graziela.</p>
+                </div>
+            </div>
+            <!-- Projeto 4 -->
+            <div class="bg-white p-6 rounded-lg shadow flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-2/3">
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">I Xadrez Direito na OAB</h4>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mb-3">Outubro 2023</span>
+                    <p class="text-gray-600">Primeiro torneio de xadrez com oficina e simultânea da advocacia alagoana, promovido pela Caixa de Assistência de Alagoas e organizado pelo CEXM.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre o CEXM -->
+    <section class="py-16 bg-chess text-white text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <h3 class="text-3xl font-bold mb-6 text-gold">Sobre o CEXM</h3>
+            <p class="text-lg text-gray-300 leading-relaxed">
+                O Clube Escola de Xadrez de Maceió é uma iniciativa pioneira, fundada com o propósito de difundir o xadrez como ferramenta educacional e esportiva. Sob a liderança de Rafael Ferreira, em parceria com Allan Gadelha (médico) e João Paulo Galvão (contador), o clube tem a missão de proporcionar um ambiente acolhedor e estimulante para o aprendizado.
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-black text-gray-400 text-center py-6">
+        <p>&copy; 2026 Clube Escola de Xadrez de Maceió & Chessveja. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>

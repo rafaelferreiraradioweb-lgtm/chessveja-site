@@ -95,13 +95,33 @@
 </div>
 
 <script>
-    function verificarSenha() {
+    async function verificarSenha() {
         const senha = document.getElementById('senha').value;
-        if (senha === 'rafaelpro') {
-            document.getElementById('senha-section').style.display = 'none';
-            document.getElementById('controls-section').style.display = 'block';
-        } else {
-            alert('Senha incorreta!');
+        const botao = document.querySelector('#senha-section button');
+        
+        botao.innerText = "Verificando...";
+        
+        try {
+            const res = await fetch('/api/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ senha: senha })
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                document.getElementById('senha-section').style.display = 'none';
+                document.getElementById('controls-section').style.display = 'block';
+                // Salva a senha temporariamente na memória para autorizar a IA depois
+                window.senhaAutenticada = senha; 
+            } else {
+                alert('Senha incorreta!');
+                botao.innerText = "Entrar";
+            }
+        } catch (error) {
+            alert('Erro de conexão com o servidor.');
+            botao.innerText = "Entrar";
         }
     }
 
@@ -124,13 +144,11 @@
             let pgns = "";
 
             if (plataforma === 'lichess') {
-                // Fetch 20 partidas do Lichess
                 const res = await fetch(`https://lichess.org/api/games/user/${nick}?max=20&perfType=rapid`);
                 if (!res.ok) throw new Error("Nick não encontrado ou sem partidas rápidas recentes.");
                 pgns = await res.text();
             } 
             else if (plataforma === 'chesscom') {
-                // Lógica para puxar do Chess.com (puxa dos arquivos mensais)
                 const archiveRes = await fetch(`https://api.chess.com/pub/player/${nick}/games/archives`);
                 if (!archiveRes.ok) throw new Error("Nick não encontrado no Chess.com.");
                 const archivesData = await archiveRes.json();
@@ -141,15 +159,12 @@
                 }
 
                 let pgnsArray = [];
-                // Vasculha os últimos meses de trás pra frente até achar 20 partidas rápidas
                 for (let i = archives.length - 1; i >= 0 && pgnsArray.length < 20; i--) {
                     const monthRes = await fetch(archives[i]);
                     const monthData = await monthRes.json();
                     
-                    // Filtra partidas rápidas que possuem PGN
                     const rapidGames = monthData.games.filter(g => g.time_class === 'rapid' && g.pgn);
                     
-                    // Adiciona as mais recentes primeiro
                     for (let j = rapidGames.length - 1; j >= 0 && pgnsArray.length < 20; j--) {
                         pgnsArray.push(rapidGames[j].pgn);
                     }
@@ -164,7 +179,6 @@
 
             statusDiv.innerText = "2/2: Inteligência Artificial redigindo o Laudo Técnico detalhado... ⏳";
 
-            // Instrução secreta que vai para a sua IA (Vercel) saber como formatar o texto
             const instrucaoIA = "Analise as 20 partidas fornecidas. OBRIGATÓRIO dividir o laudo em 3 seções exatas usando títulos h3: '1. Pontos Fortes', '2. Principais Fraquezas (Padrões de Erro)' e '3. Plano de Ação'. No plano de ação, sugira temas táticos ou estratégicos com exercícios focados para corrigir as fraquezas detectadas.";
 
             const apiRes = await fetch('/api/diagnose', {
@@ -174,7 +188,8 @@
                     pgns: pgns, 
                     nick: nick,
                     plataforma: plataforma,
-                    instructions: instrucaoIA
+                    instructions: instrucaoIA,
+                    senhaAutenticacao: window.senhaAutenticada
                 })
             });
 

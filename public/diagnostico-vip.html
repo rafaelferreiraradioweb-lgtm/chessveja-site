@@ -57,20 +57,26 @@
 
     <div id="controls-section" style="display: none;">
         <h2><i class="fas fa-chess-knight"></i> Diagnóstico IA - Chessveja</h2>
-        <p>O sistema extrai as partidas da plataforma escolhida (ou estudo) e gera um dossiê técnico e um Plano de Ação.</p>
+        <p>O sistema extrai as partidas e gera um dossiê técnico, Plano de Ação e comenta a melhor partida do aluno.</p>
         
         <div class="form-group">
             <label for="plataforma">Fonte das Partidas:</label>
             <select id="plataforma" onchange="atualizarInterface()">
-                <option value="lichess">Lichess (Nickname)</option>
-                <option value="chesscom">Chess.com (Nickname)</option>
-                <option value="estudo">Lichess (Link de Estudo)</option>
+                <option value="lichess">Lichess (Últimas 20 partidas)</option>
+                <option value="chesscom">Chess.com (Últimas 20 partidas)</option>
+                <option value="estudo">Lichess (Link de Estudo Específico)</option>
             </select>
         </div>
 
-        <div class="form-group">
-            <label id="label-input" for="input-dados">Nickname do Jogador:</label>
-            <input type="text" id="input-dados" placeholder="Ex: Hikaru, MagnusCarlsen...">
+        <div class="form-group" id="group-nick">
+            <label id="label-nick" for="input-nick">Nickname do Jogador (Alvo da Análise):</label>
+            <input type="text" id="input-nick" placeholder="Ex: Hikaru, MagnusCarlsen...">
+        </div>
+
+        <!-- Esse campo só aparece se a opção "Estudo" for selecionada -->
+        <div class="form-group" id="group-link" style="display: none;">
+            <label for="input-link">Link do Estudo no Lichess:</label>
+            <input type="text" id="input-link" placeholder="Ex: https://lichess.org/study/XXXXXXX">
         </div>
 
         <button onclick="gerarDiagnostico()"><i class="fas fa-cogs"></i> Gerar Laudo Técnico</button>
@@ -96,18 +102,15 @@
 </div>
 
 <script>
-    // Altera o rótulo e o placeholder baseado no que foi selecionado
+    // Mostra ou esconde o campo de Link dependendo do que foi selecionado
     function atualizarInterface() {
         const plataforma = document.getElementById('plataforma').value;
-        const label = document.getElementById('label-input');
-        const input = document.getElementById('input-dados');
+        const groupLink = document.getElementById('group-link');
         
         if (plataforma === 'estudo') {
-            label.innerText = "Link do Estudo no Lichess:";
-            input.placeholder = "Ex: https://lichess.org/study/XXXXXXX";
+            groupLink.style.display = 'block';
         } else {
-            label.innerText = "Nickname do Jogador:";
-            input.placeholder = "Ex: Hikaru, MagnusCarlsen...";
+            groupLink.style.display = 'none';
         }
     }
 
@@ -129,7 +132,6 @@
             if (data.success) {
                 document.getElementById('senha-section').style.display = 'none';
                 document.getElementById('controls-section').style.display = 'block';
-                // Salva a senha temporariamente na memória para autorizar a IA depois
                 window.senhaAutenticada = senha; 
             } else {
                 alert('Senha incorreta!');
@@ -142,44 +144,48 @@
     }
 
     async function gerarDiagnostico() {
-        const valorInput = document.getElementById('input-dados').value.trim();
+        const nick = document.getElementById('input-nick').value.trim();
         const plataforma = document.getElementById('plataforma').value;
+        const linkEstudo = document.getElementById('input-link').value.trim();
         const statusDiv = document.getElementById('status');
         const laudoArea = document.getElementById('laudo-area');
         const resultadoTexto = document.getElementById('resultado-texto');
 
-        if (!valorInput) {
-            statusDiv.innerText = "Por favor, preencha o campo obrigatório.";
+        if (!nick) {
+            statusDiv.innerText = "Por favor, digite o Nickname do jogador alvo da análise.";
             return;
         }
 
-        statusDiv.innerText = "1/2: Buscando as partidas na plataforma solicitada... 🎣";
+        if (plataforma === 'estudo' && !linkEstudo) {
+            statusDiv.innerText = "Por favor, cole o Link do Estudo do Lichess.";
+            return;
+        }
+
+        statusDiv.innerText = "1/2: Extraindo as partidas da base de dados... 🎣";
         laudoArea.style.display = 'none';
 
         try {
             let pgns = "";
-            let nickParaEnvio = valorInput;
 
             if (plataforma === 'lichess') {
-                const res = await fetch(`https://lichess.org/api/games/user/${valorInput}?max=20&perfType=rapid`);
-                if (!res.ok) throw new Error("Nick não encontrado ou sem partidas rápidas recentes.");
+                const res = await fetch(`https://lichess.org/api/games/user/${nick}?max=20&perfType=rapid`);
+                if (!res.ok) throw new Error("Nick não encontrado ou sem partidas recentes.");
                 pgns = await res.text();
             } 
             else if (plataforma === 'chesscom') {
-                const archiveRes = await fetch(`https://api.chess.com/pub/player/${valorInput}/games/archives`);
+                const archiveRes = await fetch(`https://api.chess.com/pub/player/${nick}/games/archives`);
                 if (!archiveRes.ok) throw new Error("Nick não encontrado no Chess.com.");
                 const archivesData = await archiveRes.json();
                 const archives = archivesData.archives;
                 
                 if (!archives || archives.length === 0) {
-                    throw new Error("Este jogador não possui histórico de partidas no Chess.com.");
+                    throw new Error("Jogador sem histórico no Chess.com.");
                 }
 
                 let pgnsArray = [];
                 for (let i = archives.length - 1; i >= 0 && pgnsArray.length < 20; i--) {
                     const monthRes = await fetch(archives[i]);
                     const monthData = await monthRes.json();
-                    
                     const rapidGames = monthData.games.filter(g => g.time_class === 'rapid' && g.pgn);
                     
                     for (let j = rapidGames.length - 1; j >= 0 && pgnsArray.length < 20; j--) {
@@ -189,19 +195,16 @@
                 pgns = pgnsArray.join("\n\n");
             }
             else if (plataforma === 'estudo') {
-                // Lógica para extrair o ID do estudo a partir do link do Lichess
                 const regexEstudo = /study\/([a-zA-Z0-9]+)/;
-                const match = valorInput.match(regexEstudo);
+                const match = linkEstudo.match(regexEstudo);
                 
                 if (!match) {
-                    throw new Error("Link inválido. Certifique-se de colar a URL correta do estudo (Ex: https://lichess.org/study/ABC123xy)");
+                    throw new Error("Link inválido. Use o formato https://lichess.org/study/ABC123xy");
                 }
                 
                 const idEstudo = match[1];
-                nickParaEnvio = `Estudo (${idEstudo})`;
-                
                 const res = await fetch(`https://lichess.org/api/study/${idEstudo}.pgn`);
-                if (!res.ok) throw new Error("Não foi possível acessar as partidas. Verifique se o link está correto e se o estudo é público.");
+                if (!res.ok) throw new Error("Não foi possível acessar o estudo. Verifique se ele é público.");
                 pgns = await res.text();
             }
 
@@ -210,16 +213,22 @@
                 return;
             }
 
-            statusDiv.innerText = "2/2: Inteligência Artificial redigindo o Laudo Técnico detalhado... ⏳";
+            statusDiv.innerText = "2/2: Inteligência Artificial avaliando performance e redigindo o Laudo... ⏳";
 
-            const instrucaoIA = "Analise as partidas fornecidas. OBRIGATÓRIO dividir o laudo em 3 seções exatas usando títulos h3: '1. Pontos Fortes', '2. Principais Fraquezas (Padrões de Erro)' e '3. Plano de Ação'. No plano de ação, sugira temas táticos ou estratégicos com exercícios focados para corrigir as fraquezas detectadas.";
+            // A MÁGICA DA IA: Instruções detalhadas para gerar as 4 seções
+            const instrucaoIA = `O jogador alvo exclusivo desta análise é: "${nick}". 
+Analise as partidas fornecidas. OBRIGATÓRIO estruturar o laudo em exatamente 4 seções, usando títulos h3 HTML: 
+<h3>1. Pontos Fortes</h3> (Destaque os acertos do jogador alvo)
+<h3>2. Principais Fraquezas</h3> (Identifique os padrões de erro)
+<h3>3. Plano de Ação</h3> (Sugira exercícios táticos/estratégicos baseados nos erros)
+<h3>4. Partida Destaque Comentada</h3> (Identifique no PGN a partida onde o jogador alvo obteve a maior performance/precisão. Mostre os lances principais dessa partida com comentários analíticos lance a lance).`;
 
             const apiRes = await fetch('/api/diagnose', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     pgns: pgns, 
-                    nick: nickParaEnvio,
+                    nick: nick,
                     plataforma: plataforma,
                     instructions: instrucaoIA,
                     senhaAutenticacao: window.senhaAutenticada
@@ -230,7 +239,7 @@
             
             if (data.analysis) {
                 resultadoTexto.innerHTML = data.analysis;
-                statusDiv.innerText = "Laudo gerado com sucesso!";
+                statusDiv.innerText = "Laudo VIP e Partida Destaque gerados com sucesso!";
                 laudoArea.style.display = 'block';
             } else {
                 statusDiv.innerText = "Erro ao gerar laudo com a IA. Tente novamente.";

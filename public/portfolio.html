@@ -20,6 +20,16 @@
             background-color: #d4af37;
             z-index: 0;
         }
+        
+        /* A mágica para deixar a foto perfeitamente quadrada e sem cortar o rosto */
+        .instructor-img-square {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .timeline-line { left: 20px; }
             .timeline-content { width: 100% !important; padding-left: 50px !important; text-align: left !important; }
@@ -81,8 +91,8 @@
         <div class="grid md:grid-cols-2 gap-12">
             <!-- Rafael Ferreira -->
             <div class="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
-                <div class="bg-gray-200 h-72 flex items-center justify-center overflow-hidden">
-                    <img src="rafael-ferreira.jpg" alt="Rafael Ferreira" class="w-full h-full object-cover object-top">
+                <div class="bg-gray-200 overflow-hidden">
+                    <img src="rafael-ferreira.jpg" alt="Rafael Ferreira" class="instructor-img-square">
                 </div>
                 <div class="p-6">
                     <h4 class="text-2xl font-bold text-gray-800 mb-1">Rafael Ferreira</h4>
@@ -95,8 +105,8 @@
 
             <!-- Graziela Garcia -->
             <div class="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
-                <div class="bg-gray-200 h-72 flex items-center justify-center overflow-hidden">
-                    <img src="graziela-garcia.jpg" alt="Graziela Garcia" class="w-full h-full object-cover object-top">
+                <div class="bg-gray-200 overflow-hidden">
+                    <img src="graziela-garcia.jpg" alt="Graziela Garcia" class="instructor-img-square">
                 </div>
                 <div class="p-6">
                     <h4 class="text-2xl font-bold text-gray-800 mb-1">Graziela Garcia</h4>

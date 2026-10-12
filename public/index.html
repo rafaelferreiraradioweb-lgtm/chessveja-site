@@ -18,6 +18,31 @@
             word-break: break-word;
             line-height: 1.3;
         }
+
+        /* Ajuste fino para garantir que as fotos dos professores fiquem redondas e centralizadas */
+        .teacher-img-circular {
+            width: 180px !important;
+            height: 180px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            object-position: center top !important; /* Impede que corte a cabeça na foto */
+            margin: 0 auto 15px auto !important;
+            display: block !important;
+            border: 4px solid #d4af37;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .teacher-subtitle {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .teacher-card {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -152,14 +177,16 @@
             <h2>Conheça a Equipe Chessveja</h2>
             <div class="teachers-container">
                 <div class="teacher-card">
-                    <img src="rafael-ferreira.jpg" alt="Foto do Professor Rafael">
+                    <img src="rafael-ferreira.jpg" alt="Foto do Professor Rafael" class="teacher-img-circular">
                     <h3>Rafael Ferreira</h3>
-                    <p>Com vasta experiência como professor, Rafael desenvolve raciocínio lógico e concentração. Certificado pela FEXEAL.</p>
+                    <span class="teacher-subtitle">Instrutor FEXEAL & Certificado FIDE (TEA)</span>
+                    <p>Com vasta experiência como professor, Rafael desenvolve raciocínio lógico e concentração. <strong>Possui curso de certificação oficial da FIDE para o ensino de xadrez adaptado a pessoas com TEA (Transtorno do Espectro Autista).</strong></p>
                 </div>
                 <div class="teacher-card">
-                    <img src="graziela-garcia.jpg" alt="Foto da Professora Graziela">
+                    <img src="graziela-garcia.jpg" alt="Foto da Professora Graziela" class="teacher-img-circular">
                     <h3>Graziela Garcia</h3>
-                    <p>Educadora com Pós-Graduação em Matemática e Instrutora de Xadrez pela FEXEAL.</p>
+                    <span class="teacher-subtitle">Educadora & Certificada FIDE (TEA)</span>
+                    <p>Educadora com Pós-Graduação em Matemática e Instrutora de Xadrez pela FEXEAL. <strong>Possui curso de certificação oficial da FIDE para o ensino inclusivo de xadrez a pessoas com TEA (Transtorno do Espectro Autista).</strong></p>
                 </div>
             </div>
         </section>

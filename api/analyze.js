@@ -4,7 +4,7 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        const { pgn, color, level, tone } = req.body;
+        const { pgn, color, level, tone } = req.body || {};
 
         if (!pgn || pgn.trim() === '') {
             return res.status(400).json({ error: 'Cole um PGN válido antes de analisar.' });
@@ -52,7 +52,7 @@ ${pgn.slice(0, 20000)}`;
 };
 
 async function chamarGemini(prompt, apiKey) {
-    const modelos = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+    const modelos = ['gemini-3.8-flash', 'gemini-2.5-flash'];
     let ultimoErro = '';
 
     for (const modelo of modelos) {
@@ -75,7 +75,7 @@ async function chamarGemini(prompt, apiKey) {
             return data.candidates[0].content.parts[0].text.trim();
         }
 
-        ultimoErro = data.error?.message || `Falha no modelo ${modelo}`;
+        ultimoErro = data.error?.message || `Falha no modelo ${modelo} (HTTP ${response.status})`;
     }
 
     throw new Error(ultimoErro);

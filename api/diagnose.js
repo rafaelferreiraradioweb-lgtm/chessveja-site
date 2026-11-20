@@ -1,52 +1,87 @@
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ analysis: 'Método não permitido.' });
-  }
+module.exports = async function handler(req, res) {
+    // Libera acesso também para a extensão do Chrome
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const { pgns, nick } = req.body;
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
-  if (!pgns) {
-    return res.status(400).json({ analysis: 'Nenhum PGN fornecido.' });
-  }
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Método não permitido' });
+    }
 
-  if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ analysis: 'Erro no servidor: Chave da API ausente.' });
-  }
+    try {
+        const { pgns, nick, plataforma, instructions, senhaAutenticacao } = req.body;
 
-  const systemPrompt = `Você é o Professor Rafael Ferreira, mestre e treinador de xadrez com 20 anos de experiência.
-Sua missão é dar um "Laudo Técnico Profissional" baseado neste lote de partidas rápidas do jogador ${nick}.
-Aja de forma clínica, direta e analítica. Ignore erros aleatórios e foque nos PADRÕES de comportamento.
+        if (!senhaAutenticacao) {
+            return res.status(401).json({ error: 'Acesso não autorizado.' });
+        }
 
-Formate o texto em HTML elegante (usando <h2>, <h3>, <p>, <ul>, <li> e <strong>) para que fique lindo num PDF. NÃO use fundos escuros.
+        if (!pgns || pgns.trim() === '') {
+            return res.status(400).json({ error: 'Nenhuma partida (PGN) enviada para análise.' });
+        }
 
-Estrutura OBRIGATÓRIA do Laudo:
-1. Resumo do Perfil (Ex: Jogador tático excessivamente agressivo, mas que peca em finais).
-2. Os 3 Maiores Pontos Fortes (com justificativa tática).
-3. Os 3 Principais Pontos Fracos (os padrões de erro, ex: "Nas partidas 2 e 7, você entregou vantagem por falta de desenvolvimento").
-4. Plano de Intervenção: Sugira o que ele deve treinar imediatamente e cite obrigatoriamente a aplicação de pelo menos duas das 22 Dicas de Mestre do seu método.
-Termine o laudo com uma assinatura profissional: "Prof. Rafael Ferreira - Chessveja".`;
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            return res.status(500).json({ error: 'Chave GEMINI_API_KEY não configurada na Vercel.' });
+        }
 
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Analise este lote de partidas do jogador ${nick}:\n\n${pgns}` }
-        ]
-      })
-    });
+        const prompt = `Você é um Mestre e Treinador de Xadrez da escola Chessveja (Prof. Rafael Ferreira).
+Analise as partidas em PGN abaixo com rigor técnico e linguagem didática em Português do Brasil.
+${nick ? `Jogador alvo da análise: ${nick}` : ''}
+${plataforma ? `Origem das partidas: ${plataforma}` : ''}
 
-    const data = await response.json();
-    if (data.error) return res.status(500).json({ analysis: `Erro na OpenAI: ${data.error.message}` });
-    res.status(200).json({ analysis: data.choices[0].message.content });
+Instruções obrigatórias de estrutura:
+${instructions || 'Estruture o laudo em 3 seções com tags HTML <h3>: 1. Pontos Fortes, 2. Principais Fraquezas e 3. Plano de Ação.'}
 
-  } catch (error) {
-    res.status(500).json({ analysis: 'Falha de comunicação com a Inteligência Artificial.' });
-  }
+Regras de formatação:
+- Responda APENAS em HTML limpo (use tags <h3>, <p>, <ul>, <li>, <strong>).
+- Não use blocos de código markdown (\`\`\`html).
+- Cite lances e partidas reais encontradas no PGN fornecido.
+
+Partidas (PGN):
+${pgns.slice(0, 60000)}`;
+
+        const textoGerado = await chamarGemini(prompt, apiKey);
+        return res.status(200).json({ analysis: textoGerado });
+
+    } catch (error) {
+        console.error('Erro no /api/diagnose:', error);
+        return res.status(500).json({ error: 'Erro na IA Gemini: ' + error.message });
+    }
+};
+
+async function chamarGemini(prompt, apiKey) {
+    const modelos = ['gemini-2.5-flash', 'gemini-2.0-flash'];
+    let ultimoErro = '';
+
+    for (const modelo of modelos) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 4096
+                }
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+            return data.candidates[0].content.parts[0].text
+                .replace(/^```html\s*/i, '')
+                .replace(/```$/i, '')
+                .trim();
+        }
+
+        ultimoErro = data.error?.message || `Falha no modelo ${modelo}`;
+    }
+
+    throw new Error(ultimoErro);
 }

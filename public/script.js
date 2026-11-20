@@ -1,77 +1,223 @@
-var board = null;
-var game = new Chess();
-var $status = $('#status');
+document.addEventListener('DOMContentLoaded', () => {
+    const chess = new Chess();
+    let moveHistory = [];
+    let currentMoveIndex = -1;
+    let stockfish = null;
 
-// Configuração do Tabuleiro
-function updateStatus () {
-  var status = '';
-  var moveColor = game.turn() === 'b' ? 'Pretas' : 'Brancas';
-  if (game.in_checkmate()) status = 'Fim de jogo, ' + moveColor + ' sofreu xeque-mate.';
-  else if (game.in_draw()) status = 'Fim de jogo, empate.';
-  else {
-    status = moveColor + ' jogam.';
-    if (game.in_check()) status += ', ' + moveColor + ' está em xeque.';
-  }
-  $status.html(status);
-}
+    // Inicializa o tabuleiro visual com tema de peças confiável
+    const board = Chessboard('board', {
+        position: 'start',
+        draggable: false,
+        pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png'
+    });
 
-var config = {
-  draggable: true,
-  position: 'start',
-  onDragStart: (s, p) => { if (game.game_over() || (game.turn()==='w' && p.search(/^b/)!==-1) || (game.turn()==='b' && p.search(/^w/)!==-1)) return false },
-  onDrop: (s, t) => { 
-      var move = game.move({ from: s, to: t, promotion: 'q' });
-      if (move === null) return 'snapback';
-      updateStatus();
-  },
-  onSnapEnd: () => { board.position(game.fen()) }
-};
-board = Chessboard('board', config);
-updateStatus();
+    window.addEventListener('resize', () => board.resize());
 
-// Botões
-$('#btn-start').on('click', () => { game.reset(); board.start(); updateStatus(); });
-$('#btn-prev').on('click', () => { game.undo(); board.position(game.fen()); updateStatus(); });
-$('#btn-flip').on('click', () => { board.flip(); });
+    // Elementos da interface
+    const statusEl = document.getElementById('status');
+    const pgnInput = document.getElementById('pgn-input');
+    const analyzeBtn = document.getElementById('analyze-button');
+    const stockfishOutput = document.getElementById('stockfish-output');
+    const aiResult = document.getElementById('ai-result');
 
-// Stockfish
-var stockfish = new Worker('stockfish.js');
-stockfish.onmessage = (e) => {
-    if (e.data.startsWith('info') && e.data.includes('score')) {
-        let out = e.data.includes('mate') ? "Mate detectado" : "Calculando...";
-        if (e.data.includes('cp')) {
-            let v = parseInt(e.data.split(' ')[e.data.split(' ').indexOf('cp') + 1]);
-            out = "Avaliação: " + (v / 100).toFixed(2);
-        }
-        $('#stockfish-output').text(out);
-    }
-};
-
-// BOTÃO ANALISAR (LIVRE)
-$('#analyze-button').on('click', async function() {
-    var pgn = $('#pgn-input').val();
-    if (!pgn) { alert("Cole um PGN primeiro."); return; }
-    if (!game.load_pgn(pgn)) { alert("PGN inválido."); return; }
-    
-    board.position(game.fen());
-    updateStatus();
-    stockfish.postMessage('position fen ' + game.fen());
-    stockfish.postMessage('go depth 15');
-
-    $('#ai-result').html('<em>A IA do Chessveja está analisando... aguarde...</em>');
-    $('#analyze-button').prop('disabled', true);
-
+    // Inicializa Stockfish de forma protegida (nunca trava o resto da página)
     try {
-        const res = await fetch('/api/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pgn, level: $('#analysis-level').val(), tone: $('#analysis-tone').val(), color: $('#analysis-color').val() })
-        });
-        const data = await res.json();
-        $('#ai-result').html(typeof marked !== 'undefined' ? marked.parse(data.analysis || "Erro.") : (data.analysis || "Erro."));
-    } catch (error) {
-        $('#ai-result').text("Erro de conexão.");
-    } finally {
-        $('#analyze-button').prop('disabled', false);
+        stockfish = new Worker('stockfish.js');
+        stockfish.onmessage = (event) => {
+            const line = typeof event.data === 'string' ? event.data : '';
+            if (line.startsWith('info depth') && line.includes(' pv ')) {
+                const depthMatch = line.match(/depth (\d+)/);
+                const cpMatch = line.match(/score cp (-?\d+)/);
+                const mateMatch = line.match(/score mate (-?\d+)/);
+                const pvMatch = line.match(/ pv (.+)/);
+
+                const depth = depthMatch ? depthMatch[1] : '?';
+                const bestMoves = pvMatch ? pvMatch[1].split(' ').slice(0, 5).join(' ') : '';
+                let evalText = '';
+
+                if (mateMatch) {
+                    const mateIn = parseInt(mateMatch[1], 10);
+                    evalText = mateIn > 0 ? `Mate em ${mateIn}` : `Mate sofrido em ${Math.abs(mateIn)}`;
+                } else if (cpMatch) {
+                    const turn = chess.turn();
+                    let score = parseInt(cpMatch[1], 10) / 100;
+                    if (turn === 'b') score = -score;
+                    evalText = (score >= 0 ? `+${score.toFixed(2)}` : score.toFixed(2));
+                }
+
+                if (evalText && stockfishOutput) {
+                    stockfishOutput.innerHTML = `<strong>Avaliação (Profundidade ${depth}):</strong> ${evalText}<br><small>Sequência sugerida: ${bestMoves}</small>`;
+                }
+            }
+        };
+        stockfish.postMessage('uci');
+    } catch (e) {
+        console.warn('Stockfish indisponível neste navegador:', e);
+        if (stockfishOutput) {
+            stockfishOutput.innerText = 'Engine local indisponível. A análise da IA funcionará normalmente.';
+        }
     }
+
+    function avaliarPosicaoStockfish(fen) {
+        if (!stockfish) return;
+        try {
+            stockfish.postMessage('stop');
+            stockfish.postMessage(`position fen ${fen}`);
+            stockfish.postMessage('go depth 14');
+        } catch (e) {
+            console.warn('Erro ao enviar posição para Stockfish:', e);
+        }
+    }
+
+    // Remove tags de relógio {[%clk ...]}, timestamps e formatações que travam o chess.js
+    function limparPGN(rawPgn) {
+        const linhas = rawPgn.replace(/\r\n/g, '\n').split('\n');
+        const headers = [];
+        const corpoLances = [];
+
+        for (const linha of linhas) {
+            const trimmed = linha.trim();
+            if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+                headers.push(trimmed);
+            } else if (trimmed !== '') {
+                corpoLances.push(trimmed);
+            }
+        }
+
+        let moves = corpoLances.join(' ');
+        // Remove comentários e relógios entre chaves {[%clk ...][%timestamp ...]}
+        moves = moves.replace(/\{[^}]*\}/g, ' ');
+        // Remove variantes entre parênteses
+        while (/\([^()]*\)/.test(moves)) {
+            moves = moves.replace(/\([^()]*\)/g, ' ');
+        }
+        // Remove numeração de lance das pretas tipo "28..."
+        moves = moves.replace(/\b\d+\.\.\.\s*/g, ' ');
+        // Remove anotações numéricas tipo $1, $2
+        moves = moves.replace(/\$\d+/g, ' ');
+        // Limpa espaços duplicados
+        moves = moves.replace(/\s+/g, ' ').trim();
+
+        return headers.length > 0 ? `${headers.join('\n')}\n\n${moves}` : moves;
+    }
+
+    // Atualiza o tabuleiro para um índice específico do histórico
+    function irParaLance(index) {
+        const tempChess = new Chess();
+        const header = chess.header();
+        if (header && header.FEN) {
+            tempChess.load(header.FEN);
+        }
+
+        for (let i = 0; i <= index; i++) {
+            tempChess.move(moveHistory[i]);
+        }
+
+        currentMoveIndex = index;
+        board.position(tempChess.fen());
+
+        if (index === -1) {
+            statusEl.innerText = `Posição inicial (${moveHistory.length} lances carregados).`;
+        } else {
+            const numeroLance = Math.floor(index / 2) + 1;
+            const lado = index % 2 === 0 ? '.' : '...';
+            statusEl.innerText = `Lance ${numeroLance}${lado} ${moveHistory[index].san} (${index + 1}/${moveHistory.length})`;
+        }
+
+        avaliarPosicaoStockfish(tempChess.fen());
+    }
+
+    // Controles do tabuleiro
+    document.getElementById('btn-start')?.addEventListener('click', () => {
+        if (moveHistory.length > 0) irParaLance(-1);
+    });
+
+    document.getElementById('btn-prev')?.addEventListener('click', () => {
+        if (moveHistory.length > 0 && currentMoveIndex >= 0) {
+            irParaLance(currentMoveIndex - 1);
+        }
+    });
+
+    document.getElementById('btn-next')?.addEventListener('click', () => {
+        if (moveHistory.length > 0 && currentMoveIndex < moveHistory.length - 1) {
+            irParaLance(currentMoveIndex + 1);
+        }
+    });
+
+    document.getElementById('btn-end')?.addEventListener('click', () => {
+        if (moveHistory.length > 0) irParaLance(moveHistory.length - 1);
+    });
+
+    document.getElementById('btn-flip')?.addEventListener('click', () => {
+        board.flip();
+    });
+
+    // Botão principal: Carregar PGN e Analisar
+    analyzeBtn?.addEventListener('click', async () => {
+        const rawPgn = pgnInput.value.trim();
+
+        if (!rawPgn) {
+            statusEl.innerText = 'Por favor, cole o PGN de uma partida antes de clicar.';
+            return;
+        }
+
+        const pgnLimpo = limparPGN(rawPgn);
+        chess.reset();
+        const carregou = chess.load_pgn(pgnLimpo, { sloppy: true });
+
+        if (!carregou) {
+            statusEl.innerText = 'PGN inválido. Verifique se copiou todos os lances da partida.';
+            return;
+        }
+
+        // Carrega os lances no tabuleiro imediatamente
+        moveHistory = chess.history({ verbose: true });
+        if (moveHistory.length === 0) {
+            statusEl.innerText = 'Nenhum lance encontrado no PGN.';
+            return;
+        }
+
+        // Vai para o lance final para visualização imediata
+        irParaLance(moveHistory.length - 1);
+
+        // Dispara a análise com Google Gemini
+        const color = document.getElementById('analysis-color')?.value || 'brancas';
+        const level = document.getElementById('analysis-level')?.value || 'iniciante';
+        const tone = document.getElementById('analysis-tone')?.value || 'tecnico';
+
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerText = 'Analisando partida com IA... ⏳';
+        aiResult.innerHTML = '<em>A Inteligência Artificial do Chessveja está estudando os lances...</em>';
+
+        try {
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    pgn: pgnLimpo,
+                    color,
+                    level,
+                    tone
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.error) {
+                throw new Error(data.error || 'Falha ao obter resposta da IA.');
+            }
+
+            if (typeof marked !== 'undefined' && marked.parse) {
+                aiResult.innerHTML = marked.parse(data.analysis);
+            } else {
+                aiResult.innerHTML = data.analysis.replace(/\n/g, '<br>');
+            }
+
+        } catch (error) {
+            aiResult.innerHTML = `<span style="color: #e74c3c; font-weight: bold;">Erro: ${error.message}</span>`;
+        } finally {
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerText = 'Carregar PGN e Analisar';
+        }
+    });
 });

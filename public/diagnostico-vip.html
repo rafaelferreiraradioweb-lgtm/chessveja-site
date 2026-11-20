@@ -29,12 +29,10 @@
         #laudo-area { margin-top: 30px; display: none; padding-top: 20px; border-top: 2px dashed #ccc; }
         #cabecalho-pdf { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; }
         
-        /* Estilização do Resultado da IA */
         #resultado-texto h3 { margin-top: 25px; border-bottom: 2px solid #d4af37; padding-bottom: 5px; color: #1a252f; }
         #resultado-texto ul { padding-left: 20px; }
         #resultado-texto li { margin-bottom: 8px; line-height: 1.5; }
         
-        /* A MÁGICA DA IMPRESSÃO DO PDF */
         @media print {
             body { background-color: white; padding: 0; }
             #senha-section, #controls-section, button, .btn-whatsapp { display: none !important; }
@@ -73,7 +71,6 @@
             <input type="text" id="input-nick" placeholder="Ex: Hikaru, MagnusCarlsen...">
         </div>
 
-        <!-- Esse campo só aparece se a opção "Estudo" for selecionada -->
         <div class="form-group" id="group-link" style="display: none;">
             <label for="input-link">Link do Estudo no Lichess:</label>
             <input type="text" id="input-link" placeholder="Ex: https://lichess.org/study/XXXXXXX">
@@ -102,16 +99,20 @@
 </div>
 
 <script>
-    // Mostra ou esconde o campo de Link dependendo do que foi selecionado
     function atualizarInterface() {
         const plataforma = document.getElementById('plataforma').value;
         const groupLink = document.getElementById('group-link');
-        
-        if (plataforma === 'estudo') {
-            groupLink.style.display = 'block';
-        } else {
-            groupLink.style.display = 'none';
-        }
+        groupLink.style.display = plataforma === 'estudo' ? 'block' : 'none';
+    }
+
+    function limparPGNsParaEnvio(rawPgns) {
+        return rawPgns
+            .replace(/\{[^}]*\}/g, ' ')
+            .split('\n')
+            .filter(l => !l.trim().startsWith('[') || /^\[(White|Black|Result|Opening|ECO|Date|WhiteElo|BlackElo)\s/i.test(l.trim()))
+            .join('\n')
+            .replace(/[ \t]+/g, ' ')
+            .trim();
     }
 
     async function verificarSenha() {
@@ -161,6 +162,7 @@
             return;
         }
 
+        statusDiv.style.color = "#2c3e50";
         statusDiv.innerText = "1/2: Extraindo as partidas da base de dados... 🎣";
         laudoArea.style.display = 'none';
 
@@ -168,12 +170,12 @@
             let pgns = "";
 
             if (plataforma === 'lichess') {
-                const res = await fetch(`https://lichess.org/api/games/user/${nick}?max=20&perfType=rapid`);
-                if (!res.ok) throw new Error("Nick não encontrado ou sem partidas recentes.");
+                const res = await fetch(`https://lichess.org/api/games/user/${nick}?max=20&perfType=rapid,blitz`);
+                if (!res.ok) throw new Error("Nick não encontrado ou sem partidas recentes no Lichess.");
                 pgns = await res.text();
             } 
             else if (plataforma === 'chesscom') {
-                const archiveRes = await fetch(`https://api.chess.com/pub/player/${nick}/games/archives`);
+                const archiveRes = await fetch(`https://api.chess.com/pub/player/${nick.toLowerCase()}/games/archives`);
                 if (!archiveRes.ok) throw new Error("Nick não encontrado no Chess.com.");
                 const archivesData = await archiveRes.json();
                 const archives = archivesData.archives;
@@ -186,10 +188,10 @@
                 for (let i = archives.length - 1; i >= 0 && pgnsArray.length < 20; i--) {
                     const monthRes = await fetch(archives[i]);
                     const monthData = await monthRes.json();
-                    const rapidGames = monthData.games.filter(g => g.time_class === 'rapid' && g.pgn);
+                    const games = (monthData.games || []).filter(g => g.pgn);
                     
-                    for (let j = rapidGames.length - 1; j >= 0 && pgnsArray.length < 20; j--) {
-                        pgnsArray.push(rapidGames[j].pgn);
+                    for (let j = games.length - 1; j >= 0 && pgnsArray.length < 20; j--) {
+                        pgnsArray.push(games[j].pgn);
                     }
                 }
                 pgns = pgnsArray.join("\n\n");
@@ -209,13 +211,15 @@
             }
 
             if (!pgns || pgns.trim() === "") {
+                statusDiv.style.color = "#e74c3c";
                 statusDiv.innerText = "Nenhuma partida válida foi encontrada para análise.";
                 return;
             }
 
+            const pgnsLimpos = limparPGNsParaEnvio(pgns);
+
             statusDiv.innerText = "2/2: Inteligência Artificial avaliando performance e redigindo o Laudo... ⏳";
 
-            // A MÁGICA DA IA: Instruções detalhadas para gerar as 4 seções
             const instrucaoIA = `O jogador alvo exclusivo desta análise é: "${nick}". 
 Analise as partidas fornecidas. OBRIGATÓRIO estruturar o laudo em exatamente 4 seções, usando títulos h3 HTML: 
 <h3>1. Pontos Fortes</h3> (Destaque os acertos do jogador alvo)
@@ -227,7 +231,7 @@ Analise as partidas fornecidas. OBRIGATÓRIO estruturar o laudo em exatamente 4 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    pgns: pgns, 
+                    pgns: pgnsLimpos, 
                     nick: nick,
                     plataforma: plataforma,
                     instructions: instrucaoIA,
@@ -235,17 +239,25 @@ Analise as partidas fornecidas. OBRIGATÓRIO estruturar o laudo em exatamente 4 
                 })
             });
 
-            const data = await apiRes.json();
+            const rawText = await apiRes.text();
+            let data;
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                throw new Error(`Servidor demorou ou retornou resposta inválida (HTTP ${apiRes.status}).`);
+            }
             
-            if (data.analysis) {
+            if (apiRes.ok && data.analysis) {
                 resultadoTexto.innerHTML = data.analysis;
+                statusDiv.style.color = "#27ae60";
                 statusDiv.innerText = "Laudo VIP e Partida Destaque gerados com sucesso!";
                 laudoArea.style.display = 'block';
             } else {
-                statusDiv.innerText = "Erro ao gerar laudo com a IA. Tente novamente.";
+                throw new Error(data.error || "Erro desconhecido ao gerar laudo com a IA.");
             }
 
         } catch (error) {
+            statusDiv.style.color = "#e74c3c";
             statusDiv.innerText = "Erro: " + error.message;
         }
     }

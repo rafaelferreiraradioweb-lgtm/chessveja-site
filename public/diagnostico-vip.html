@@ -10,6 +10,10 @@
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h1, h2, h3 { color: #2c3e50; }
         
+        .top-nav { margin-bottom: 20px; }
+        .top-nav a { color: #2c3e50; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .top-nav a:hover { text-decoration: underline; }
+
         .form-group { margin-bottom: 15px; }
         label { font-weight: bold; display: block; margin-bottom: 5px; color: #2c3e50; }
         
@@ -18,7 +22,8 @@
         }
         
         button { background-color: #2c3e50; color: white; padding: 14px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s; }
-        button:hover { background-color: #1a252f; }
+        button:hover:not(:disabled) { background-color: #1a252f; }
+        button:disabled { opacity: 0.65; cursor: not-allowed; }
         
         .btn-print { background-color: #2ecc71; margin-bottom: 10px; }
         .btn-print:hover { background-color: #27ae60; }
@@ -35,7 +40,7 @@
         
         @media print {
             body { background-color: white; padding: 0; }
-            #senha-section, #controls-section, button, .btn-whatsapp { display: none !important; }
+            .top-nav, #senha-section, #controls-section, button, .btn-whatsapp { display: none !important; }
             .container { box-shadow: none; border: none; max-width: 100%; padding: 0; }
             #cabecalho-pdf { display: block; }
             #laudo-area { display: block; margin-top: 0; border: none; }
@@ -46,11 +51,15 @@
 <body>
 
 <div class="container">
+    <div class="top-nav">
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Voltar para o site</a>
+    </div>
+
     <div id="senha-section">
         <h2><i class="fas fa-lock"></i> Acesso Restrito - Diagnóstico VIP</h2>
         <p>Área exclusiva para geração de laudos técnicos avançados.</p>
-        <input type="password" id="senha" placeholder="Digite a senha de acesso">
-        <button onclick="verificarSenha()">Entrar</button>
+        <input type="password" id="senha" placeholder="Digite a senha de acesso" onkeydown="if(event.key === 'Enter') verificarSenha()">
+        <button id="btn-entrar" onclick="verificarSenha()">Entrar</button>
     </div>
 
     <div id="controls-section" style="display: none;">
@@ -76,7 +85,7 @@
             <input type="text" id="input-link" placeholder="Ex: https://lichess.org/study/XXXXXXX">
         </div>
 
-        <button onclick="gerarDiagnostico()"><i class="fas fa-cogs"></i> Gerar Laudo Técnico</button>
+        <button id="btn-gerar" onclick="gerarDiagnostico()"><i class="fas fa-cogs"></i> Gerar Laudo Técnico</button>
         <div id="status" style="margin-top:15px; font-weight:bold; color:#e74c3c; text-align: center;"></div>
     </div>
 
@@ -91,4 +100,196 @@
         
         <div style="margin-top: 40px; text-align: center;">
             <button class="btn-print" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Laudo em PDF</button>
-            <a href="
+            <a href="https://api.whatsapp.com/send?phone=5582996535079&text=Ol%C3%A1%20Mestre%20Rafael!%20Acabei%20de%20ler%20meu%20diagn%C3%B3stico%20VIP%20e%20gostaria%20de%20agendar%20uma%20aula%20para%20corrigir%20meus%20erros." target="_blank" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Agendar Aula com o Mestre
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function atualizarInterface() {
+        const plataforma = document.getElementById('plataforma').value;
+        const groupLink = document.getElementById('group-link');
+        groupLink.style.display = plataforma === 'estudo' ? 'block' : 'none';
+    }
+
+    function limparPGNsParaEnvio(rawPgns) {
+        return rawPgns
+            .replace(/\{[^}]*\}/g, ' ')
+            .split('\n')
+            .filter(l => !l.trim().startsWith('[') || /^\[(White|Black|Result|Opening|ECO|Date|WhiteElo|BlackElo)\s/i.test(l.trim()))
+            .join('\n')
+            .replace(/[ \t]+/g, ' ')
+            .trim();
+    }
+
+    async function verificarSenha() {
+        const senha = document.getElementById('senha').value.trim();
+        const botao = document.getElementById('btn-entrar');
+
+        if (!senha) {
+            alert('Digite a senha antes de entrar.');
+            return;
+        }
+        
+        botao.disabled = true;
+        botao.innerText = "Verificando...";
+        
+        try {
+            const res = await fetch('/api/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ senha: senha })
+            });
+            
+            const rawText = await res.text();
+            let data;
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                throw new Error(`Resposta inesperada do servidor (HTTP ${res.status}). Verifique o arquivo api/auth.js.`);
+            }
+            
+            if (res.ok && data.success) {
+                document.getElementById('senha-section').style.display = 'none';
+                document.getElementById('controls-section').style.display = 'block';
+                window.senhaAutenticada = senha; 
+            } else {
+                alert(data.error || 'Senha incorreta!');
+            }
+        } catch (error) {
+            alert(error.message || 'Erro de conexão com o servidor.');
+        } finally {
+            botao.disabled = false;
+            botao.innerText = "Entrar";
+        }
+    }
+
+    async function gerarDiagnostico() {
+        const nick = document.getElementById('input-nick').value.trim();
+        const plataforma = document.getElementById('plataforma').value;
+        const linkEstudo = document.getElementById('input-link').value.trim();
+        const statusDiv = document.getElementById('status');
+        const laudoArea = document.getElementById('laudo-area');
+        const resultadoTexto = document.getElementById('resultado-texto');
+        const btnGerar = document.getElementById('btn-gerar');
+
+        if (!nick) {
+            statusDiv.style.color = "#e74c3c";
+            statusDiv.innerText = "Por favor, digite o Nickname do jogador alvo da análise.";
+            return;
+        }
+
+        if (plataforma === 'estudo' && !linkEstudo) {
+            statusDiv.style.color = "#e74c3c";
+            statusDiv.innerText = "Por favor, cole o Link do Estudo do Lichess.";
+            return;
+        }
+
+        btnGerar.disabled = true;
+        statusDiv.style.color = "#2c3e50";
+        statusDiv.innerText = "1/2: Extraindo as partidas da base de dados... 🎣";
+        laudoArea.style.display = 'none';
+
+        try {
+            let pgns = "";
+
+            if (plataforma === 'lichess') {
+                const res = await fetch(`https://lichess.org/api/games/user/${nick}?max=20&perfType=rapid,blitz`);
+                if (!res.ok) throw new Error("Nick não encontrado ou sem partidas recentes no Lichess.");
+                pgns = await res.text();
+            } 
+            else if (plataforma === 'chesscom') {
+                const archiveRes = await fetch(`https://api.chess.com/pub/player/${nick.toLowerCase()}/games/archives`);
+                if (!archiveRes.ok) throw new Error("Nick não encontrado no Chess.com.");
+                const archivesData = await archiveRes.json();
+                const archives = archivesData.archives;
+                
+                if (!archives || archives.length === 0) {
+                    throw new Error("Jogador sem histórico no Chess.com.");
+                }
+
+                let pgnsArray = [];
+                for (let i = archives.length - 1; i >= 0 && pgnsArray.length < 20; i--) {
+                    const monthRes = await fetch(archives[i]);
+                    const monthData = await monthRes.json();
+                    const games = (monthData.games || []).filter(g => g.pgn);
+                    
+                    for (let j = games.length - 1; j >= 0 && pgnsArray.length < 20; j--) {
+                        pgnsArray.push(games[j].pgn);
+                    }
+                }
+                pgns = pgnsArray.join("\n\n");
+            }
+            else if (plataforma === 'estudo') {
+                const regexEstudo = /study\/([a-zA-Z0-9]+)/;
+                const match = linkEstudo.match(regexEstudo);
+                
+                if (!match) {
+                    throw new Error("Link inválido. Use o formato https://lichess.org/study/ABC123xy");
+                }
+                
+                const idEstudo = match[1];
+                const res = await fetch(`https://lichess.org/api/study/${idEstudo}.pgn`);
+                if (!res.ok) throw new Error("Não foi possível acessar o estudo. Verifique se ele é público.");
+                pgns = await res.text();
+            }
+
+            if (!pgns || pgns.trim() === "") {
+                statusDiv.style.color = "#e74c3c";
+                statusDiv.innerText = "Nenhuma partida válida foi encontrada para análise.";
+                return;
+            }
+
+            const pgnsLimpos = limparPGNsParaEnvio(pgns);
+
+            statusDiv.innerText = "2/2: Inteligência Artificial avaliando performance e redigindo o Laudo... ⏳";
+
+            const instrucaoIA = `O jogador alvo exclusivo desta análise é: "${nick}". 
+Analise as partidas fornecidas. OBRIGATÓRIO estruturar o laudo em exatamente 4 seções, usando títulos h3 HTML: 
+<h3>1. Pontos Fortes</h3> (Destaque os acertos do jogador alvo)
+<h3>2. Principais Fraquezas</h3> (Identifique os padrões de erro)
+<h3>3. Plano de Ação</h3> (Sugira exercícios táticos/estratégicos baseados nos erros)
+<h3>4. Partida Destaque Comentada</h3> (Identifique no PGN a partida onde o jogador alvo obteve a maior performance/precisão. Mostre os lances principais dessa partida com comentários analíticos lance a lance).`;
+
+            const apiRes = await fetch('/api/diagnose', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    pgns: pgnsLimpos, 
+                    nick: nick,
+                    plataforma: plataforma,
+                    instructions: instrucaoIA,
+                    senhaAutenticacao: window.senhaAutenticada
+                })
+            });
+
+            const rawText = await apiRes.text();
+            let data;
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                throw new Error(`Servidor demorou ou retornou resposta inválida (HTTP ${apiRes.status}).`);
+            }
+            
+            if (apiRes.ok && data.analysis) {
+                resultadoTexto.innerHTML = data.analysis;
+                statusDiv.style.color = "#27ae60";
+                statusDiv.innerText = "Laudo VIP e Partida Destaque gerados com sucesso!";
+                laudoArea.style.display = 'block';
+            } else {
+                throw new Error(data.error || "Erro desconhecido ao gerar laudo com a IA.");
+            }
+
+        } catch (error) {
+            statusDiv.style.color = "#e74c3c";
+            statusDiv.innerText = "Erro: " + error.message;
+        } finally {
+            btnGerar.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>

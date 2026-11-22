@@ -12,16 +12,18 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        const { senha } = req.body || {};
-        const senhaDigitada = typeof senha === 'string' ? senha.trim() : '';
+        const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+        const senhaDigitada = typeof body.senha === 'string' ? body.senha.trim() : '';
 
         const senhasAceitas = [
             'rafaelpro',
             process.env.SENHA_VIP,
             process.env.VIP_PASSWORD
-        ].filter(Boolean);
+        ]
+            .filter(Boolean)
+            .map((s) => String(s).trim().toLowerCase());
 
-        if (senhaDigitada && senhasAceitas.includes(senhaDigitada)) {
+        if (senhaDigitada && senhasAceitas.includes(senhaDigitada.toLowerCase())) {
             return res.status(200).json({ success: true });
         }
 
